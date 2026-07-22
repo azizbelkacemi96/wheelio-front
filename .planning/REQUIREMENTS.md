@@ -90,37 +90,37 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | TBD | Pending |
-| AUTH-02 | TBD | Pending |
-| AUTH-03 | TBD | Pending |
-| AUTH-04 | TBD | Pending |
-| AUTH-05 | TBD | Pending |
-| AUTH-06 | TBD | Pending |
-| FLEET-01 | TBD | Pending |
-| FLEET-02 | TBD | Pending |
-| CUST-01 | TBD | Pending |
-| CUST-02 | TBD | Pending |
-| CUST-03 | TBD | Pending |
-| RENT-01 | TBD | Pending |
-| RENT-02 | TBD | Pending |
-| RENT-03 | TBD | Pending |
-| RENT-04 | TBD | Pending |
-| RENT-05 | TBD | Pending |
-| INSP-01 | TBD | Pending |
-| INSP-02 | TBD | Pending |
-| INSP-03 | TBD | Pending |
-| BILL-01 | TBD | Pending |
-| BILL-02 | TBD | Pending |
-| BILL-03 | TBD | Pending |
-| BILL-04 | TBD | Pending |
-| BILL-05 | TBD | Pending |
-| OPS-01 | TBD | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Pending |
+| AUTH-06 | Phase 1 | Pending |
+| FLEET-01 | Phase 2 | Pending |
+| FLEET-02 | Phase 2 | Pending |
+| CUST-01 | Phase 3 | Pending |
+| CUST-02 | Phase 3 | Pending |
+| CUST-03 | Phase 3 | Pending |
+| RENT-01 | Phase 4 | Pending |
+| RENT-02 | Phase 4 | Pending |
+| RENT-03 | Phase 4 | Pending |
+| RENT-04 | Phase 4 | Pending |
+| RENT-05 | Phase 4 | Pending |
+| INSP-01 | Phase 5 | Pending |
+| INSP-02 | Phase 5 | Pending |
+| INSP-03 | Phase 5 | Pending |
+| BILL-01 | Phase 6 | Pending |
+| BILL-02 | Phase 6 | Pending |
+| BILL-03 | Phase 6 | Pending |
+| BILL-04 | Phase 6 | Pending |
+| BILL-05 | Phase 6 | Pending |
+| OPS-01 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 25 total
-- Mapped to phases: 0 (filled by roadmap creation)
-- Unmapped: 25 ⚠️ (expected before roadmap step)
+- Mapped to phases: 25 (Phase 1: 6, Phase 2: 2, Phase 3: 3, Phase 4: 6, Phase 5: 3, Phase 6: 5)
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-07-22*
-*Last updated: 2026-07-22 after initial definition*
+*Last updated: 2026-07-22 after roadmap creation (traceability mapped)*
