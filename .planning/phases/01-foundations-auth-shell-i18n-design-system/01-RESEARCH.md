@@ -614,17 +614,17 @@ export interface AuthResponse {
 
 **If this table is empty:** N/A — see rows above; all are low/medium-risk implementation-detail assumptions, not core-decision risks (every CONTEXT.md gray area was already resolved per that document).
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Should `currentAgencyId` persist across page reloads for the owner role?**
+1. **Should `currentAgencyId` persist across page reloads for the owner role?** — **RESOLVED at plan time (01-03 Task 2): default to NOT persisting** (resets to the org's first/primary agency on fresh load). Recorded as a flagged assumption in 01-03's SUMMARY for executor confirmation, per this research's own recommendation below.
    - What we know: D-11 only requires no reset "on switch" (within-session); nothing in CONTEXT.md addresses reload/new-tab behavior.
    - What's unclear: whether "always land back where you were" extends across a full reload.
-   - Recommendation: default to NOT persisting (reset to the org's first/primary agency on fresh load) as the simpler behavior unless the planner/user wants full cross-reload continuity — flag this as a one-line confirmation at plan time, low cost either way.
+   - Recommendation (adopted): default to NOT persisting as the simpler behavior — low cost either way, flagged for confirmation rather than silently decided.
 
-2. **Exact CSS variable names shadcn expects for the `new-york`/`slate`/custom-token combination.**
+2. **Exact CSS variable names shadcn expects for the `new-york`/`slate`/custom-token combination.** — **RESOLVED as an execution-time step, not a planning-time answer**: 01-02's tasks read the generated CSS at execution time rather than guessing variable names now.
    - What we know: `npx shadcn init` with `cssVariables: true` generates a standard set (`--background`, `--foreground`, `--primary`, `--primary-foreground`, `--muted`, `--border`, etc.) that UI-SPEC.md's token table must map onto.
    - What's unclear: the precise generated variable list depends on the shadcn CLI's current version at execution time (not independently re-verified in this pass beyond the dark-mode pattern above).
-   - Recommendation: run `npx shadcn@latest init` first during execution and read the generated `src/index.css`/`globals.css` before hand-editing token values — don't guess variable names from memory.
+   - Recommendation (adopted): run `npx shadcn@latest init` first during execution and read the generated `src/index.css`/`globals.css` before hand-editing token values — don't guess variable names from memory.
 
 ## Environment Availability
 
