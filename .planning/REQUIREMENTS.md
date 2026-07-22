@@ -14,7 +14,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **AUTH-03**: Navigation and available actions reflect the user's role (agent / manager / owner) driven entirely by the backend's `/me` scope, never re-derived independently
 - [ ] **AUTH-04**: Owner can switch between agencies within their organization
 - [ ] **AUTH-05**: Interface is available in French (default) and English, switchable
-- [ ] **AUTH-06**: The app is built on a documented design-token system (colors, typography, spacing) and a base component library, applied consistently across every screen
+- [x] **AUTH-06**: The app is built on a documented design-token system (colors, typography, spacing) and a base component library, applied consistently across every screen
 
 ### Fleet
 
@@ -95,7 +95,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Pending |
 | AUTH-05 | Phase 1 | Pending |
-| AUTH-06 | Phase 1 | Pending |
+| AUTH-06 | Phase 1 | Complete |
 | FLEET-01 | Phase 2 | Pending |
 | FLEET-02 | Phase 2 | Pending |
 | CUST-01 | Phase 3 | Pending |

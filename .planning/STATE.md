@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: foundations-auth-shell-i18n-design-system
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-07-22T19:14:39.858Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-07-22T23:14:36.143Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 1 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 7
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 1 (foundations-auth-shell-i18n-design-system) — EXECUTING
-Plan: 2 of 7
+Plan: 3 of 7
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 1 execution started
 
-Progress: [█░░░░░░░░░] 14%
+Progress: [███░░░░░░░] 29%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [█░░░░░░░░░] 14%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 12 | 3 tasks | 23 files |
+| Phase 01 P02 | 55 | 2 tasks | 19 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Roadmap]: OPS-01 ("today" overview) folded into Phase 4 (Contrats de location) rather than a standalone phase — it depends on rental data and is too thin (1 requirement) to justify its own phase.
 - [Phase ?]: Added scripts/generate-routes.mjs + npm postinstall/predev/prebuild/pretest hooks to fix a bare-clone build break (routeTree.gen.ts chicken-and-egg with tsc -b)
 - [Phase ?]: Added @types/react + @types/react-dom (not in 01-RESEARCH.md install list) — required for TypeScript 7 to resolve React's module shape
+- [Phase ?]: shadcn CLI v4.14.0 replaced the style/baseColor init paradigm with presets (Nova/Vega/.../Custom) + base library (base/radix/aria) — ran init with --base radix and the nova preset, then hand-mapped 01-UI-SPEC.md's exact token values onto the generated CSS variable names (architecture unaffected, only the CLI invocation differed)
+- [Phase ?]: shadcn's official registry replaced form.tsx with field.tsx (framework-agnostic Field/FieldLabel/FieldError primitives) — vendored field.tsx; Plan 03's login/signup forms will compose Field/FieldError with React Hook Form's fieldState.errors directly
+- [Phase ?]: Fixed a Node 22+/jsdom incompatibility (experimental global localStorage shadows window.localStorage in Vitest workers) via vitest.config.ts execArgv — required for theme-provider.test.tsx and every future test touching localStorage (e.g. Plan 03's auth store)
 
 ### Pending Todos
 
@@ -93,6 +97,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T19:14:39.852Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-07-22T23:14:36.138Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
