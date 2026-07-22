@@ -1,7 +1,7 @@
 ---
 phase: 1
 slug: foundations-auth-shell-i18n-design-system
-status: draft
+status: approved
 shadcn_initialized: false
 preset: "custom (style: new-york, baseColor: slate, cssVariables: true) — not yet run; see Design System note"
 created: 2026-07-22
@@ -159,11 +159,11 @@ No third-party registries are declared for this phase. If a future phase propose
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: FLAG (non-blocking — add explicit focal-point statements for auth/shell screens; declare `aria-label`/tooltip fallback for icon-only nav controls before/during planning)
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved 2026-07-22 (gsd-ui-checker) — 5/6 PASS, 1 non-blocking FLAG
