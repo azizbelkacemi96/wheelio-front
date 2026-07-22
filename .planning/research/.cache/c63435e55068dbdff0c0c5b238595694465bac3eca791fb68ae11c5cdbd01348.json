@@ -1,0 +1,1 @@
+{"content":"2025 consensus: separate server state (TanStack Query) from client/UI state (Zustand, now default lightweight choice). Redux Toolkit reserved for very large multi-team apps; Context fine only for rarely-changing values.","source":"web","provider":"websearch","confidence":"LOW","fetched_at":"2026-07-22T09:33:03.810Z","ttl":86400000,"kind":"web"}

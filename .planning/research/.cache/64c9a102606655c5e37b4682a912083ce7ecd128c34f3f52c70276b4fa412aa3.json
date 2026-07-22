@@ -1,0 +1,1 @@
+{"content":"Standard file-upload UX: each file has its own state machine (queued/uploading/done/failed-with-reason), independently retryable. Offline apps persist local upload queue (IndexedDB), flush on reconnect.","source":"web","provider":"websearch","confidence":"LOW","fetched_at":"2026-07-22T09:33:03.671Z","ttl":86400000,"kind":"web"}
