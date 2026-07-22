@@ -31,7 +31,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User's navigation menu and available actions match their role (agent/manager/owner) exactly as returned by the backend's `/me` scope — no independently re-derived role logic.
   4. Owner user can switch between agencies within their organization, and the shell reflects the newly selected agency context everywhere.
   5. User can switch the interface language between French (default) and English at any time, and every screen — including the shared component library and design-token-driven layout, header, and navigation — reflects the choice immediately.
-**Plans**: TBD
+**Plans**: 7 plans
+- [ ] 01-01-PLAN.md — Scaffold Vite+React19+TS app, build/test tooling, DTO types + MSW mocks (Wave 1)
+- [ ] 01-02-PLAN.md — Design-token system (light+dark), ThemeProvider, base component library (Wave 2)
+- [ ] 01-03-PLAN.md — Auth core: permissions port, Zustand store, single-flight refresh client (Wave 2)
+- [ ] 01-04-PLAN.md — i18n runtime: FR-default/EN, CLDR plurals, copy inventory (Wave 2)
+- [ ] 01-05-PLAN.md — Login + signup screens (Wave 3)
+- [ ] 01-06-PLAN.md — Role-aware shell: route guard, nav, agency switcher, top bar (Wave 3)
+- [ ] 01-07-PLAN.md — Placeholder pages + E2E happy path (Wave 4)
 **UI hint**: yes
 
 ### Phase 2: Fleet
@@ -99,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundations — Auth, Shell, i18n, Design System | 0/TBD | Not started | - |
+| 1. Foundations — Auth, Shell, i18n, Design System | 0/7 | Not started | - |
 | 2. Fleet | 0/TBD | Not started | - |
 | 3. Clients | 0/TBD | Not started | - |
 | 4. Contrats de location | 0/TBD | Not started | - |
