@@ -35,10 +35,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Owner user can switch between agencies within their organization, and the shell reflects the newly selected agency context everywhere.
   5. User can switch the interface language between French (default) and English at any time, and every screen — including the shared component library and design-token-driven layout, header, and navigation — reflects the choice immediately.
 
-**Plans**: 7 plans
+**Plans**: 1/7 plans executed
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Scaffold Vite+React19+TS app, build/test tooling, DTO types + MSW mocks (Wave 1)
+- [x] 01-01-PLAN.md — Scaffold Vite+React19+TS app, build/test tooling, DTO types + MSW mocks (Wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -137,7 +137,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundations — Auth, Shell, i18n, Design System | 0/7 | Not started | - |
+| 1. Foundations — Auth, Shell, i18n, Design System | 1/7 | In Progress|  |
 | 2. Fleet | 0/TBD | Not started | - |
 | 3. Clients | 0/TBD | Not started | - |
 | 4. Contrats de location | 0/TBD | Not started | - |

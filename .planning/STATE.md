@@ -3,17 +3,17 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 current_phase: 1
-current_phase_name: Foundations — Auth, Shell, i18n, Design System
+current_phase_name: foundations-auth-shell-i18n-design-system
 status: executing
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-07-22T18:57:49.679Z"
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-07-22T19:14:39.858Z"
 last_activity: 2026-07-22
-last_activity_desc: Roadmap created from requirements + research
+last_activity_desc: Phase 1 execution started
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 7
+  completed_plans: 1
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-22)
 
 **Core value:** Une agence peut gérer tout son cycle de location — véhicule, client, contrat, état des lieux, facture — depuis une seule interface web professionnelle, aussi utilisable au comptoir que sur le terrain.
-**Current focus:** Phase 1 — Foundations (Auth, Shell, i18n, Design System)
+**Current focus:** Phase 1 — foundations-auth-shell-i18n-design-system
 
 ## Current Position
 
-Phase: 1 of 6 (Foundations — Auth, Shell, i18n, Design System)
-Plan: 0 of TBD in current phase
+Phase: 1 (foundations-auth-shell-i18n-design-system) — EXECUTING
+Plan: 2 of 7
 Status: Ready to execute
-Last activity: 2026-07-22 — Roadmap created from requirements + research
+Last activity: 2026-07-22 — Phase 1 execution started
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 14%
 
 ## Performance Metrics
 
@@ -54,6 +54,11 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 01 P01 | 12 | 3 tasks | 23 files |
 
 ## Accumulated Context
 
@@ -66,6 +71,8 @@ Recent decisions affecting current work:
 - [Research]: JWT compromise — access token in memory + refresh token in localStorage, single-flight refresh interceptor, because `wheelio-api` returns both tokens as plain JSON (no httpOnly cookie support); revisit if backend ever adds cookie-based auth.
 - [Roadmap]: PROJECT_MODE=standard (horizontal-layer/complete-feature phases) — each phase ships one fully complete requirement category, not thin vertical MVP slices.
 - [Roadmap]: OPS-01 ("today" overview) folded into Phase 4 (Contrats de location) rather than a standalone phase — it depends on rental data and is too thin (1 requirement) to justify its own phase.
+- [Phase ?]: Added scripts/generate-routes.mjs + npm postinstall/predev/prebuild/pretest hooks to fix a bare-clone build break (routeTree.gen.ts chicken-and-egg with tsc -b)
+- [Phase ?]: Added @types/react + @types/react-dom (not in 01-RESEARCH.md install list) — required for TypeScript 7 to resolve React's module shape
 
 ### Pending Todos
 
@@ -86,6 +93,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T15:50:36.231Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-foundations-auth-shell-i18n-design-system/01-UI-SPEC.md
+Last session: 2026-07-22T19:14:39.852Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None
