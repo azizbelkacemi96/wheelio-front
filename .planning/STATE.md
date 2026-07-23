@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 1
 current_phase_name: foundations-auth-shell-i18n-design-system
-status: executing
-stopped_at: Completed 01-06-PLAN.md
-last_updated: "2026-07-23T11:04:56.660Z"
+status: verifying
+stopped_at: Completed 01-07-PLAN.md (phase 01 complete — 7/7 plans)
+last_updated: "2026-07-23T12:23:31.124Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 1 execution started
 progress:
   total_phases: 1
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -29,10 +29,10 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 1 (foundations-auth-shell-i18n-design-system) — EXECUTING
 Plan: 7 of 7
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-22 — Phase 1 execution started
 
-Progress: [█████████░] 86%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [█████████░] 86%
 | Phase 01 P04 | 25 | 2 tasks | 5 files |
 | Phase 01 P05 | 26 | 2 tasks | 8 files |
 | Phase 01 P06 | 30 | 2 tasks | 18 files |
+| Phase 01 P07 | 45 | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-06]: Toasting 'Session expirée' from beforeLoad silently drops the toast (RouterProvider defers committing __root.tsx's <Toaster/> until the first navigation settles) -- moved the toast to /login's own mount effect via a reason=session-expired search param, and reordered __root.tsx to render <Toaster/> before <Outlet/> (React fires effects depth-first in JSX order).
 - [Phase ?]: [Phase 01-06]: Moved the previously-public src/routes/index.tsx under _authenticated (as _authenticated.index.tsx) -- leaving '/' unguarded would have meant AUTH-02's guard never actually applied to the app's own home route.
 - [Phase ?]: [Phase 01-06]: Added a display-only user field (first_name/last_name/email) to the Zustand auth store, populated alongside setScope -- permissions.ts's Scope deliberately carries no display data (literal port of scope.go), so the user-menu name requirement needed a home elsewhere.
+- [Phase ?]: [Phase 01-07]: Added routeFileIgnorePattern '\.test\.' to BOTH scripts/generate-routes.mjs and vite.config.ts's tanstackRouter plugin — the router generator has no default ignore for .test. files, so co-located vitest files inside src/routes would otherwise be generated as routes.
+- [Phase ?]: [Phase 01-07]: Phase E2E ran in MOCKED API mode (plan-sanctioned fallback) — wheelio-api unreachable at execution time, and owner+agent role assertions need deterministic fixtures; Playwright page.route mocks reuse src/test/fixtures/scope.ts with CORS headers + OPTIONS preflight handling (fulfilled cross-origin responses still undergo browser CORS checks).
 
 ### Pending Todos
 
@@ -110,6 +113,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-23T11:04:48.332Z
-Stopped at: Completed 01-06-PLAN.md
+Last session: 2026-07-23T12:23:31.118Z
+Stopped at: Completed 01-07-PLAN.md (phase 01 complete — 7/7 plans)
 Resume file: None
