@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: foundations-auth-shell-i18n-design-system
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-07-23T08:42:12.970Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-07-23T09:06:06.572Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 1 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 7
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 1 (foundations-auth-shell-i18n-design-system) — EXECUTING
-Plan: 4 of 7
+Plan: 5 of 7
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 1 execution started
 
-Progress: [████░░░░░░] 43%
+Progress: [██████░░░░] 57%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [████░░░░░░] 43%
 | Phase 01 P01 | 12 | 3 tasks | 23 files |
 | Phase 01 P02 | 55 | 2 tasks | 19 files |
 | Phase 01 P03 | 21 | 3 tasks | 6 files |
+| Phase 01 P04 | 25 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Fixed a Node 22+/jsdom incompatibility (experimental global localStorage shadows window.localStorage in Vitest workers) via vitest.config.ts execArgv — required for theme-provider.test.tsx and every future test touching localStorage (e.g. Plan 03's auth store)
 - [Phase ?]: ky installed is v2.0.2 (major version ahead of 01-RESEARCH.md's v1-style Pattern 1 sample) — client.ts rewritten against ky v2's confirmed API: baseUrl replaces prefixUrl, hooks receive a destructured {request,response,retryCount} object, and ky.retry({request,code}) is used for the single forced retry (bypasses the default retry methods allow-list, confirmed via ky source, so POST/PUT also get the retry).
 - [Phase ?]: currentAgencyId is not persisted this phase (flagged assumption from 01-RESEARCH.md A1/OQ1) — resets to null on reload; callers default to the org's first agency.
+- [Phase ?]: [Phase 01-04]: Restricted i18next-browser-languagedetector's detection.order to ['localStorage'] only (excluding navigator/cookie/querystring/htmlTag) so FR is a true hard default -- the default detector order would otherwise let the browser's Accept-Language override fallbackLng 'fr' on a fresh session with nothing stored.
+- [Phase ?]: [Phase 01-04]: EN admin-section nav labels (fiscal identity/agency management/cross-agency billing) are not verbatim-specified in 01-UI-SPEC.md; used CONTEXT.md's English paraphrase directly as the EN copy -- flagged for confirmation.
 
 ### Pending Todos
 
@@ -100,6 +103,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-23T08:42:12.957Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-07-23T09:06:06.567Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
