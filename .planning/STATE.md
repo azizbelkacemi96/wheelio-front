@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: foundations-auth-shell-i18n-design-system
 status: executing
-stopped_at: Completed 01-05-PLAN.md
-last_updated: "2026-07-23T09:36:42.835Z"
+stopped_at: Completed 01-06-PLAN.md
+last_updated: "2026-07-23T11:04:56.660Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 1 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 1 (foundations-auth-shell-i18n-design-system) — EXECUTING
-Plan: 6 of 7
+Plan: 7 of 7
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 1 execution started
 
-Progress: [███████░░░] 71%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [███████░░░] 71%
 | Phase 01 P03 | 21 | 3 tasks | 6 files |
 | Phase 01 P04 | 25 | 2 tasks | 5 files |
 | Phase 01 P05 | 26 | 2 tasks | 8 files |
+| Phase 01 P06 | 30 | 2 tasks | 18 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-04]: EN admin-section nav labels (fiscal identity/agency management/cross-agency billing) are not verbatim-specified in 01-UI-SPEC.md; used CONTEXT.md's English paraphrase directly as the EN copy -- flagged for confirmation.
 - [Phase ?]: [Phase 01-05]: login()/signup() use a bare ky request instead of the shared refresh-interceptor client -- routing an unauthenticated 401 credentials failure through the refresh hook would misfire (unrelated token refresh or a confusing 'no refresh token' error instead of the real login failure).
 - [Phase ?]: [Phase 01-05]: Extended Plan 04's i18n copy inventory with field-label/placeholder/cross-link/generic-error auth.* keys -- the inventory only covered CTA + error strings, not the actual form labels this plan's own 'no bare JSX literals' prohibition requires.
+- [Phase ?]: [Phase 01-06]: Toasting 'Session expirée' from beforeLoad silently drops the toast (RouterProvider defers committing __root.tsx's <Toaster/> until the first navigation settles) -- moved the toast to /login's own mount effect via a reason=session-expired search param, and reordered __root.tsx to render <Toaster/> before <Outlet/> (React fires effects depth-first in JSX order).
+- [Phase ?]: [Phase 01-06]: Moved the previously-public src/routes/index.tsx under _authenticated (as _authenticated.index.tsx) -- leaving '/' unguarded would have meant AUTH-02's guard never actually applied to the app's own home route.
+- [Phase ?]: [Phase 01-06]: Added a display-only user field (first_name/last_name/email) to the Zustand auth store, populated alongside setScope -- permissions.ts's Scope deliberately carries no display data (literal port of scope.go), so the user-menu name requirement needed a home elsewhere.
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-23T09:36:32.334Z
-Stopped at: Completed 01-05-PLAN.md
+Last session: 2026-07-23T11:04:48.332Z
+Stopped at: Completed 01-06-PLAN.md
 Resume file: None
