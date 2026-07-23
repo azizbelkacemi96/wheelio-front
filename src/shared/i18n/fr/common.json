@@ -21,13 +21,27 @@
   },
   "shell": {
     "meError": "Impossible de charger votre profil.",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "logout": "Se déconnecter",
+    "userMenu": "Menu utilisateur",
+    "agencySwitcher": "Changer d'agence",
+    "languageSwitcher": "Changer de langue",
+    "openNav": "Ouvrir le menu de navigation"
+  },
+  "roles": {
+    "owner": "Propriétaire",
+    "admin": "Administrateur",
+    "member": "Membre",
+    "manager": "Gérant",
+    "agent": "Agent",
+    "viewer": "Lecteur"
   },
   "emptyState": {
     "heading": "Bientôt disponible",
     "body": "Cette fonctionnalité arrive dans une prochaine mise à jour de Wheelio."
   },
   "nav": {
+    "mainLabel": "Navigation principale",
     "today": "Aujourd'hui",
     "vehicles": "Véhicules",
     "customers": "Clients",

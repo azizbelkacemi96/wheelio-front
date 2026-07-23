@@ -21,13 +21,27 @@
   },
   "shell": {
     "meError": "Couldn't load your profile.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "logout": "Log out",
+    "userMenu": "User menu",
+    "agencySwitcher": "Switch agency",
+    "languageSwitcher": "Switch language",
+    "openNav": "Open navigation menu"
+  },
+  "roles": {
+    "owner": "Owner",
+    "admin": "Admin",
+    "member": "Member",
+    "manager": "Manager",
+    "agent": "Agent",
+    "viewer": "Viewer"
   },
   "emptyState": {
     "heading": "Coming soon",
     "body": "This feature is coming in a future Wheelio update."
   },
   "nav": {
+    "mainLabel": "Main navigation",
     "today": "Today",
     "vehicles": "Vehicles",
     "customers": "Customers",

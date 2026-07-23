@@ -22,8 +22,13 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { AgencyResponse } from "@/types/identity";
+import type { AgencyResponse, UserResponse } from "@/types/identity";
 import type { Scope } from "./permissions";
+
+/** Display-only slice of `/me`'s user — NOT part of Scope (permissions.ts
+ * stays a literal, display-free port of scope.go's authorization model).
+ * Populated once per session by `shared/auth/session.ts`'s bootstrap. */
+export type DisplayUser = Pick<UserResponse, "first_name" | "last_name" | "email">;
 
 export interface SetTokensInput {
   accessToken: string;
@@ -40,12 +45,16 @@ export interface AuthState {
   refreshToken: string | null;
   /** Refetched via `/me` on boot/refresh; never persisted. */
   scope: Scope | null;
+  /** Display-only (name/email) slice of the same `/me` response; never
+   * persisted, never consulted for authorization (see DisplayUser above). */
+  user: DisplayUser | null;
   /** Owner-only, from `GET /agencies`; never persisted. */
   agencies: AgencyResponse[];
   currentAgencyId: string | null;
 
   setTokens: (tokens: SetTokensInput) => void;
   setScope: (scope: Scope | null) => void;
+  setUser: (user: DisplayUser | null) => void;
   setAgencies: (agencies: AgencyResponse[]) => void;
   /** Pure client state change — no network call (D-11 groundwork). */
   setCurrentAgency: (id: string | null) => void;
@@ -59,6 +68,7 @@ export const useAuthStore = create<AuthState>()(
       accessTokenExpiresAt: null,
       refreshToken: null,
       scope: null,
+      user: null,
       agencies: [],
       currentAgencyId: null,
 
@@ -69,6 +79,7 @@ export const useAuthStore = create<AuthState>()(
           accessTokenExpiresAt: expiresAt,
         }),
       setScope: (scope) => set({ scope }),
+      setUser: (user) => set({ user }),
       setAgencies: (agencies) => set({ agencies }),
       setCurrentAgency: (id) => set({ currentAgencyId: id }),
       clearSession: () =>
@@ -77,6 +88,7 @@ export const useAuthStore = create<AuthState>()(
           accessTokenExpiresAt: null,
           refreshToken: null,
           scope: null,
+          user: null,
         }),
     }),
     {
