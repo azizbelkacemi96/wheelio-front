@@ -12,6 +12,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // e2e/ specs are Playwright tests — importing @playwright/test under
+    // Vitest throws "did not expect test.describe() to be called here".
+    exclude: ["e2e/**", "node_modules/**", "dist/**"],
     setupFiles: ["src/test/setup.ts"],
     reporters: "default",
     // Node 22+ ships an experimental global `localStorage`/`sessionStorage`
