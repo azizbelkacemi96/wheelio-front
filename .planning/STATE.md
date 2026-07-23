@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: foundations-auth-shell-i18n-design-system
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-07-22T23:14:36.143Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-07-23T08:42:12.970Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 1 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 7
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 1 (foundations-auth-shell-i18n-design-system) — EXECUTING
-Plan: 3 of 7
+Plan: 4 of 7
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 1 execution started
 
-Progress: [███░░░░░░░] 29%
+Progress: [████░░░░░░] 43%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [███░░░░░░░] 29%
 |------|----------|-------|-------|
 | Phase 01 P01 | 12 | 3 tasks | 23 files |
 | Phase 01 P02 | 55 | 2 tasks | 19 files |
+| Phase 01 P03 | 21 | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase ?]: shadcn CLI v4.14.0 replaced the style/baseColor init paradigm with presets (Nova/Vega/.../Custom) + base library (base/radix/aria) — ran init with --base radix and the nova preset, then hand-mapped 01-UI-SPEC.md's exact token values onto the generated CSS variable names (architecture unaffected, only the CLI invocation differed)
 - [Phase ?]: shadcn's official registry replaced form.tsx with field.tsx (framework-agnostic Field/FieldLabel/FieldError primitives) — vendored field.tsx; Plan 03's login/signup forms will compose Field/FieldError with React Hook Form's fieldState.errors directly
 - [Phase ?]: Fixed a Node 22+/jsdom incompatibility (experimental global localStorage shadows window.localStorage in Vitest workers) via vitest.config.ts execArgv — required for theme-provider.test.tsx and every future test touching localStorage (e.g. Plan 03's auth store)
+- [Phase ?]: ky installed is v2.0.2 (major version ahead of 01-RESEARCH.md's v1-style Pattern 1 sample) — client.ts rewritten against ky v2's confirmed API: baseUrl replaces prefixUrl, hooks receive a destructured {request,response,retryCount} object, and ky.retry({request,code}) is used for the single forced retry (bypasses the default retry methods allow-list, confirmed via ky source, so POST/PUT also get the retry).
+- [Phase ?]: currentAgencyId is not persisted this phase (flagged assumption from 01-RESEARCH.md A1/OQ1) — resets to null on reload; callers default to the org's first agency.
 
 ### Pending Todos
 
@@ -97,6 +100,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T23:14:36.138Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-07-23T08:42:12.957Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None

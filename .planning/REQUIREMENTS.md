@@ -10,7 +10,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Auth & Foundations
 
 - [x] **AUTH-01**: User can log in with email/password (JWT) and stays logged in across sessions via transparent (single-flight) token refresh
-- [ ] **AUTH-02**: A session expiry never silently destroys in-progress work (especially an in-progress inspection) — refresh happens invisibly before any hard redirect
+- [x] **AUTH-02**: A session expiry never silently destroys in-progress work (especially an in-progress inspection) — refresh happens invisibly before any hard redirect
 - [x] **AUTH-03**: Navigation and available actions reflect the user's role (agent / manager / owner) driven entirely by the backend's `/me` scope, never re-derived independently
 - [ ] **AUTH-04**: Owner can switch between agencies within their organization
 - [ ] **AUTH-05**: Interface is available in French (default) and English, switchable
@@ -91,7 +91,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | AUTH-01 | Phase 1 | Complete |
-| AUTH-02 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Pending |
 | AUTH-05 | Phase 1 | Pending |

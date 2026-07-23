@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Owner user can switch between agencies within their organization, and the shell reflects the newly selected agency context everywhere.
   5. User can switch the interface language between French (default) and English at any time, and every screen — including the shared component library and design-token-driven layout, header, and navigation — reflects the choice immediately.
 
-**Plans**: 2/7 plans executed
+**Plans**: 3/7 plans executed
 **Wave 1**
 
 - [x] 01-01-PLAN.md — Scaffold Vite+React19+TS app, build/test tooling, DTO types + MSW mocks (Wave 1)
@@ -43,7 +43,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Wave 2** *(blocked on Wave 1 completion)*
 
 - [x] 01-02-PLAN.md — Design-token system (light+dark), ThemeProvider, base component library (Wave 2)
-- [ ] 01-03-PLAN.md — Auth core: permissions port, Zustand store, single-flight refresh client (Wave 2)
+- [x] 01-03-PLAN.md — Auth core: permissions port, Zustand store, single-flight refresh client (Wave 2)
 - [ ] 01-04-PLAN.md — i18n runtime: FR-default/EN, CLDR plurals, copy inventory (Wave 2)
 
 **Wave 3** *(blocked on Wave 2 completion)*
@@ -137,7 +137,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundations — Auth, Shell, i18n, Design System | 2/7 | In Progress|  |
+| 1. Foundations — Auth, Shell, i18n, Design System | 3/7 | In Progress|  |
 | 2. Fleet | 0/TBD | Not started | - |
 | 3. Clients | 0/TBD | Not started | - |
 | 4. Contrats de location | 0/TBD | Not started | - |
