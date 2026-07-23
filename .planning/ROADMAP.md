@@ -13,7 +13,7 @@ Wheelio Front is a greenfield SPA that exposes `wheelio-api`'s golden path — v
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundations — Auth, Shell, i18n, Design System** - Login with transparent session refresh, role-aware navigation, agency switching, FR/EN i18n, and a consistent design-token/component library
+- [x] **Phase 1: Foundations — Auth, Shell, i18n, Design System** - Login with transparent session refresh, role-aware navigation, agency switching, FR/EN i18n, and a consistent design-token/component library
 - [ ] **Phase 2: Fleet** - Vehicle list with live status and vehicle detail view
 - [ ] **Phase 3: Clients** - Individual/company customer creation, designated drivers, and search
 - [ ] **Phase 4: Contrats de location** - Full reservation → activation → closure → cancellation lifecycle as a guided wizard, plus a "today" overview
@@ -67,7 +67,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. User can view a list of all vehicles showing live status (available, rented, in maintenance, etc.).
   2. User can open a vehicle's detail page and see its plate, brand/model, mileage, fuel level, and current contract if one exists.
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+
+- [ ] 02-01-PLAN.md — /v1 base-URL fix, fleet/rental DTO mirrors, MSW fleet handlers + fixtures, query hooks + StatusBadge + i18n (Wave 1)
+- [ ] 02-02-PLAN.md — Vehicle list screen: dense table/cards, status filter + search, UI states, placeholder route replacement (Wave 2)
+- [ ] 02-03-PLAN.md — Vehicle detail screen: vehicle card + current-contract summary, $vehicleId route, phase gate (Wave 3)
+
 **UI hint**: yes
 
 ### Phase 3: Clients
@@ -137,8 +144,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundations — Auth, Shell, i18n, Design System | 7/7 | In Progress|  |
-| 2. Fleet | 0/TBD | Not started | - |
+| 1. Foundations — Auth, Shell, i18n, Design System | 7/7 | Complete (2 visual backstop checks deferred to user's final review, see 01-VERIFICATION.md) | 2026-07-23 |
+| 2. Fleet | 0/3 | Planned | - |
 | 3. Clients | 0/TBD | Not started | - |
 | 4. Contrats de location | 0/TBD | Not started | - |
 | 5. État des lieux | 0/TBD | Not started | - |
