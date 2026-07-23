@@ -4,7 +4,20 @@
     "signupCta": "Create account",
     "loginError": "Incorrect email or password.",
     "signupEmailInUse": "This email is already in use.",
-    "sessionExpired": "Session expired — please sign in again."
+    "sessionExpired": "Session expired — please sign in again.",
+    "genericError": "Something went wrong. Please try again.",
+    "loginTitle": "Sign in",
+    "signupTitle": "Create an account",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "organizationNameLabel": "Organization name",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "emailPlaceholder": "you@agency.dz",
+    "noAccountPrompt": "Don't have an account?",
+    "goToSignup": "Create an account",
+    "hasAccountPrompt": "Already have an account?",
+    "goToLogin": "Sign in"
   },
   "shell": {
     "meError": "Couldn't load your profile.",

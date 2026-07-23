@@ -4,7 +4,20 @@
     "signupCta": "Créer mon compte",
     "loginError": "Email ou mot de passe incorrect.",
     "signupEmailInUse": "Cet email est déjà utilisé.",
-    "sessionExpired": "Session expirée — veuillez vous reconnecter."
+    "sessionExpired": "Session expirée — veuillez vous reconnecter.",
+    "genericError": "Une erreur est survenue. Veuillez réessayer.",
+    "loginTitle": "Connexion",
+    "signupTitle": "Créer un compte",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "organizationNameLabel": "Nom de l'organisation",
+    "firstNameLabel": "Prénom",
+    "lastNameLabel": "Nom",
+    "emailPlaceholder": "vous@agence.dz",
+    "noAccountPrompt": "Pas encore de compte ?",
+    "goToSignup": "Créer un compte",
+    "hasAccountPrompt": "Déjà un compte ?",
+    "goToLogin": "Se connecter"
   },
   "shell": {
     "meError": "Impossible de charger votre profil.",
