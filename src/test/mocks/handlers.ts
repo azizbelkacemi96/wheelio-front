@@ -4,7 +4,10 @@ import type {
   AuthResponse,
   MeResponse,
 } from "@/types/identity";
+import type { VehicleResponse, VehicleStatus } from "@/types/fleet";
+import type { ContractResponse, ContractStatus } from "@/types/rental";
 import { ownerFixture } from "../fixtures/scope";
+import { contractFixtures, vehicleFixtures } from "../fixtures/fleet";
 
 /**
  * MSW handlers mirroring wheelio-api's confirmed endpoint shapes (see
@@ -30,6 +33,22 @@ function authResponseFor(me: MeResponse): AuthResponse {
 }
 
 const defaultAgencies: AgencyResponse[] = ownerFixture.agencies;
+
+// Closed enum sets mirroring the backend's oneof validations
+// (fleet_dto.go `oneof=available rented maintenance retired`,
+// rental_handler.go contract-status parsing) — an out-of-set ?status is 400.
+const VEHICLE_STATUSES: readonly VehicleStatus[] = [
+  "available",
+  "rented",
+  "maintenance",
+  "retired",
+];
+const CONTRACT_STATUSES: readonly ContractStatus[] = [
+  "reserved",
+  "active",
+  "closed",
+  "cancelled",
+];
 
 export const handlers = [
   http.post(`${API_URL}/auth/login`, () => {
@@ -67,4 +86,60 @@ export const handlers = [
   http.get(`${API_URL}/agencies`, () => {
     return HttpResponse.json<AgencyResponse[]>(defaultAgencies, { status: 200 });
   }),
+
+  // ---- Fleet (Phase 2) ----
+  // MSW v2 matches paths only, never query strings (02-RESEARCH.md Pitfall
+  // 7) — each handler parses request.url's searchParams itself.
+
+  http.get(`${API_URL}/vehicles`, ({ request }) => {
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get("status");
+    const agencyId = searchParams.get("agency_id");
+
+    if (status !== null && !VEHICLE_STATUSES.includes(status as VehicleStatus)) {
+      // Mirrors vehicle_handler.go's 400 on an out-of-enum status value.
+      return HttpResponse.json({ message: "invalid status" }, { status: 400 });
+    }
+
+    let vehicles = vehicleFixtures;
+    if (agencyId !== null) {
+      vehicles = vehicles.filter((v) => v.agency_id === agencyId);
+    }
+    if (status !== null) {
+      vehicles = vehicles.filter((v) => v.status === status);
+    }
+    return HttpResponse.json<VehicleResponse[]>(vehicles, { status: 200 });
+  }),
+
+  http.get(`${API_URL}/vehicles/:vehicleId`, ({ params }) => {
+    const vehicle = vehicleFixtures.find((v) => v.id === params.vehicleId);
+    if (!vehicle) {
+      // Backend returns 404 for both nonexistent AND out-of-scope vehicles.
+      return HttpResponse.json({ message: "vehicle not found" }, { status: 404 });
+    }
+    return HttpResponse.json<VehicleResponse>(vehicle, { status: 200 });
+  }),
+
+  http.get(
+    `${API_URL}/vehicles/:vehicleId/rental-contracts`,
+    ({ request, params }) => {
+      const { searchParams } = new URL(request.url);
+      const status = searchParams.get("status");
+
+      if (
+        status !== null &&
+        !CONTRACT_STATUSES.includes(status as ContractStatus)
+      ) {
+        return HttpResponse.json({ message: "invalid status" }, { status: 400 });
+      }
+
+      let contracts = contractFixtures.filter(
+        (c) => c.vehicle_id === params.vehicleId,
+      );
+      if (status !== null) {
+        contracts = contracts.filter((c) => c.status === status);
+      }
+      return HttpResponse.json<ContractResponse[]>(contracts, { status: 200 });
+    },
+  ),
 ];
