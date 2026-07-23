@@ -1,0 +1,31 @@
+{
+  "auth": {
+    "loginCta": "Sign in",
+    "signupCta": "Create account",
+    "loginError": "Incorrect email or password.",
+    "signupEmailInUse": "This email is already in use.",
+    "sessionExpired": "Session expired — please sign in again."
+  },
+  "shell": {
+    "meError": "Couldn't load your profile.",
+    "retry": "Retry"
+  },
+  "emptyState": {
+    "heading": "Coming soon",
+    "body": "This feature is coming in a future Wheelio update."
+  },
+  "nav": {
+    "today": "Today",
+    "vehicles": "Vehicles",
+    "customers": "Customers",
+    "contracts": "Contracts",
+    "inspections": "Inspections",
+    "admin": {
+      "fiscalIdentity": "Company fiscal identity",
+      "agencies": "Agency management",
+      "billing": "Cross-agency billing"
+    }
+  },
+  "vehicleCount_one": "{{count}} vehicle",
+  "vehicleCount_other": "{{count}} vehicles"
+}
