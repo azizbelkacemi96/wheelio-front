@@ -1,17 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAuthStore } from "./store";
 
-const INITIAL_STATE = {
-  accessToken: null,
-  accessTokenExpiresAt: null,
-  refreshToken: null,
-  scope: null,
-  agencies: [],
-  currentAgencyId: null,
-} as const;
-
 function resetStore() {
-  useAuthStore.setState(INITIAL_STATE);
+  useAuthStore.setState({
+    accessToken: null,
+    accessTokenExpiresAt: null,
+    refreshToken: null,
+    scope: null,
+    agencies: [],
+    currentAgencyId: null,
+  });
   localStorage.clear();
 }
 
