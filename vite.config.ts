@@ -12,6 +12,10 @@ export default defineConfig({
       autoCodeSplitting: true,
       routesDirectory: "./src/routes",
       generatedRouteTree: "./src/routeTree.gen.ts",
+      // Co-located vitest files live inside src/routes — without this the
+      // generator would treat them as route files. MUST stay in sync with
+      // scripts/generate-routes.mjs.
+      routeFileIgnorePattern: "\\.test\\.",
     }),
     react(),
     tailwindcss(),

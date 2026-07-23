@@ -7,15 +7,13 @@
  * D-09: the 3 admin sections are rendered ONLY when `isOrgAdmin(scope)` is
  * true, and are fully absent (not disabled/greyed) otherwise.
  *
- * Only "Aujourd'hui" has a real route this phase (mapped to "/") — the rest
- * are 01-07's placeholder-route scope; clicking them surfaces the
- * "Bientôt disponible" empty-state copy via a toast rather than navigating
- * to a route that doesn't exist yet (see 01-06-SUMMARY.md Deviations).
+ * Every item links to a real route since 01-07's placeholder routes exist —
+ * the 01-06 era "toast instead of navigating" fallback for route-less items
+ * is gone (no dead links, per 01-07's must-have truths).
  */
 import type { ComponentType } from "react";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import {
   Building2,
   Car,
@@ -29,26 +27,45 @@ import {
 import { cn } from "@/lib/utils";
 import { isOrgAdmin, type Scope } from "@/shared/auth/permissions";
 
+type NavPath =
+  | "/"
+  | "/vehicules"
+  | "/clients"
+  | "/contrats"
+  | "/etats-des-lieux"
+  | "/admin/identite-fiscale"
+  | "/admin/agences"
+  | "/admin/facturation";
+
 interface NavItemDef {
   key: string;
   labelKey: string;
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
-  /** Only set for routes that exist this phase. */
-  to?: "/";
+  to: NavPath;
 }
 
 const BASE_NAV_ITEMS: NavItemDef[] = [
   { key: "today", labelKey: "nav.today", icon: Home, to: "/" },
-  { key: "vehicles", labelKey: "nav.vehicles", icon: Car },
-  { key: "customers", labelKey: "nav.customers", icon: Users },
-  { key: "contracts", labelKey: "nav.contracts", icon: FileText },
-  { key: "inspections", labelKey: "nav.inspections", icon: ClipboardCheck },
+  { key: "vehicles", labelKey: "nav.vehicles", icon: Car, to: "/vehicules" },
+  { key: "customers", labelKey: "nav.customers", icon: Users, to: "/clients" },
+  { key: "contracts", labelKey: "nav.contracts", icon: FileText, to: "/contrats" },
+  {
+    key: "inspections",
+    labelKey: "nav.inspections",
+    icon: ClipboardCheck,
+    to: "/etats-des-lieux",
+  },
 ];
 
 const ADMIN_NAV_ITEMS: NavItemDef[] = [
-  { key: "fiscalIdentity", labelKey: "nav.admin.fiscalIdentity", icon: Landmark },
-  { key: "agencies", labelKey: "nav.admin.agencies", icon: Building2 },
-  { key: "billing", labelKey: "nav.admin.billing", icon: Receipt },
+  {
+    key: "fiscalIdentity",
+    labelKey: "nav.admin.fiscalIdentity",
+    icon: Landmark,
+    to: "/admin/identite-fiscale",
+  },
+  { key: "agencies", labelKey: "nav.admin.agencies", icon: Building2, to: "/admin/agences" },
+  { key: "billing", labelKey: "nav.admin.billing", icon: Receipt, to: "/admin/facturation" },
 ];
 
 const itemClassName = (isActive: boolean) =>
@@ -61,29 +78,13 @@ function NavLinkItem({ item, onNavigate }: { item: NavItemDef; onNavigate?: () =
   const { t } = useTranslation();
   const matchRoute = useMatchRoute();
   const Icon = item.icon;
-
-  if (item.to) {
-    const isActive = !!matchRoute({ to: item.to });
-    return (
-      <Link to={item.to} className={itemClassName(isActive)} onClick={onNavigate}>
-        <Icon className="size-4 shrink-0" aria-hidden={true} />
-        <span className="truncate">{t(item.labelKey)}</span>
-      </Link>
-    );
-  }
+  const isActive = !!matchRoute({ to: item.to });
 
   return (
-    <button
-      type="button"
-      className={itemClassName(false)}
-      onClick={() => {
-        toast(t("emptyState.heading"), { description: t("emptyState.body") });
-        onNavigate?.();
-      }}
-    >
+    <Link to={item.to} className={itemClassName(isActive)} onClick={onNavigate}>
       <Icon className="size-4 shrink-0" aria-hidden={true} />
       <span className="truncate">{t(item.labelKey)}</span>
-    </button>
+    </Link>
   );
 }
 

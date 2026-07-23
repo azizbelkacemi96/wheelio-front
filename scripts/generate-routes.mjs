@@ -13,6 +13,11 @@ const config = getConfig(
     routesDirectory: "./src/routes",
     generatedRouteTree: "./src/routeTree.gen.ts",
     disableLogging: true,
+    // Co-located vitest files (e.g. _authenticated/placeholders.test.tsx)
+    // live inside src/routes; the generator has NO default ignore for
+    // ".test." files, so without this it would treat them as route files.
+    // MUST stay in sync with the tanstackRouter() plugin in vite.config.ts.
+    routeFileIgnorePattern: "\\.test\\.",
   },
   root,
 );
