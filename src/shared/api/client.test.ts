@@ -4,7 +4,7 @@ import { useAuthStore } from "@/shared/auth/store";
 import { server } from "@/test/mocks/server";
 import { api, refreshAccessToken } from "./client";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 const FAKE_USER = {
   id: "44444444-4444-4444-8444-444444444444",

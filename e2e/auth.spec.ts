@@ -22,7 +22,7 @@ import {
 
 // Must match the app's own fallback in src/shared/api/client.ts — the build
 // under test was produced without VITE_API_URL set.
-const API_URL = process.env.VITE_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 // Dummy fixture credentials — the mocked API accepts anything (T-01-e2e-secret).
 const E2E_EMAIL = process.env.E2E_EMAIL ?? "owner@wheelio.dz";

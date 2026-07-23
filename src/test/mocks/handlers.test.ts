@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { handlers } from "./handlers";
 import { agentFixture, managerFixture, ownerFixture } from "../fixtures/scope";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 describe("MSW handlers + Scope fixtures (Wave 0 test-data layer)", () => {
   it("registers a handler for every confirmed wheelio-api endpoint", () => {

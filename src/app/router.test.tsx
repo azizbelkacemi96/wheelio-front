@@ -20,7 +20,7 @@ import { resetSession, ensureSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/shared/auth/store";
 import { TooltipProvider } from "@/shared/ui/tooltip";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 function resetAuthStore() {
   useAuthStore.setState({

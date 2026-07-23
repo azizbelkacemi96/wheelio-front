@@ -18,7 +18,13 @@
  * ky v2 API note: the installed `ky` (2.0.2) is a major version ahead of
  * 01-RESEARCH.md's Pattern 1 code sample (written against ky v1's
  * positional-argument hooks and `prefixUrl` option). ky v2 renamed
- * `prefixUrl` -> `baseUrl`, hooks now receive a single destructured state
+ * `prefixUrl` -> `prefix` (concatenation with slash normalization at the
+ * join boundary). We use `prefix`, NOT ky v2's `baseUrl`: `baseUrl` does
+ * standard `new URL(input, base)` resolution, which silently DROPS the
+ * `/v1` path segment of `http://localhost:8080/v1` when joining a relative
+ * input like `"vehicles"` (a base without a trailing slash resolves
+ * relative inputs against its parent). `prefix` always yields
+ * `{API_URL}/{input}`. Hooks receive a single destructured state
  * object (`{request, response, retryCount}`), and forcing a single retry
  * from `afterResponse` is done via the built-in `ky.retry({request, code})`
  * — which explicitly bypasses ky's default retry `methods` allow-list for
@@ -34,7 +40,7 @@ import ky, { isHTTPError } from "ky";
 import { useAuthStore } from "@/shared/auth/store";
 import type { AuthResponse } from "@/types/identity";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 /** Thrown by `refreshAccessToken` when there is no persisted refresh token
  * at all — callers (session bootstrap) treat it as "genuinely logged out",
@@ -83,7 +89,7 @@ async function doRefresh(): Promise<string> {
     const res = await ky
       .post("auth/refresh", {
         json: { refresh_token: refreshToken },
-        baseUrl: API_URL,
+        prefix: API_URL,
       })
       .json<AuthResponse>();
 
@@ -103,7 +109,7 @@ async function doRefresh(): Promise<string> {
 }
 
 export const api = ky.create({
-  baseUrl: API_URL,
+  prefix: API_URL,
   hooks: {
     beforeRequest: [
       ({ request }) => {

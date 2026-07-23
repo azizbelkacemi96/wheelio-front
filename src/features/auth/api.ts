@@ -23,17 +23,17 @@ import { api } from "@/shared/api/client";
 import type { AuthResponse } from "@/types/identity";
 import type { LoginInput, SignupInput } from "./schemas";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 export async function login(input: LoginInput): Promise<AuthResponse> {
   return ky
-    .post("auth/login", { json: input, baseUrl: API_URL })
+    .post("auth/login", { json: input, prefix: API_URL })
     .json<AuthResponse>();
 }
 
 export async function signup(input: SignupInput): Promise<AuthResponse> {
   return ky
-    .post("auth/signup", { json: input, baseUrl: API_URL })
+    .post("auth/signup", { json: input, prefix: API_URL })
     .json<AuthResponse>();
 }
 
