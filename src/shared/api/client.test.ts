@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { useAuthStore } from "@/shared/auth/store";
 import { server } from "@/test/mocks/server";
-import { api } from "./client";
+import { api, refreshAccessToken } from "./client";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 
@@ -119,5 +119,43 @@ describe("api client — single-flight refresh interceptor", () => {
     expect(refreshCalls).toBe(1);
     expect(useAuthStore.getState().accessToken).toBeNull();
     expect(useAuthStore.getState().refreshToken).toBeNull();
+  });
+
+  it("refreshAccessToken itself is single-flight: concurrent DIRECT callers share one POST /auth/refresh (WR-01)", async () => {
+    let refreshCalls = 0;
+
+    server.use(
+      http.post(`${API_URL}/auth/refresh`, () => {
+        refreshCalls += 1;
+        return HttpResponse.json({
+          token_type: "Bearer",
+          access_token: "fresh-access-token",
+          access_token_expires_at: "2026-01-01T01:00:00.000Z",
+          refresh_token: "rotated-refresh-token",
+          user: FAKE_USER,
+          organization: FAKE_ORG,
+        });
+      }),
+    );
+
+    // Session bootstrap and the 401 interceptor can both need a refresh at
+    // the same moment — with rotating tokens, two parallel POSTs would trip
+    // the API's theft detection and revoke the whole session.
+    const [a, b] = await Promise.all([refreshAccessToken(), refreshAccessToken()]);
+
+    expect(refreshCalls).toBe(1);
+    expect(a).toBe("fresh-access-token");
+    expect(b).toBe("fresh-access-token");
+  });
+
+  it("a transient refresh failure (network/5xx) rejects WITHOUT clearing the session (WR-02)", async () => {
+    server.use(
+      http.post(`${API_URL}/auth/refresh`, () => new HttpResponse(null, { status: 503 })),
+    );
+
+    await expect(refreshAccessToken()).rejects.toThrow();
+
+    // Only an explicit 401/403 rejection of the token clears the session.
+    expect(useAuthStore.getState().refreshToken).toBe("valid-refresh-token");
   });
 });

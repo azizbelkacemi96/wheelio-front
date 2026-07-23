@@ -20,15 +20,19 @@
  *    unavailable" and render a retry affordance instead of bouncing an
  *    authenticated user back out to the login screen.
  *
- * Memoised for the session: once a Scope is resolved it lives on the auth
- * store (`setScope`) and every subsequent call returns it with zero network
- * cost; concurrent callers during the bootstrap window share the SAME
- * in-flight promise instead of firing duplicate `/me` requests (T-01-refresh
- * — this is what lets `_authenticated`'s beforeLoad and AppShell's own
- * mount-time check both call `ensureSession()` without ever double-fetching
- * on the happy path).
+ * The durable success memo is the Scope on the auth store (`setScope`) —
+ * checked first on every call, zero network cost once resolved. The
+ * module-level promise below ONLY deduplicates the in-flight bootstrap
+ * window (concurrent `beforeLoad` + AppShell mount share the SAME promise
+ * instead of double-fetching, T-01-refresh) and is cleared as soon as the
+ * attempt settles, success or failure. It must NEVER cache an outcome
+ * across attempts: a cached resolved-`null` would replay "logged out"
+ * forever after a subsequent successful login (login sets tokens but not
+ * scope — only bootstrap's `/me` does), and a cached resolved-Scope would
+ * let `ensureSession()` resurrect a session after logout cleared the store.
  */
-import { api, refreshAccessToken } from "@/shared/api/client";
+import { api, MissingRefreshTokenError, refreshAccessToken } from "@/shared/api/client";
+import { isHTTPError } from "ky";
 import type { MeResponse } from "@/types/identity";
 import { scopeFromMe, type Scope } from "./permissions";
 import { useAuthStore } from "./store";
@@ -36,11 +40,12 @@ import { useAuthStore } from "./store";
 let sessionPromise: Promise<Scope | null> | null = null;
 
 /**
- * Clears the in-flight/failed bootstrap memo so the NEXT `ensureSession()`
- * call re-attempts the full boot sequence from scratch. Used by AppShell's
- * error-banner "Réessayer"/"Retry" action after a `/me` failure — never
- * called after a successful bootstrap (the resolved Scope on the store is
- * itself the fast-path memo at that point).
+ * Clears the in-flight bootstrap memo so the NEXT `ensureSession()` call
+ * re-attempts the full boot sequence from scratch. The memo already clears
+ * itself whenever an attempt settles; this exists for callers that must not
+ * race a still-in-flight attempt — logout (so a bootstrap resolving after
+ * `clearSession()` isn't awaited by anyone downstream) and AppShell's
+ * error-banner "Réessayer"/"Retry".
  */
 export function resetSession(): void {
   sessionPromise = null;
@@ -50,15 +55,11 @@ export async function ensureSession(): Promise<Scope | null> {
   const existingScope = useAuthStore.getState().scope;
   if (existingScope) return existingScope;
 
-  if (!sessionPromise) {
-    sessionPromise = bootstrap().catch((err: unknown) => {
-      // Allow a future call (e.g. Retry, or a fresh beforeLoad on the next
-      // navigation) to re-attempt instead of replaying this same rejection
-      // forever.
-      sessionPromise = null;
-      throw err;
-    });
-  }
+  // In-flight dedupe only — `.finally` guarantees the memo never outlives
+  // the attempt, so outcomes are always re-derived from live store state.
+  sessionPromise ??= bootstrap().finally(() => {
+    sessionPromise = null;
+  });
   return sessionPromise;
 }
 
@@ -68,8 +69,19 @@ async function bootstrap(): Promise<Scope | null> {
   if (!accessToken) {
     try {
       accessToken = await refreshAccessToken();
-    } catch {
-      return null; // no session can be established — the ONE redirect case
+    } catch (err) {
+      // "No session can be established" — the ONE redirect case — means the
+      // refresh token is absent or the API explicitly rejected it. A network
+      // error or 5xx is NOT that: the persisted token may still be valid, so
+      // rethrow and let AppShell's retry banner handle it instead of bouncing
+      // a recoverable user to /login with a false "Session expirée".
+      if (
+        err instanceof MissingRefreshTokenError ||
+        (isHTTPError(err) && (err.response.status === 401 || err.response.status === 403))
+      ) {
+        return null;
+      }
+      throw err;
     }
   }
 

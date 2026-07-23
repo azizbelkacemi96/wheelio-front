@@ -89,6 +89,10 @@ export const useAuthStore = create<AuthState>()(
           refreshToken: null,
           scope: null,
           user: null,
+          // Multi-tenant hygiene: agency data belongs to the org that loaded
+          // it — it must never survive into the next login on the same tab.
+          agencies: [],
+          currentAgencyId: null,
         }),
     }),
     {

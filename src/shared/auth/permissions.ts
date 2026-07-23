@@ -46,7 +46,10 @@ export function isOrgAdmin(scope: Scope): boolean {
  */
 export function roleInAgency(scope: Scope, agencyId: string): AgencyRole | undefined {
   if (isOrgAdmin(scope)) return "manager";
-  return scope.agencyRoles[agencyId];
+  // Own-property check mirrors Go's map semantics: a bare index would walk
+  // the prototype chain, so e.g. agencyId "constructor" would "resolve" a
+  // role for a member with no memberships at all.
+  return Object.hasOwn(scope.agencyRoles, agencyId) ? scope.agencyRoles[agencyId] : undefined;
 }
 
 /** Mirrors Scope.CanRead — viewer and above. */

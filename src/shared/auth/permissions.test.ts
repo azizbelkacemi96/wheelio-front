@@ -127,6 +127,19 @@ describe("canRead / canOperate / canManage rank gates", () => {
     expect(canOperate(ownerScope, UNRELATED_AGENCY_ID)).toBe(true);
     expect(canManage(ownerScope, UNRELATED_AGENCY_ID)).toBe(true);
   });
+
+  it("never resolves prototype-chain keys as memberships — Go map semantics (WR-04)", () => {
+    const memberScope = scopeFromMe(agentFixture.me);
+
+    // A bare index lookup would walk Object.prototype and "find" a role for
+    // these — a member must get undefined/false for any non-own key.
+    for (const key of ["constructor", "toString", "hasOwnProperty", "__proto__"]) {
+      expect(roleInAgency(memberScope, key)).toBeUndefined();
+      expect(canRead(memberScope, key)).toBe(false);
+      expect(canOperate(memberScope, key)).toBe(false);
+      expect(canManage(memberScope, key)).toBe(false);
+    }
+  });
 });
 
 // Note: "no JWT-decode import" is verified structurally (this module's only

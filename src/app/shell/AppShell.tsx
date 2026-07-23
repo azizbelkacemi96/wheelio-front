@@ -6,12 +6,15 @@
  * cost here) OR still null because the `/me` call itself failed even though
  * the access token is valid. AppShell owns that second case entirely:
  * it retries `ensureSession()` on mount, renders a skeleton while that is
- * in flight, and — if it fails again — a full-shell error banner with a
- * "Réessayer"/"Retry" action that resets the session memo and tries again.
- * Nothing here ever redirects; only the route guard does that (AUTH-02).
+ * in flight, and — if it REJECTS again (transient `/me` failure) — a
+ * full-shell error banner with a "Réessayer"/"Retry" action that resets the
+ * session memo and tries again. A `null` resolution here means the session
+ * died between the guard and this mount (refresh token gone/rejected): the
+ * banner's Retry could never succeed for that case, so it redirects to
+ * /login exactly like the guard would (AUTH-02).
  */
 import { useCallback, useEffect, useState } from "react";
-import { Outlet } from "@tanstack/react-router";
+import { Outlet, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { ensureSession, resetSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/shared/auth/store";
@@ -53,14 +56,23 @@ function ShellErrorBanner({ onRetry }: { onRetry: () => void }) {
 
 export function AppShell() {
   const scope = useAuthStore((s) => s.scope);
+  const navigate = useNavigate();
   const [status, setStatus] = useState<ShellStatus>(scope ? "ready" : "loading");
 
   const load = useCallback(() => {
     setStatus("loading");
     ensureSession()
-      .then((result) => setStatus(result ? "ready" : "error"))
+      .then((result) => {
+        if (result) {
+          setStatus("ready");
+        } else {
+          // Dead session (no/rejected refresh token) — Retry can never fix
+          // this, so bounce to /login like the route guard would.
+          void navigate({ to: "/login", search: { reason: "session-expired" } });
+        }
+      })
       .catch(() => setStatus("error"));
-  }, []);
+  }, [navigate]);
 
   // Runs once on mount: if beforeLoad already resolved a Scope this is a
   // no-op (scope truthy); if beforeLoad's own `/me` attempt failed, this is

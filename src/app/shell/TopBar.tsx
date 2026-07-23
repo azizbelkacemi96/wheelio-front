@@ -3,13 +3,14 @@
  * owner-only agency switcher (D-10/D-11) + language switcher + user menu.
  */
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Building2, Check, Globe, LogOut, Menu } from "lucide-react";
 import { api } from "@/shared/api/client";
 import { logout } from "@/features/auth/api";
 import { isOrgAdmin, type Scope } from "@/shared/auth/permissions";
+import { resetSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/shared/auth/store";
 import { useLocale } from "@/shared/i18n/useLocale";
 import type { AgencyResponse } from "@/types/identity";
@@ -122,6 +123,7 @@ function LanguageSwitcher() {
 function UserMenu({ scope }: { scope: Scope }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
   const clearSession = useAuthStore((s) => s.clearSession);
 
@@ -136,6 +138,12 @@ function UserMenu({ scope }: { scope: Scope }) {
       await logout();
     } finally {
       clearSession();
+      // Drop the bootstrap memo so an in-flight ensureSession() can't
+      // resurrect the pre-logout Scope, and purge the react-query cache so
+      // no cross-org data (agency list, later feature data) survives into
+      // the next login on this tab.
+      resetSession();
+      queryClient.clear();
       await navigate({ to: "/login" });
     }
   }

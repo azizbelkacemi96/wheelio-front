@@ -67,6 +67,26 @@ describe("useAuthStore token persistence", () => {
     expect(state.refreshToken).toBeNull();
     expect(state.scope).toBeNull();
   });
+
+  it("clearSession also drops agency data — no cross-org leak into the next login on this tab (WR-03)", () => {
+    useAuthStore.setState({
+      agencies: [
+        {
+          id: "22222222-2222-4222-8222-222222222222",
+          name: "Agence Alger Centre",
+          country_code: "DZ",
+          created_at: "2026-01-01T00:00:00.000Z",
+          updated_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      currentAgencyId: "22222222-2222-4222-8222-222222222222",
+    });
+
+    useAuthStore.getState().clearSession();
+
+    expect(useAuthStore.getState().agencies).toEqual([]);
+    expect(useAuthStore.getState().currentAgencyId).toBeNull();
+  });
 });
 
 describe("useAuthStore.setCurrentAgency", () => {

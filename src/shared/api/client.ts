@@ -30,11 +30,21 @@
  * instead of looping.
  */
 
-import ky from "ky";
+import ky, { isHTTPError } from "ky";
 import { useAuthStore } from "@/shared/auth/store";
 import type { AuthResponse } from "@/types/identity";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+
+/** Thrown by `refreshAccessToken` when there is no persisted refresh token
+ * at all — callers (session bootstrap) treat it as "genuinely logged out",
+ * distinct from a transient network/5xx failure of the refresh call. */
+export class MissingRefreshTokenError extends Error {
+  constructor() {
+    super("no refresh token");
+    this.name = "MissingRefreshTokenError";
+  }
+}
 
 // Module-level, outside React/Zustand state on purpose: a race-free
 // single-flight guard needs a plain synchronous check-and-set, and
@@ -43,17 +53,30 @@ let refreshPromise: Promise<string> | null = null;
 
 /**
  * Exchanges the stored refresh token for a fresh access/refresh pair via
- * `POST /auth/refresh`, updates the store, and returns the new access
- * token. On any failure (no refresh token, or the API rejects it) the
- * session is cleared and the error is rethrown — the only path in this
- * module that ends in a login redirect (handled by the caller/route guard).
+ * `POST /auth/refresh`, updates the store, and returns the new access token.
+ *
+ * Single-flight lives HERE, not only in the interceptor: wheelio-api
+ * rotates refresh tokens and revokes the whole session when a stale one is
+ * reused (theft detection), so EVERY caller — the 401 interceptor below AND
+ * the session bootstrap's direct call — must share one in-flight refresh.
+ *
+ * The session is cleared only when the API explicitly rejects the token
+ * (401/403) or none is stored; a network error or 5xx rethrows WITHOUT
+ * clearing, so a connectivity blip never force-logs the user out.
  */
-export async function refreshAccessToken(): Promise<string> {
+export function refreshAccessToken(): Promise<string> {
+  refreshPromise ??= doRefresh().finally(() => {
+    refreshPromise = null;
+  });
+  return refreshPromise;
+}
+
+async function doRefresh(): Promise<string> {
   const { refreshToken, setTokens, clearSession } = useAuthStore.getState();
 
   if (!refreshToken) {
     clearSession();
-    throw new Error("no refresh token");
+    throw new MissingRefreshTokenError();
   }
 
   try {
@@ -72,7 +95,9 @@ export async function refreshAccessToken(): Promise<string> {
 
     return res.access_token;
   } catch (err) {
-    clearSession();
+    if (isHTTPError(err) && (err.response.status === 401 || err.response.status === 403)) {
+      clearSession();
+    }
     throw err;
   }
 }
@@ -95,15 +120,10 @@ export const api = ky.create({
         // exactly one retry per request instead of looping forever.
         if (response.status !== 401 || retryCount > 0) return;
 
-        // ??= assigns only if refreshPromise is still null — the first
-        // afterResponse invocation to reach this line synchronously claims
-        // the shared promise before yielding; every other concurrent 401
-        // sees the already-assigned promise and awaits the SAME refresh.
-        refreshPromise ??= refreshAccessToken().finally(() => {
-          refreshPromise = null;
-        });
-
-        const newAccessToken = await refreshPromise;
+        // refreshAccessToken is itself single-flight: every concurrent 401
+        // (and any parallel session-bootstrap refresh) awaits the SAME
+        // in-flight POST /auth/refresh.
+        const newAccessToken = await refreshAccessToken();
 
         const headers = new Headers(request.headers);
         headers.set("Authorization", `Bearer ${newAccessToken}`);

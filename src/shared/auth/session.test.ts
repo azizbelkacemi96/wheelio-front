@@ -125,4 +125,43 @@ describe("ensureSession", () => {
 
     expect(scope?.orgRole).toBe("owner");
   }, 10000);
+
+  it("does NOT replay a resolved-null outcome after a subsequent login (CR-01 login-loop regression)", async () => {
+    // Logged out, no tokens at all: guard evaluation resolves null.
+    expect(await ensureSession()).toBeNull();
+
+    // User then logs in on /login: tokens land in the store, but scope stays
+    // null until a bootstrap runs /me. The next guard evaluation MUST
+    // re-attempt the bootstrap, not replay the cached "logged out".
+    server.use(http.get(`${API_URL}/me`, () => HttpResponse.json(ownerFixture.me)));
+    useAuthStore.setState({ accessToken: "fresh-login-access-token" });
+
+    const scope = await ensureSession();
+    expect(scope?.orgRole).toBe("owner");
+  });
+
+  it("does NOT resurrect the pre-logout Scope after clearSession (CR-02 guard-bypass regression)", async () => {
+    server.use(http.get(`${API_URL}/me`, () => HttpResponse.json(ownerFixture.me)));
+    useAuthStore.setState({ refreshToken: "valid-refresh-token" });
+    expect((await ensureSession())?.orgRole).toBe("owner");
+
+    // Logout: store cleared. Back-button into a guarded route must resolve
+    // null (redirect to /login), never the stale pre-logout Scope.
+    useAuthStore.getState().clearSession();
+    resetSession();
+
+    expect(await ensureSession()).toBeNull();
+  });
+
+  it("REJECTS on a transient refresh failure (network/5xx) and PRESERVES the refresh token — no false 'Session expirée'", async () => {
+    server.use(
+      http.post(`${API_URL}/auth/refresh`, () => new HttpResponse(null, { status: 503 })),
+    );
+    useAuthStore.setState({ refreshToken: "still-good-token" });
+
+    await expect(ensureSession()).rejects.toBeTruthy();
+    // The persisted token may still be perfectly valid — a connectivity blip
+    // must not force-log the user out.
+    expect(useAuthStore.getState().refreshToken).toBe("still-good-token");
+  });
 });
