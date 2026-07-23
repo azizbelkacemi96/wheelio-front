@@ -12,7 +12,7 @@
  */
 import { http, HttpResponse } from "msw";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   RouterProvider,
@@ -43,7 +43,7 @@ function resetAuthStore() {
 /** Mounts a component at "/" inside a minimal 3-route memory-history tree
  * (root -> login -> signup) so useNavigate()/Link actually resolve, mirroring
  * the real app's top-level route structure without needing routeTree.gen.ts. */
-function renderAtRoute(path: "/login" | "/signup") {
+async function renderAtRoute(path: "/login" | "/signup") {
   const rootRoute = createRootRoute();
   const indexRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -65,7 +65,14 @@ function renderAtRoute(path: "/login" | "/signup") {
     routeTree,
     history: createMemoryHistory({ initialEntries: [path] }),
   });
-  return { ...render(<RouterProvider router={router} />), router };
+  await act(async () => {
+    await router.load();
+  });
+  let result!: ReturnType<typeof render>;
+  await act(async () => {
+    result = render(<RouterProvider router={router} />);
+  });
+  return { ...result, router };
 }
 
 describe("LoginForm", () => {
@@ -74,7 +81,7 @@ describe("LoginForm", () => {
 
   it("submitting valid credentials stores tokens and navigates into the app; the submit button disables + spins while pending", async () => {
     const user = userEvent.setup();
-    renderAtRoute("/login");
+    await renderAtRoute("/login");
 
     await user.type(screen.getByLabelText(/email/i), "owner@wheelio.dz");
     await user.type(screen.getByLabelText(/mot de passe|password/i), "s3cret123");
@@ -100,7 +107,7 @@ describe("LoginForm", () => {
       http.post(`${API_URL}/auth/login`, () => new HttpResponse(null, { status: 401 })),
     );
     const user = userEvent.setup();
-    renderAtRoute("/login");
+    await renderAtRoute("/login");
 
     await user.type(screen.getByLabelText(/email/i), "owner@wheelio.dz");
     await user.type(screen.getByLabelText(/mot de passe|password/i), "wrong-password");
@@ -118,7 +125,7 @@ describe("LoginForm", () => {
 
   it("invalid email / empty password render inline field errors before submit", async () => {
     const user = userEvent.setup();
-    renderAtRoute("/login");
+    await renderAtRoute("/login");
 
     await user.type(screen.getByLabelText(/email/i), "not-an-email");
     await user.click(screen.getByRole("button", { name: /se connecter|sign in/i }));
@@ -133,14 +140,14 @@ describe("SignupForm", () => {
   beforeEach(resetAuthStore);
   afterEach(resetAuthStore);
 
-  function fillValidSignup(user: ReturnType<typeof userEvent.setup>) {
-    return Promise.all([
-      user.type(screen.getByLabelText(/organisation|organization/i), "Wheelio Location Alger"),
-      user.type(screen.getByLabelText(/^email/i), "owner@wheelio.dz"),
-      user.type(screen.getByLabelText(/mot de passe|password/i), "s3cret123"),
-      user.type(screen.getByLabelText(/prénom|first name/i), "Karim"),
-      user.type(screen.getByLabelText(/^nom$|^last name$/i), "Haddad"),
-    ]);
+  async function fillValidSignup(user: ReturnType<typeof userEvent.setup>) {
+    // Sequential, not Promise.all — userEvent.type is not safe to run
+    // concurrently across multiple fields (interleaves keystrokes).
+    await user.type(screen.getByLabelText(/organisation|organization/i), "Wheelio Location Alger");
+    await user.type(screen.getByLabelText(/^email/i), "owner@wheelio.dz");
+    await user.type(screen.getByLabelText(/mot de passe|password/i), "s3cret123");
+    await user.type(screen.getByLabelText(/prénom|first name/i), "Karim");
+    await user.type(screen.getByLabelText(/^nom$|^last name$/i), "Haddad");
   }
 
   it("signup surfaces a field-level 'email already registered' error on a 409 from the backend", async () => {
@@ -150,7 +157,7 @@ describe("SignupForm", () => {
       ),
     );
     const user = userEvent.setup();
-    renderAtRoute("/signup");
+    await renderAtRoute("/signup");
 
     await fillValidSignup(user);
     await user.click(screen.getByRole("button", { name: /créer mon compte|create account/i }));
@@ -166,7 +173,7 @@ describe("SignupForm", () => {
       http.post(`${API_URL}/auth/signup`, () => new HttpResponse(null, { status: 500 })),
     );
     const user = userEvent.setup();
-    renderAtRoute("/signup");
+    await renderAtRoute("/signup");
 
     await fillValidSignup(user);
     await user.click(screen.getByRole("button", { name: /créer mon compte|create account/i }));
@@ -181,7 +188,7 @@ describe("SignupForm", () => {
 
   it("per-field validation renders inline before submit (short password rejected)", async () => {
     const user = userEvent.setup();
-    renderAtRoute("/signup");
+    await renderAtRoute("/signup");
 
     await user.type(screen.getByLabelText(/organisation|organization/i), "Wheelio Location Alger");
     await user.type(screen.getByLabelText(/^email/i), "owner@wheelio.dz");
@@ -195,7 +202,7 @@ describe("SignupForm", () => {
   });
 
   it("has no password-reset affordance anywhere", async () => {
-    renderAtRoute("/signup");
+    await renderAtRoute("/signup");
     expect(screen.queryByText(/forgot/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/mot de passe oublié/i)).not.toBeInTheDocument();
   });
