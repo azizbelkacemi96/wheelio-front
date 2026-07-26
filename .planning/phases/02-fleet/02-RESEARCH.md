@@ -480,7 +480,7 @@ Use the existing `numeric-cell` utility (tabular-nums, added in 01-02 specifical
 
 All other claims are `[VERIFIED: source read]` against wheelio-api/wheelio-front files cited inline.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **List "fuel level" column semantics (D-03)** — the API has no per-vehicle fuel level; this research prescribes `fuel_type` for the column. Surface to the user at verification: "the backend tracks fuel level per contract, not per vehicle; list shows fuel type instead."
 2. **Current-contract summary content** — `contractResponse` exposes `customer_id` only (no name; customer endpoints are Phase 3). Prescription: summary shows period (`starts_at`→`ends_at`), status badge, departure mileage/fuel; customer identity omitted this phase.
