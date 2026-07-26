@@ -54,5 +54,76 @@
     }
   },
   "vehicleCount_one": "{{count}} vehicle",
-  "vehicleCount_other": "{{count}} vehicles"
+  "vehicleCount_other": "{{count}} vehicles",
+  "vehicles": {
+    "title": "Vehicles",
+    "searchPlaceholder": "Search by plate, brand or model",
+    "statusFilterLabel": "Filter by status",
+    "statusFilterAll": "All statuses",
+    "status": {
+      "available": "Available",
+      "rented": "Rented",
+      "maintenance": "Under maintenance",
+      "retired": "Retired"
+    },
+    "fuelType": {
+      "petrol": "Petrol",
+      "diesel": "Diesel",
+      "hybrid": "Hybrid",
+      "electric": "Electric",
+      "lpg": "LPG"
+    },
+    "fuelLevel": {
+      "empty": "Empty",
+      "quarter": "1/4",
+      "half": "1/2",
+      "three_quarters": "3/4",
+      "full": "Full"
+    },
+    "transmission": {
+      "manual": "Manual",
+      "automatic": "Automatic"
+    },
+    "columns": {
+      "plate": "Plate",
+      "vehicle": "Vehicle",
+      "status": "Status",
+      "mileage": "Mileage",
+      "fuelType": "Fuel",
+      "agency": "Agency"
+    },
+    "empty": {
+      "heading": "No vehicles",
+      "body": "No vehicles are registered for this agency."
+    },
+    "noResults": "No vehicles match your search.",
+    "loadError": "Couldn't load vehicles.",
+    "retry": "Retry",
+    "detail": {
+      "backToList": "Back to vehicles",
+      "notFoundHeading": "Vehicle not found",
+      "notFoundBody": "This vehicle doesn't exist or is no longer accessible.",
+      "infoTitle": "Vehicle information",
+      "vin": "VIN",
+      "modelYear": "Year",
+      "color": "Color",
+      "seats": "Seats",
+      "transmissionLabel": "Transmission",
+      "notes": "Notes",
+      "currentContract": "Current contract",
+      "noCurrentContract": "No current contract",
+      "contractPeriod": "Period",
+      "departureMileage": "Departure mileage",
+      "departureFuel": "Departure fuel level",
+      "contractLoadError": "Couldn't load the current contract."
+    }
+  },
+  "contracts": {
+    "status": {
+      "reserved": "Reserved",
+      "active": "Active",
+      "closed": "Closed",
+      "cancelled": "Cancelled"
+    }
+  }
 }

@@ -54,5 +54,76 @@
     }
   },
   "vehicleCount_one": "{{count}} véhicule",
-  "vehicleCount_other": "{{count}} véhicules"
+  "vehicleCount_other": "{{count}} véhicules",
+  "vehicles": {
+    "title": "Véhicules",
+    "searchPlaceholder": "Rechercher par plaque, marque ou modèle",
+    "statusFilterLabel": "Filtrer par statut",
+    "statusFilterAll": "Tous les statuts",
+    "status": {
+      "available": "Disponible",
+      "rented": "Loué",
+      "maintenance": "En maintenance",
+      "retired": "Retiré"
+    },
+    "fuelType": {
+      "petrol": "Essence",
+      "diesel": "Diesel",
+      "hybrid": "Hybride",
+      "electric": "Électrique",
+      "lpg": "GPL"
+    },
+    "fuelLevel": {
+      "empty": "Vide",
+      "quarter": "1/4",
+      "half": "1/2",
+      "three_quarters": "3/4",
+      "full": "Plein"
+    },
+    "transmission": {
+      "manual": "Manuelle",
+      "automatic": "Automatique"
+    },
+    "columns": {
+      "plate": "Plaque",
+      "vehicle": "Véhicule",
+      "status": "Statut",
+      "mileage": "Kilométrage",
+      "fuelType": "Carburant",
+      "agency": "Agence"
+    },
+    "empty": {
+      "heading": "Aucun véhicule",
+      "body": "Aucun véhicule n'est enregistré pour cette agence."
+    },
+    "noResults": "Aucun véhicule ne correspond à votre recherche.",
+    "loadError": "Impossible de charger les véhicules.",
+    "retry": "Réessayer",
+    "detail": {
+      "backToList": "Retour aux véhicules",
+      "notFoundHeading": "Véhicule introuvable",
+      "notFoundBody": "Ce véhicule n'existe pas ou n'est plus accessible.",
+      "infoTitle": "Informations du véhicule",
+      "vin": "VIN",
+      "modelYear": "Année",
+      "color": "Couleur",
+      "seats": "Places",
+      "transmissionLabel": "Transmission",
+      "notes": "Notes",
+      "currentContract": "Contrat en cours",
+      "noCurrentContract": "Aucun contrat en cours",
+      "contractPeriod": "Période",
+      "departureMileage": "Kilométrage de départ",
+      "departureFuel": "Carburant au départ",
+      "contractLoadError": "Impossible de charger le contrat en cours."
+    }
+  },
+  "contracts": {
+    "status": {
+      "reserved": "Réservé",
+      "active": "En cours",
+      "closed": "Clôturé",
+      "cancelled": "Annulé"
+    }
+  }
 }
