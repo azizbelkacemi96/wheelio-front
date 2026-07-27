@@ -19,6 +19,7 @@ import { server } from "@/test/mocks/server";
 import { resetSession, ensureSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/shared/auth/store";
 import { TooltipProvider } from "@/shared/ui/tooltip";
+import { vehicleAvailable } from "@/test/fixtures/fleet";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
@@ -76,6 +77,30 @@ describe("_authenticated route guard", () => {
     });
     expect(router.state.location.pathname).toBe("/");
     expect(useAuthStore.getState().scope).not.toBeNull();
+  });
+
+  it("navigating to /vehicules renders the real vehicle list, not the retired placeholder", async () => {
+    useAuthStore.setState({ refreshToken: "valid-refresh-token" });
+
+    const { router } = await renderApp(["/vehicules"]);
+
+    // The real list screen: its "Véhicules" page heading + fixture rows from
+    // the plan 02-01 vehicles MSW handler. The Phase 1 placeholder's "Bientôt
+    // disponible" empty state must be gone.
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: "Véhicules" }),
+      ).toBeInTheDocument();
+    });
+    await waitFor(() => {
+      // Rendered in both the desktop table and the mobile card stack (both in
+      // the DOM; CSS controls visibility) — assert at least one instance.
+      expect(
+        screen.getAllByText(vehicleAvailable.registration_plate).length,
+      ).toBeGreaterThan(0);
+    });
+    expect(screen.queryByText("Bientôt disponible")).not.toBeInTheDocument();
+    expect(router.state.location.pathname).toBe("/vehicules");
   });
 
   it("refresh failure: redirects to /login and shows the 'Session expirée' copy", async () => {
