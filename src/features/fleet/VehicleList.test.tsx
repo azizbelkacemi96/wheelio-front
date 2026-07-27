@@ -215,6 +215,32 @@ describe("VehicleList", () => {
     expect(screen.queryByText(/aucun véhicule n'est enregistré/i)).not.toBeInTheDocument();
   });
 
+  it("a status filter matching zero rows shows noResults AND keeps the filter control mounted (CR-01)", async () => {
+    const user = userEvent.setup();
+    // Server honors ?status: 'retired' returns rows, but pretend this agency
+    // has none by returning [] for that status only.
+    server.use(
+      http.get(`${API_URL}/vehicles`, ({ request }) => {
+        const s = new URL(request.url).searchParams.get("status");
+        if (s === "retired") return HttpResponse.json([]);
+        return HttpResponse.json(vehicleFixtures);
+      }),
+    );
+    await mount();
+    await screen.findByRole("table");
+
+    await user.click(screen.getByRole("combobox", { name: /filtrer par statut/i }));
+    await user.click(screen.getByRole("option", { name: /^retiré$/i }));
+
+    // noResults copy, NOT the true-empty EmptyState.
+    await waitFor(() => {
+      expect(screen.getByText(/aucun véhicule ne correspond/i)).toBeInTheDocument();
+    });
+    expect(screen.queryByText(/aucun véhicule n'est enregistré/i)).not.toBeInTheDocument();
+    // The Select is still there — the user can clear the filter (not stranded).
+    expect(screen.getByRole("combobox", { name: /filtrer par statut/i })).toBeInTheDocument();
+  });
+
   it("renders skeleton rows while the query is pending", async () => {
     server.use(
       http.get(`${API_URL}/vehicles`, async () => {

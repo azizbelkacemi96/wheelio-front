@@ -74,7 +74,7 @@ export function VehicleList() {
 
   const showAgency = agencies.length > 0;
   const agencyName = (agencyId: string) =>
-    agencies.find((a) => a.id === agencyId)?.name ?? "";
+    agencies.find((a) => a.id === agencyId)?.name ?? "—";
   const formatMileage = (km: number) => `${km.toLocaleString(locale)} km`;
 
   const filtered = useMemo(() => {
@@ -88,7 +88,13 @@ export function VehicleList() {
     );
   }, [vehicles, search]);
 
-  const hasData = query.isSuccess && vehicles.length > 0;
+  const isFilterActive = status !== null || search.trim() !== "";
+  // Controls stay mounted whenever a filter is active, even if it currently
+  // matches nothing — otherwise selecting a zero-result status would unmount
+  // the very Select holding that filter, stranding the user with no way to
+  // clear it (CR-01). Only a genuinely empty fleet (no filter) hides them.
+  const showControls = query.isSuccess && (vehicles.length > 0 || isFilterActive);
+  const showCount = query.isSuccess && filtered.length > 0;
 
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
@@ -96,14 +102,14 @@ export function VehicleList() {
         <h1 className="font-heading text-xl font-semibold text-foreground">
           {t("vehicles.title")}
         </h1>
-        {hasData && (
+        {showCount && (
           <p className="text-sm text-muted-foreground">
             {t("vehicleCount", { count: filtered.length })}
           </p>
         )}
       </header>
 
-      {hasData && (
+      {showControls && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Input
             type="search"
@@ -143,6 +149,7 @@ export function VehicleList() {
         query={query}
         vehicles={vehicles}
         filtered={filtered}
+        isFilterActive={isFilterActive}
         showAgency={showAgency}
         agencyName={agencyName}
         formatMileage={formatMileage}
@@ -155,6 +162,7 @@ interface BodyProps {
   query: ReturnType<typeof useVehiclesQuery>;
   vehicles: VehicleResponse[];
   filtered: VehicleResponse[];
+  isFilterActive: boolean;
   showAgency: boolean;
   agencyName: (agencyId: string) => string;
   formatMileage: (km: number) => string;
@@ -164,6 +172,7 @@ function VehicleListBody({
   query,
   vehicles,
   filtered,
+  isFilterActive,
   showAgency,
   agencyName,
   formatMileage,
@@ -184,7 +193,9 @@ function VehicleListBody({
     );
   }
 
-  if (vehicles.length === 0) {
+  // True-empty fleet ONLY when nothing is filtered. A zero-row result while a
+  // status/search filter is active is "no matches", not "no vehicles" (CR-01).
+  if (vehicles.length === 0 && !isFilterActive) {
     return (
       <EmptyState
         titleKey="vehicles.empty.heading"
