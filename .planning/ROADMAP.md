@@ -14,7 +14,7 @@ Wheelio Front is a greenfield SPA that exposes `wheelio-api`'s golden path — v
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundations — Auth, Shell, i18n, Design System** - Login with transparent session refresh, role-aware navigation, agency switching, FR/EN i18n, and a consistent design-token/component library
-- [ ] **Phase 2: Fleet** - Vehicle list with live status and vehicle detail view
+- [x] **Phase 2: Fleet** - Vehicle list with live status and vehicle detail view
 - [ ] **Phase 3: Clients** - Individual/company customer creation, designated drivers, and search
 - [ ] **Phase 4: Contrats de location** - Full reservation → activation → closure → cancellation lifecycle as a guided wizard, plus a "today" overview
 - [ ] **Phase 5: État des lieux** - Departure/return inspections with zone-based damage entry and resilient on-site photo capture
@@ -145,7 +145,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundations — Auth, Shell, i18n, Design System | 7/7 | Complete (2 visual backstop checks deferred to user's final review, see 01-VERIFICATION.md) | 2026-07-23 |
-| 2. Fleet | 3/3 | In Progress (verifying) |  |
+| 2. Fleet | 3/3 | Complete | 2026-07-27 |
 | 3. Clients | 0/TBD | Not started | - |
 | 4. Contrats de location | 0/TBD | Not started | - |
 | 5. État des lieux | 0/TBD | Not started | - |
