@@ -19,7 +19,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Fleet
 
 - [x] **FLEET-01**: User can view the list of vehicles with live status
-- [ ] **FLEET-02**: User can view a vehicle's detail (plate, brand/model, mileage, fuel, current contract)
+- [x] **FLEET-02**: User can view a vehicle's detail (plate, brand/model, mileage, fuel, current contract)
 
 ### Clients
 
@@ -97,7 +97,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-05 | Phase 1 | Complete |
 | AUTH-06 | Phase 1 | Complete |
 | FLEET-01 | Phase 2 | Complete |
-| FLEET-02 | Phase 2 | Pending |
+| FLEET-02 | Phase 2 | Complete |
 | CUST-01 | Phase 3 | Pending |
 | CUST-02 | Phase 3 | Pending |
 | CUST-03 | Phase 3 | Pending |
