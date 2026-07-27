@@ -57,30 +57,42 @@ async function mockApi(page: Page, fixture: RoleFixture): Promise<ApiCallCounts>
     organization: fixture.me.organization,
   };
 
+  // Backend routes live under the /v1 prefix (see the 02-01 base-URL fix).
+  // Strip that prefix so the path comparisons below stay backend-relative.
+  const apiBasePath = new URL(API_URL).pathname.replace(/\/$/, "");
+
   await page.route(`${API_URL}/**`, async (route) => {
     const request = route.request();
     const { pathname } = new URL(request.url());
+    const path = pathname.startsWith(apiBasePath)
+      ? pathname.slice(apiBasePath.length)
+      : pathname;
     const method = request.method();
 
     if (method === "OPTIONS") {
       return route.fulfill({ status: 204, headers: CORS_HEADERS });
     }
-    if (method === "POST" && pathname === "/auth/login") {
+    if (method === "POST" && path === "/auth/login") {
       return route.fulfill({ status: 200, headers: CORS_HEADERS, json: authResponse });
     }
-    if (method === "POST" && pathname === "/auth/refresh") {
+    if (method === "POST" && path === "/auth/refresh") {
       counts.refresh += 1;
       return route.fulfill({ status: 200, headers: CORS_HEADERS, json: authResponse });
     }
-    if (method === "POST" && pathname === "/auth/logout") {
+    if (method === "POST" && path === "/auth/logout") {
       return route.fulfill({ status: 204, headers: CORS_HEADERS });
     }
-    if (method === "GET" && pathname === "/me") {
+    if (method === "GET" && path === "/me") {
       counts.me += 1;
       return route.fulfill({ status: 200, headers: CORS_HEADERS, json: fixture.me });
     }
-    if (method === "GET" && pathname === "/agencies") {
+    if (method === "GET" && path === "/agencies") {
       return route.fulfill({ status: 200, headers: CORS_HEADERS, json: fixture.agencies });
+    }
+    // Fleet phase (02) turned /vehicules into a real screen; serve the list
+    // so a stray navigation there doesn't 404 into the error banner.
+    if (method === "GET" && path === "/vehicles") {
+      return route.fulfill({ status: 200, headers: CORS_HEADERS, json: [] });
     }
     return route.fulfill({
       status: 404,
@@ -133,9 +145,10 @@ test.describe("phase 01 happy path — login -> shell -> role-gated nav -> place
     // The "/" landing itself renders the shared empty state.
     await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
 
-    // Base section navigation -> placeholder empty state.
-    await page.getByRole("link", { name: "Véhicules" }).click();
-    await expect(page).toHaveURL("/vehicules");
+    // Base section navigation -> placeholder empty state. Uses "Clients"
+    // (still a placeholder); "Véhicules" became a real screen in phase 02.
+    await page.getByRole("link", { name: "Clients" }).click();
+    await expect(page).toHaveURL("/clients");
     await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
     await expect(
       page.getByText("Cette fonctionnalité arrive dans une prochaine mise à jour de Wheelio."),
@@ -200,15 +213,16 @@ test.describe("phase 01 happy path — login -> shell -> role-gated nav -> place
     await mockApi(page, ownerFixture);
     await login(page);
 
-    await page.getByRole("link", { name: "Véhicules" }).click();
-    await expect(page).toHaveURL("/vehicules");
+    // "Clients" is still a placeholder (Véhicules became real in phase 02).
+    await page.getByRole("link", { name: "Clients" }).click();
+    await expect(page).toHaveURL("/clients");
     // FR is the hard default with nothing stored.
     await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
 
     await page.getByRole("button", { name: "Changer de langue" }).click();
 
     // Same route, live-switched copy: placeholder + nav + chrome all EN.
-    await expect(page).toHaveURL("/vehicules");
+    await expect(page).toHaveURL("/clients");
     await expect(page.getByRole("heading", { name: "Coming soon" })).toBeVisible();
     await expect(
       page.getByText("This feature is coming in a future Wheelio update."),
