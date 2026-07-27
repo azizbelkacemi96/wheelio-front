@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: foundations-auth-shell-i18n-design-system
 status: verifying
-stopped_at: Completed 01-07-PLAN.md (phase 01 complete — 7/7 plans)
-last_updated: "2026-07-23T12:23:31.124Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-07-27T11:28:28.865Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 1 execution started
 progress:
-  total_phases: 1
+  total_phases: 2
   completed_phases: 1
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 10
+  completed_plans: 9
 ---
 
 # Project State
@@ -32,7 +32,7 @@ Plan: 7 of 7
 Status: Phase complete — ready for verification
 Last activity: 2026-07-22 — Phase 1 execution started
 
-Progress: [██████████] 100%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -65,6 +65,7 @@ Progress: [██████████] 100%
 | Phase 01 P05 | 26 | 2 tasks | 8 files |
 | Phase 01 P06 | 30 | 2 tasks | 18 files |
 | Phase 01 P07 | 45 | 2 tasks | 15 files |
+| Phase 02 P02 | 1 session | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -93,6 +94,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-06]: Added a display-only user field (first_name/last_name/email) to the Zustand auth store, populated alongside setScope -- permissions.ts's Scope deliberately carries no display data (literal port of scope.go), so the user-menu name requirement needed a home elsewhere.
 - [Phase ?]: [Phase 01-07]: Added routeFileIgnorePattern '\.test\.' to BOTH scripts/generate-routes.mjs and vite.config.ts's tanstackRouter plugin — the router generator has no default ignore for .test. files, so co-located vitest files inside src/routes would otherwise be generated as routes.
 - [Phase ?]: [Phase 01-07]: Phase E2E ran in MOCKED API mode (plan-sanctioned fallback) — wheelio-api unreachable at execution time, and owner+agent role assertions need deterministic fixtures; Playwright page.route mocks reuse src/test/fixtures/scope.ts with CORS headers + OPTIONS preflight handling (fulfilled cross-origin responses still undergo browser CORS checks).
+- [Phase ?]: 02-02: Vehicle list uses server-side ?status= filter (in query key) + client-side useMemo text search; responsive table(md+)/cards(<md) both in DOM
+- [Phase ?]: 02-02: Created $vehicleId stub route as the typed link target (02-03 fills VehicleDetail); routeTree.gen.ts is gitignored, not committed
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-23T12:23:31.118Z
-Stopped at: Completed 01-07-PLAN.md (phase 01 complete — 7/7 plans)
+Last session: 2026-07-27T11:28:18.348Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
