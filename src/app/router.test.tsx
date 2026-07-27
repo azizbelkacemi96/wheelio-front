@@ -103,6 +103,24 @@ describe("_authenticated route guard", () => {
     expect(router.state.location.pathname).toBe("/vehicules");
   });
 
+  it("navigating to /vehicules/{id} resolves the detail screen through the real route tree", async () => {
+    useAuthStore.setState({ refreshToken: "valid-refresh-token" });
+
+    const { router } = await renderApp([`/vehicules/${vehicleAvailable.id}`]);
+
+    // The detail screen renders the vehicle's plate as its page heading,
+    // proving list -> detail routing works end-to-end via the generated tree
+    // + the plan 02-01 vehicles MSW handler.
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: vehicleAvailable.registration_plate }),
+      ).toBeInTheDocument();
+    });
+    expect(router.state.location.pathname).toBe(
+      `/vehicules/${vehicleAvailable.id}`,
+    );
+  });
+
   it("refresh failure: redirects to /login and shows the 'Session expirée' copy", async () => {
     server.use(
       http.post(`${API_URL}/auth/refresh`, () => new HttpResponse(null, { status: 401 })),

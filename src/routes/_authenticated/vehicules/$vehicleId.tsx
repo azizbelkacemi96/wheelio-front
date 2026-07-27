@@ -1,15 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { EmptyState } from "@/shared/ui/empty-state";
+import { VehicleDetail } from "@/features/fleet/VehicleDetail";
 
 /**
- * /vehicules/$vehicleId — vehicle detail route (FLEET-02).
+ * /vehicules/$vehicleId — vehicle detail route (FLEET-02, D-04).
  *
- * STUB: this route exists so the vehicle list's per-row plate <Link> has a
- * registered, type-checked target (the whole project compiles under
- * `tsc -b`, so an unregistered route would fail typecheck). Plan 02-03
- * replaces this placeholder with the real VehicleDetail component + its
- * useVehicleQuery/useActiveContractQuery composition.
+ * No loader: component-level useQuery is the established idiom (the list route
+ * follows the same shape). The id comes from the path param and is forwarded
+ * to VehicleDetail, which composes useVehicleQuery + useActiveContractQuery.
  */
 export const Route = createFileRoute("/_authenticated/vehicules/$vehicleId")({
-  component: EmptyState,
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  const { vehicleId } = Route.useParams();
+  return <VehicleDetail vehicleId={vehicleId} />;
+}
