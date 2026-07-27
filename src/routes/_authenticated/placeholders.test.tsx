@@ -15,7 +15,6 @@ import { afterEach, describe, expect, it } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import i18n from "@/shared/i18n";
 import { Route as IndexRoute } from "./index";
-import { Route as VehiculesRoute } from "./vehicules";
 import { Route as ClientsRoute } from "./clients";
 import { Route as ContratsRoute } from "./contrats";
 import { Route as EtatsDesLieuxRoute } from "./etats-des-lieux";
@@ -28,9 +27,10 @@ const FR_BODY = "Cette fonctionnalité arrive dans une prochaine mise à jour de
 const EN_HEADING = "Coming soon";
 const EN_BODY = "This feature is coming in a future Wheelio update.";
 
+// NOTE: /vehicules is no longer a placeholder — plan 02-02 replaced it with
+// the real VehicleList screen, so it is intentionally absent here.
 const allPlaceholderRoutes = {
   "/": IndexRoute,
-  "/vehicules": VehiculesRoute,
   "/clients": ClientsRoute,
   "/contrats": ContratsRoute,
   "/etats-des-lieux": EtatsDesLieuxRoute,
@@ -54,8 +54,8 @@ afterEach(async () => {
 
 describe("placeholder routes — shared empty state", () => {
   it("renders the FR 'Bientôt disponible' copy by default on a base placeholder route", () => {
-    const Vehicules = componentOf(VehiculesRoute);
-    render(<Vehicules />);
+    const Clients = componentOf(ClientsRoute);
+    render(<Clients />);
 
     expect(screen.getByRole("heading", { name: FR_HEADING })).toBeInTheDocument();
     expect(screen.getByText(FR_BODY)).toBeInTheDocument();
@@ -63,8 +63,8 @@ describe("placeholder routes — shared empty state", () => {
   });
 
   it("switches to the EN 'Coming soon' copy live on locale change, and back to FR", async () => {
-    const Vehicules = componentOf(VehiculesRoute);
-    render(<Vehicules />);
+    const Clients = componentOf(ClientsRoute);
+    render(<Clients />);
     expect(screen.getByRole("heading", { name: FR_HEADING })).toBeInTheDocument();
 
     await act(async () => {

@@ -21,6 +21,30 @@ if (typeof window !== "undefined" && !window.matchMedia) {
   }) as unknown as MediaQueryList;
 }
 
+// Radix UI popper primitives (Select, DropdownMenu) probe pointer-capture and
+// scroll APIs that jsdom does not implement; without these no-op polyfills a
+// userEvent.click on a Select trigger/option throws instead of opening. Added
+// here (shared infra) so any test exercising a Radix overlay works — feature
+// tests shouldn't each rediscover the same jsdom gap.
+if (typeof window !== "undefined") {
+  if (!Element.prototype.hasPointerCapture) {
+    Element.prototype.hasPointerCapture = () => false;
+  }
+  if (!Element.prototype.releasePointerCapture) {
+    Element.prototype.releasePointerCapture = () => {};
+  }
+  if (!Element.prototype.scrollIntoView) {
+    Element.prototype.scrollIntoView = () => {};
+  }
+  if (!("ResizeObserver" in globalThis)) {
+    globalThis.ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as unknown as typeof ResizeObserver;
+  }
+}
+
 // Every test file inherits this MSW bootstrap automatically via
 // vitest.config.ts's `test.setupFiles`. `onUnhandledRequest: 'error'` ensures
 // any request not covered by a handler fails the test loudly instead of
