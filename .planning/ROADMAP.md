@@ -88,14 +88,14 @@ Plans:
   2. User can create a company customer record (RC/NIF/NIS) with one or more designated drivers attached.
   3. User can search for and locate an existing customer (individual or company) instead of re-creating a duplicate.
 
-**Plans**: 3/4 plans executed
+**Plans**: 4/4 plans executed
 
 Plans:
 
 - [x] 03-01-PLAN.md — Customer contract foundation: DTO mirror, hasOrgRole org-scope gate, MSW handlers + fixtures, api/queries, customers.* i18n (Wave 1)
 - [x] 03-02-PLAN.md — Customer list + server-side ?q= search at /clients, placeholder replacement + E2E/placeholder-test migration (Wave 2)
 - [x] 03-03-PLAN.md — Create form: individual/company type toggle, discriminated-union validation, drivers field array, create-then-attach mutation (Wave 3)
-- [ ] 03-04-PLAN.md — Customer detail at /clients/$customerId + company drivers, phase gate (unit + tsc + build + playwright) (Wave 4)
+- [x] 03-04-PLAN.md — Customer detail at /clients/$customerId + company drivers, phase gate (unit + tsc + build + playwright) (Wave 4)
 
 **UI hint**: yes
 
@@ -154,7 +154,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundations — Auth, Shell, i18n, Design System | 7/7 | Complete (2 visual backstop checks deferred to user's final review, see 01-VERIFICATION.md) | 2026-07-23 |
 | 2. Fleet | 3/3 | Complete | 2026-07-27 |
-| 3. Clients | 3/4 | In Progress|  |
+| 3. Clients | 4/4 | In Progress|  |
 | 4. Contrats de location | 0/TBD | Not started | - |
 | 5. État des lieux | 0/TBD | Not started | - |
 | 6. Identité fiscale & Facturation | 0/TBD | Not started | - |

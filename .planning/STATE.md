@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 03
 current_phase_name: clients
-status: executing
-stopped_at: Completed 03-03-PLAN.md
-last_updated: "2026-07-28T08:22:30.265Z"
+status: verifying
+stopped_at: Completed 03-04-PLAN.md — Phase 3 (clients) complete, ready for verification
+last_updated: "2026-07-28T08:29:58.168Z"
 last_activity: 2026-07-28
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -29,10 +29,10 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 03 (clients) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-28 — Phase 03 execution started
 
-Progress: [█████████░] 93%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -69,6 +69,7 @@ Progress: [█████████░] 93%
 | Phase 03 P01 | 25 | 3 tasks | 11 files |
 | Phase 03 P02 | 8 | 3 tasks | 10 files |
 | Phase 03 P03 | 15min | 3 tasks | 10 files |
+| Phase 03 P04 | 10min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,10 @@ Recent decisions affecting current work:
 - [Phase ?]: 03-03: Radix RadioGroup/Select wired via react-hook-form Controller (value/onValueChange), not register()
 - [Phase ?]: 03-03: translatedError(t, fieldError) helper resolves i18n-key Zod messages before FieldError renders them (first form whose schema messages are keys, not bare strings)
 - [Phase ?]: 03-03: Partial-failure retry re-attaches only the previously-failed driver rows against the existing customer id; onSubmit guards against ever re-POSTing /customers once a customer exists
+- [Phase ?]: 03-04: LicenseCard omitted entirely (not shown empty) when a customer has no license data; only rendered on the individual branch
+- [Phase ?]: 03-04: Phone/address rendered for both individual and company branches (DTO Shared fields present on real individual fixtures), not only company as the plan's literal action text named
+- [Phase ?]: 03-04: Drivers query fires unconditionally in parallel with the customer query (no waterfall); the drivers section itself is gated on customer.type === company, not the query result
+- [Phase ?]: 03-04: Date-only YYYY-MM-DD fields formatted via new Date(year, month-1, day) instead of new Date(dateOnlyString) to avoid a UTC-parse timezone shift
 
 ### Pending Todos
 
@@ -128,6 +133,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-28T08:22:30.259Z
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-07-28T08:29:58.162Z
+Stopped at: Completed 03-04-PLAN.md — Phase 3 (clients) complete, ready for verification
 Resume file: None
