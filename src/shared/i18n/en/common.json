@@ -159,7 +159,9 @@
       "typeLegend": "Customer type",
       "individualLabel": "Individual",
       "companyLabel": "Company",
-      "success": "Customer created successfully."
+      "success": "Customer created successfully.",
+      "notAuthorizedHeading": "Access denied",
+      "notAuthorizedBody": "You don't have the required permissions to create a customer."
     },
     "fields": {
       "fullName": "Full name",

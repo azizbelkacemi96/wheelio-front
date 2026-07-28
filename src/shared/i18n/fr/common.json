@@ -159,7 +159,9 @@
       "typeLegend": "Type de client",
       "individualLabel": "Particulier",
       "companyLabel": "Entreprise",
-      "success": "Client créé avec succès."
+      "success": "Client créé avec succès.",
+      "notAuthorizedHeading": "Accès non autorisé",
+      "notAuthorizedBody": "Vous n'avez pas les droits nécessaires pour créer un client."
     },
     "fields": {
       "fullName": "Nom complet",
