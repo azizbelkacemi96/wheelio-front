@@ -188,6 +188,11 @@
     "errors": {
       "cinRequired": "The national ID number is required.",
       "licenseDateOrder": "The valid-until date must be after the issue date.",
+      "fullNameRequired": "Full name is required.",
+      "legalNameRequired": "Legal name is required.",
+      "rcRequired": "Trade register (RC) is required.",
+      "driverFullNameRequired": "The driver's full name is required.",
+      "driverLicenseNumberRequired": "The driver's license number is required.",
       "createFailed": "Couldn't create the customer.",
       "driverFailed": "Couldn't add this driver.",
       "driverFailedValidation": "Invalid data — fix this driver before retrying.",

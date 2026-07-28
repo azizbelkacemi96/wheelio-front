@@ -188,6 +188,11 @@
     "errors": {
       "cinRequired": "Le numéro de CIN est requis.",
       "licenseDateOrder": "La date de validité doit être postérieure à la date de délivrance.",
+      "fullNameRequired": "Le nom complet est requis.",
+      "legalNameRequired": "La raison sociale est requise.",
+      "rcRequired": "Le registre de commerce (RC) est requis.",
+      "driverFullNameRequired": "Le nom complet du conducteur est requis.",
+      "driverLicenseNumberRequired": "Le numéro de permis du conducteur est requis.",
       "createFailed": "Impossible de créer le client.",
       "driverFailed": "Impossible d'ajouter ce conducteur.",
       "driverFailedValidation": "Données invalides — corrigez ce conducteur avant de réessayer.",

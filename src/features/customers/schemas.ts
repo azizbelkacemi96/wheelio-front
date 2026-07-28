@@ -31,8 +31,11 @@ const licenseDates = {
  * optional license, driver full_name/license_number are REQUIRED. */
 export const driverSchema = z
   .object({
-    full_name: z.string().min(1).max(200),
-    license_number: z.string().min(1).max(30),
+    full_name: z.string().min(1, { message: "customers.errors.driverFullNameRequired" }).max(200),
+    license_number: z
+      .string()
+      .min(1, { message: "customers.errors.driverLicenseNumberRequired" })
+      .max(30),
     license_issued_at: z.string().optional(),
     license_valid_until: z.string().optional(),
   })
@@ -51,7 +54,10 @@ export type DriverFormValues = z.infer<typeof driverSchema>;
 
 const individual = z.object({
   type: z.literal("individual"),
-  full_name: z.string().min(1).max(200), // domain-required (customer.go:161)
+  full_name: z
+    .string()
+    .min(1, { message: "customers.errors.fullNameRequired" })
+    .max(200), // domain-required (customer.go:161)
   identity_doc_type: z.enum(["cin", "passport"]),
   identity_doc_number: z.string().max(30).optional(), // required-when-cin, refined below
   ...licenseDates,
@@ -60,8 +66,11 @@ const individual = z.object({
 
 const company = z.object({
   type: z.literal("company"),
-  legal_name: z.string().min(1).max(200), // domain-required (customer.go:167)
-  rc: z.string().min(1).max(30), // pivot, required (customer.go:106)
+  legal_name: z
+    .string()
+    .min(1, { message: "customers.errors.legalNameRequired" })
+    .max(200), // domain-required (customer.go:167)
+  rc: z.string().min(1, { message: "customers.errors.rcRequired" }).max(30), // pivot, required (customer.go:106)
   nif: z.string().max(30).optional(),
   nis: z.string().max(30).optional(),
   ...licenseDates,
