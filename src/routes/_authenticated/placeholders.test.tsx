@@ -15,7 +15,6 @@ import { afterEach, describe, expect, it } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import i18n from "@/shared/i18n";
 import { Route as IndexRoute } from "./index";
-import { Route as ContratsRoute } from "./contrats";
 import { Route as EtatsDesLieuxRoute } from "./etats-des-lieux";
 import { Route as AdminIdentiteFiscaleRoute } from "./admin/identite-fiscale";
 import { Route as AdminAgencesRoute } from "./admin/agences";
@@ -30,9 +29,10 @@ const EN_BODY = "This feature is coming in a future Wheelio update.";
 // the real VehicleList screen, so it is intentionally absent here.
 // NOTE: /clients is no longer a placeholder — plan 03-02 replaced it with
 // the real CustomerList screen, so it is intentionally absent here.
+// NOTE: /contrats is no longer a placeholder — plan 04-02 replaced it with
+// the real ContractList screen, so it is intentionally absent here.
 const allPlaceholderRoutes = {
   "/": IndexRoute,
-  "/contrats": ContratsRoute,
   "/etats-des-lieux": EtatsDesLieuxRoute,
   "/admin/identite-fiscale": AdminIdentiteFiscaleRoute,
   "/admin/agences": AdminAgencesRoute,
