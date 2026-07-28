@@ -29,7 +29,7 @@
  * never the per-agency `canOperate`. The backend re-enforces with its own
  * 403; this gate is UX only (D-08).
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import type { Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -124,8 +124,18 @@ function CustomerCreateFormInner() {
     defaultValues: { type: "individual", identity_doc_type: "cin", drivers: [] },
   });
 
-  const { fields, append, remove } = useFieldArray({ control, name: "drivers" });
+  const { fields, append, remove, replace } = useFieldArray({ control, name: "drivers" });
   const type = watch("type");
+
+  // Both discriminated-union branches carry `drivers` (schemas.ts), but only
+  // the company branch renders/submits it. Toggling back to "individual"
+  // must clear any rows added while on "company" — otherwise a still-blank
+  // (still-invalid) drivers row silently fails validation on submit with no
+  // rendered error anywhere, since drivers.* errors are only ever displayed
+  // in the company branch (review CR-03).
+  useEffect(() => {
+    if (type === "individual") replace([]);
+  }, [type, replace]);
 
   async function onSubmit(values: CustomerFormValues) {
     // Guard against any resubmission (Enter-key or a second click) once a

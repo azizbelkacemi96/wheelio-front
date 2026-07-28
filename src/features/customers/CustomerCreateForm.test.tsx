@@ -152,6 +152,30 @@ describe("CustomerCreateForm — type toggle", () => {
     expect(screen.queryByLabelText(/type de pièce d'identité/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/numéro de pièce/i)).not.toBeInTheDocument();
   });
+
+  it("toggling back to individual clears a blank/invalid drivers row added while on company, so submit is not silently blocked (CR-03)", async () => {
+    const user = userEvent.setup();
+    mockCreateCustomer("new-after-toggle");
+    await mount();
+
+    await user.click(screen.getByRole("radio", { name: /entreprise/i }));
+    await user.click(screen.getByRole("button", { name: /ajouter un conducteur/i }));
+    expect(screen.getByTestId("driver-row-0")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("radio", { name: /particulier/i }));
+    // The (still-blank, still-invalid) drivers row must be gone, not merely
+    // hidden — otherwise it re-fails validation on the individual branch
+    // with no rendered error anywhere (the bug this test guards against).
+    expect(screen.queryByTestId("driver-row-0")).not.toBeInTheDocument();
+
+    await user.type(screen.getByLabelText(/nom complet/i), "Yacine Belkacem");
+    await user.type(screen.getByLabelText(/numéro de pièce/i), "123456789012");
+    await user.click(screen.getByRole("button", { name: /créer le client/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/^detail:new-after-toggle-1$/)).toBeInTheDocument();
+    });
+  });
 });
 
 describe("CustomerCreateForm — individual", () => {
