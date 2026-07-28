@@ -29,10 +29,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Contrats de location
 
-- [ ] **RENT-01**: User can create a rental contract (reservation) for an available vehicle and a customer
-- [ ] **RENT-02**: User can activate a contract, recording departure mileage and fuel level
-- [ ] **RENT-03**: User can close a contract, recording return mileage, fuel level, and invoice lines
-- [ ] **RENT-04**: User can cancel a reservation or an active contract with a reason
+- [x] **RENT-01**: User can create a rental contract (reservation) for an available vehicle and a customer
+- [x] **RENT-02**: User can activate a contract, recording departure mileage and fuel level
+- [x] **RENT-03**: User can close a contract, recording return mileage, fuel level, and invoice lines
+- [x] **RENT-04**: User can cancel a reservation or an active contract with a reason
 - [ ] **RENT-05**: User is guided through the entire new-rental golden path (vehicle → customer → contract → departure inspection) as one continuous wizard flow, not four disconnected screens — this is a full v1 feature, built properly, not a cut-corner version
 
 ### État des lieux
@@ -51,7 +51,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Ops
 
-- [ ] **OPS-01**: User sees a "today" overview (pickups and returns due today) on landing
+- [x] **OPS-01**: User sees a "today" overview (pickups and returns due today) on landing
 
 ## v2 Requirements
 
@@ -101,10 +101,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CUST-01 | Phase 3 | Complete |
 | CUST-02 | Phase 3 | Complete |
 | CUST-03 | Phase 3 | Complete |
-| RENT-01 | Phase 4 | Pending |
-| RENT-02 | Phase 4 | Pending |
-| RENT-03 | Phase 4 | Pending |
-| RENT-04 | Phase 4 | Pending |
+| RENT-01 | Phase 4 | Complete |
+| RENT-02 | Phase 4 | Complete |
+| RENT-03 | Phase 4 | Complete |
+| RENT-04 | Phase 4 | Complete |
 | RENT-05 | Phase 4 | Pending |
 | INSP-01 | Phase 5 | Pending |
 | INSP-02 | Phase 5 | Pending |
@@ -114,7 +114,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BILL-03 | Phase 6 | Pending |
 | BILL-04 | Phase 6 | Pending |
 | BILL-05 | Phase 6 | Pending |
-| OPS-01 | Phase 4 | Pending |
+| OPS-01 | Phase 4 | Complete |
 
 **Coverage:**
 
