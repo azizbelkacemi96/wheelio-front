@@ -299,11 +299,16 @@ function CustomerCreateFormInner() {
                     <FieldError errors={translatedError(t, errors.identity_doc_number)} />
                   </Field>
 
-                  <Field>
+                  <Field data-invalid={!!errors.license_number}>
                     <FieldLabel htmlFor="license_number">
                       {t("customers.fields.licenseNumber")}
                     </FieldLabel>
-                    <Input id="license_number" {...register("license_number")} />
+                    <Input
+                      id="license_number"
+                      aria-invalid={!!errors.license_number}
+                      {...register("license_number")}
+                    />
+                    <FieldError errors={translatedError(t, errors.license_number)} />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="license_issued_at">
@@ -411,13 +416,15 @@ function CustomerCreateFormInner() {
                 </>
               )}
 
-              <Field>
+              <Field data-invalid={!!errors.phone}>
                 <FieldLabel htmlFor="phone">{t("customers.fields.phone")}</FieldLabel>
-                <Input id="phone" {...register("phone")} />
+                <Input id="phone" aria-invalid={!!errors.phone} {...register("phone")} />
+                <FieldError errors={translatedError(t, errors.phone)} />
               </Field>
-              <Field>
+              <Field data-invalid={!!errors.address}>
                 <FieldLabel htmlFor="address">{t("customers.fields.address")}</FieldLabel>
-                <Input id="address" {...register("address")} />
+                <Input id="address" aria-invalid={!!errors.address} {...register("address")} />
+                <FieldError errors={translatedError(t, errors.address)} />
               </Field>
 
               {createError && <FieldError>{createError}</FieldError>}

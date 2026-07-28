@@ -420,3 +420,27 @@ describe("CustomerCreateForm — company + drivers", () => {
     expect(receivedBodies[1]).toMatchObject({ license_number: "AL-2020-FIXED" });
   });
 });
+
+describe("CustomerCreateForm — field-level validation visibility (WR-02)", () => {
+  it("phone exceeding the max length is visibly flagged (aria-invalid) and blocks submit, instead of failing silently", async () => {
+    const user = userEvent.setup();
+    let customerPosts = 0;
+    server.use(
+      http.post(`${API_URL}/customers`, () => {
+        customerPosts += 1;
+        return HttpResponse.json({}, { status: 201 });
+      }),
+    );
+    await mount();
+
+    await user.type(screen.getByLabelText(/nom complet/i), "Yacine Belkacem");
+    await user.type(screen.getByLabelText(/numéro de pièce/i), "123456789012");
+    await user.type(screen.getByLabelText(/téléphone/i), "0".repeat(31));
+    await user.click(screen.getByRole("button", { name: /créer le client/i }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/téléphone/i)).toHaveAttribute("aria-invalid", "true");
+    });
+    expect(customerPosts).toBe(0);
+  });
+});
