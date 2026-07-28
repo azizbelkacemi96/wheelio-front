@@ -12,8 +12,16 @@ import type {
   CustomerResponse,
   DriverResponse,
 } from "@/types/customer";
+import type {
+  ActivateBody,
+  CancelBody,
+  CloseBody,
+  CreateContractBody,
+  DepositBody,
+} from "@/types/rental";
 import { ownerFixture } from "../fixtures/scope";
-import { contractFixtures, vehicleFixtures } from "../fixtures/fleet";
+import { vehicleFixtures } from "../fixtures/fleet";
+import { contractFixtures, contractsByVehicleId } from "../fixtures/contracts";
 import { customerFixtures, driversByCustomerId } from "../fixtures/customers";
 
 /**
@@ -56,6 +64,28 @@ const CONTRACT_STATUSES: readonly ContractStatus[] = [
   "closed",
   "cancelled",
 ];
+
+/**
+ * Base contract a lifecycle handler mutates: the matching fixture, or a
+ * synthesized minimal `reserved` contract when the id isn't a fixture (so a
+ * mutation test that POSTs against an arbitrary id still gets a well-shaped
+ * echo carrying that id).
+ */
+function contractOr(contractId: string): ContractResponse {
+  const found = contractFixtures.find((c) => c.id === contractId);
+  if (found) return found;
+  const now = new Date().toISOString();
+  return {
+    id: contractId,
+    vehicle_id: vehicleFixtures[0].id,
+    customer_id: customerFixtures[0].id,
+    status: "reserved",
+    starts_at: "2026-08-10T09:00:00.000Z",
+    ends_at: "2026-08-15T09:00:00.000Z",
+    created_at: now,
+    updated_at: now,
+  };
+}
 
 export const handlers = [
   http.post(`${API_URL}/auth/login`, () => {
@@ -147,6 +177,166 @@ export const handlers = [
         contracts = contracts.filter((c) => c.status === status);
       }
       return HttpResponse.json<ContractResponse[]>(contracts, { status: 200 });
+    },
+  ),
+
+  // ---- Rentals lifecycle (Phase 4) ----
+  // The per-vehicle GET list above already covers listing (now sourced from
+  // fixtures/contracts so all four statuses are listable). These handlers add
+  // the create/activate/close/cancel/get/deposit lifecycle. MSW v2 matches
+  // paths only — each handler reads the JSON body itself.
+  //
+  // Overlap 409: the create handler is deterministic — it rejects (409
+  // application/problem+json, RFC 7807) when the posted window intersects an
+  // existing reserved/active contract on the same vehicle (fixtures'
+  // overlapReservedA/B pair). A per-test `server.use(...)` override can also
+  // force any variant; the default happy path returns 201 reserved.
+
+  http.post(
+    `${API_URL}/vehicles/:vehicleId/rental-contracts`,
+    async ({ request, params }) => {
+      const vehicleId = params.vehicleId as string;
+      const body = (await request.json()) as CreateContractBody;
+
+      if (body.ends_at <= body.starts_at) {
+        return HttpResponse.json(
+          { message: "ends_at must be after starts_at" },
+          { status: 400 },
+        );
+      }
+
+      const existing = (contractsByVehicleId[vehicleId] ?? []).filter(
+        (c) => c.status === "reserved" || c.status === "active",
+      );
+      const overlaps = existing.some(
+        (c) => body.starts_at < c.ends_at && c.starts_at < body.ends_at,
+      );
+      if (overlaps) {
+        return HttpResponse.json(
+          {
+            type: "about:blank",
+            title: "Conflict",
+            status: 409,
+            detail:
+              "period overlaps an existing contract or unavailability on this vehicle",
+            instance: `/v1/vehicles/${vehicleId}/rental-contracts`,
+          },
+          {
+            status: 409,
+            headers: { "Content-Type": "application/problem+json" },
+          },
+        );
+      }
+
+      const now = new Date().toISOString();
+      const created: ContractResponse = {
+        id: crypto.randomUUID(),
+        vehicle_id: vehicleId,
+        customer_id: body.customer_id,
+        status: "reserved",
+        starts_at: body.starts_at,
+        ends_at: body.ends_at,
+        created_at: now,
+        updated_at: now,
+      };
+      return HttpResponse.json<ContractResponse>(created, { status: 201 });
+    },
+  ),
+
+  http.get(`${API_URL}/rental-contracts/:contractId`, ({ params }) => {
+    const contract = contractFixtures.find((c) => c.id === params.contractId);
+    if (!contract) {
+      return HttpResponse.json({ message: "contract not found" }, { status: 404 });
+    }
+    return HttpResponse.json<ContractResponse>(contract, { status: 200 });
+  }),
+
+  http.post(
+    `${API_URL}/rental-contracts/:contractId/activate`,
+    async ({ request, params }) => {
+      const body = (await request.json()) as ActivateBody;
+      const base = contractOr(params.contractId as string);
+      const now = new Date().toISOString();
+      return HttpResponse.json<ContractResponse>(
+        {
+          ...base,
+          status: "active",
+          actual_departure_at: body.actual_at ?? now,
+          departure_mileage: body.mileage,
+          departure_fuel_level: body.fuel,
+          updated_at: now,
+        },
+        { status: 200 },
+      );
+    },
+  ),
+
+  http.post(
+    `${API_URL}/rental-contracts/:contractId/close`,
+    async ({ request, params }) => {
+      const body = (await request.json()) as CloseBody;
+      if (!Array.isArray(body.invoice_lines) || body.invoice_lines.length < 1) {
+        return HttpResponse.json(
+          { message: "at least one invoice line is required" },
+          { status: 400 },
+        );
+      }
+      const base = contractOr(params.contractId as string);
+      const now = new Date().toISOString();
+      return HttpResponse.json<ContractResponse>(
+        {
+          ...base,
+          status: "closed",
+          actual_return_at: body.actual_at ?? now,
+          return_mileage: body.mileage,
+          return_fuel_level: body.fuel,
+          updated_at: now,
+        },
+        { status: 200 },
+      );
+    },
+  ),
+
+  http.post(
+    `${API_URL}/rental-contracts/:contractId/cancel`,
+    async ({ request, params }) => {
+      const body = (await request.json()) as CancelBody;
+      if (!body.reason || body.reason.trim() === "") {
+        return HttpResponse.json(
+          { message: "reason is required" },
+          { status: 400 },
+        );
+      }
+      const base = contractOr(params.contractId as string);
+      const now = new Date().toISOString();
+      return HttpResponse.json<ContractResponse>(
+        {
+          ...base,
+          status: "cancelled",
+          cancel_reason: body.reason,
+          cancelled_at: now,
+          updated_at: now,
+        },
+        { status: 200 },
+      );
+    },
+  ),
+
+  http.post(
+    `${API_URL}/rental-contracts/:contractId/deposit`,
+    async ({ request, params }) => {
+      const body = (await request.json()) as DepositBody;
+      const base = contractOr(params.contractId as string);
+      const now = new Date().toISOString();
+      return HttpResponse.json<ContractResponse>(
+        {
+          ...base,
+          deposit_amount_cents: body.amount_cents,
+          deposit_method: body.method,
+          updated_at: now,
+        },
+        { status: 200 },
+      );
     },
   ),
 

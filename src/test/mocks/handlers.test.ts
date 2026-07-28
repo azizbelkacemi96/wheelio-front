@@ -2,11 +2,16 @@ import { describe, expect, it } from "vitest";
 import { handlers } from "./handlers";
 import { agentFixture, managerFixture, ownerFixture } from "../fixtures/scope";
 import {
-  activeContractFixture,
   vehicleAvailable,
   vehicleFixtures,
   vehicleRented,
 } from "../fixtures/fleet";
+import {
+  activeContractFixture,
+  closedContract,
+  overlapVehicleId,
+  reservedContract,
+} from "../fixtures/contracts";
 import {
   customerCompany,
   customerFixtures,
@@ -17,7 +22,7 @@ const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 describe("MSW handlers + Scope fixtures (Wave 0 test-data layer)", () => {
   it("registers a handler for every confirmed wheelio-api endpoint", () => {
-    expect(handlers.length).toBe(14);
+    expect(handlers.length).toBe(20);
   });
 
   it("GET /me returns the owner fixture shape via the real MSW server", async () => {
@@ -108,15 +113,22 @@ describe("MSW handlers + Scope fixtures (Wave 0 test-data layer)", () => {
     expect(res.status).toBe(404);
   });
 
-  it("GET /vehicles/:vehicleId/rental-contracts?status=active returns the active contract for the rented vehicle", async () => {
+  it("GET /vehicles/:vehicleId/rental-contracts?status=active includes the active contract for the rented vehicle", async () => {
     const res = await fetch(
       `${API_URL}/vehicles/${vehicleRented.id}/rental-contracts?status=active`,
     );
-    const body = await res.json();
+    const body = (await res.json()) as {
+      id: string;
+      status: string;
+      departure_fuel_level?: string;
+    }[];
     expect(res.status).toBe(200);
-    expect(body).toHaveLength(1);
-    expect(body[0].id).toBe(activeContractFixture.id);
-    expect(body[0].departure_fuel_level).toBe(
+    // Phase 4 fixtures add an active-ending-today contract on the same rented
+    // vehicle (OPS-01 returns), so the list now carries more than one active.
+    expect(body.every((c) => c.status === "active")).toBe(true);
+    const active = body.find((c) => c.id === activeContractFixture.id);
+    expect(active).toBeDefined();
+    expect(active?.departure_fuel_level).toBe(
       activeContractFixture.departure_fuel_level,
     );
   });
@@ -128,6 +140,178 @@ describe("MSW handlers + Scope fixtures (Wave 0 test-data layer)", () => {
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body).toEqual([]);
+  });
+
+  // ---- Rentals lifecycle handlers (Phase 4 Wave 0 test-data layer) ----
+
+  it("GET /vehicles/:vehicleId/rental-contracts now lists all statuses from the contracts fixtures", async () => {
+    const res = await fetch(
+      `${API_URL}/vehicles/${vehicleAvailable.id}/rental-contracts`,
+    );
+    const body = (await res.json()) as { status: string }[];
+    expect(res.status).toBe(200);
+    // vehicleAvailable carries reserved + cancelled + reserved-today fixtures.
+    expect(body.length).toBeGreaterThanOrEqual(2);
+    expect(body.some((c) => c.status === "reserved")).toBe(true);
+  });
+
+  it("POST /vehicles/:vehicleId/rental-contracts returns 201 reserved for a free window", async () => {
+    const res = await fetch(
+      `${API_URL}/vehicles/${vehicleRented.id}/rental-contracts`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer_id: customerCompany.id,
+          starts_at: "2027-01-01T09:00:00.000Z",
+          ends_at: "2027-01-05T09:00:00.000Z",
+        }),
+      },
+    );
+    const body = await res.json();
+    expect(res.status).toBe(201);
+    expect(body.status).toBe("reserved");
+    expect(body.id).toBeTruthy();
+  });
+
+  it("POST create returns 409 application/problem+json when the window overlaps", async () => {
+    const res = await fetch(
+      `${API_URL}/vehicles/${overlapVehicleId}/rental-contracts`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer_id: customerCompany.id,
+          // Intersects overlapReservedA's [10-10, 10-20] window.
+          starts_at: "2026-10-12T09:00:00.000Z",
+          ends_at: "2026-10-14T09:00:00.000Z",
+        }),
+      },
+    );
+    const body = await res.json();
+    expect(res.status).toBe(409);
+    expect(res.headers.get("content-type")).toContain("application/problem+json");
+    expect(body.detail).toContain("overlaps");
+  });
+
+  it("POST create returns 400 when ends_at is not after starts_at", async () => {
+    const res = await fetch(
+      `${API_URL}/vehicles/${vehicleRented.id}/rental-contracts`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer_id: customerCompany.id,
+          starts_at: "2027-02-01T09:00:00.000Z",
+          ends_at: "2027-02-01T09:00:00.000Z",
+        }),
+      },
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it("POST /rental-contracts/:id/activate returns 200 active echoing mileage+fuel", async () => {
+    const res = await fetch(
+      `${API_URL}/rental-contracts/${reservedContract.id}/activate`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mileage: 12345, fuel: "half" }),
+      },
+    );
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.status).toBe("active");
+    expect(body.departure_mileage).toBe(12345);
+    expect(body.departure_fuel_level).toBe("half");
+  });
+
+  it("POST /rental-contracts/:id/close returns 400 with zero invoice lines, 200 with ≥1", async () => {
+    const bad = await fetch(
+      `${API_URL}/rental-contracts/${activeContractFixture.id}/close`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mileage: 20000, fuel: "full", invoice_lines: [] }),
+      },
+    );
+    expect(bad.status).toBe(400);
+
+    const ok = await fetch(
+      `${API_URL}/rental-contracts/${activeContractFixture.id}/close`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mileage: 20000,
+          fuel: "full",
+          invoice_lines: [
+            {
+              description: "Location 7 jours",
+              quantity: 7,
+              unit_price_ht_cents: 500000,
+              vat_rate: 19,
+            },
+          ],
+        }),
+      },
+    );
+    const okBody = await ok.json();
+    expect(ok.status).toBe(200);
+    expect(okBody.status).toBe("closed");
+    expect(okBody.return_mileage).toBe(20000);
+  });
+
+  it("POST /rental-contracts/:id/cancel returns 400 without a reason, 200 with one", async () => {
+    const bad = await fetch(
+      `${API_URL}/rental-contracts/${reservedContract.id}/cancel`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: "" }),
+      },
+    );
+    expect(bad.status).toBe(400);
+
+    const ok = await fetch(
+      `${API_URL}/rental-contracts/${reservedContract.id}/cancel`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: "Client indisponible" }),
+      },
+    );
+    const okBody = await ok.json();
+    expect(ok.status).toBe(200);
+    expect(okBody.status).toBe("cancelled");
+    expect(okBody.cancel_reason).toBe("Client indisponible");
+  });
+
+  it("GET /rental-contracts/:id returns 200 for a fixture, 404 for an unknown id", async () => {
+    const ok = await fetch(`${API_URL}/rental-contracts/${closedContract.id}`);
+    const okBody = await ok.json();
+    expect(ok.status).toBe(200);
+    expect(okBody.id).toBe(closedContract.id);
+
+    const missing = await fetch(
+      `${API_URL}/rental-contracts/00000000-0000-4000-8000-000000000000`,
+    );
+    expect(missing.status).toBe(404);
+  });
+
+  it("POST /rental-contracts/:id/deposit returns 200 echoing amount+method", async () => {
+    const res = await fetch(
+      `${API_URL}/rental-contracts/${reservedContract.id}/deposit`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount_cents: 2000000, method: "cash" }),
+      },
+    );
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.deposit_amount_cents).toBe(2000000);
+    expect(body.deposit_method).toBe("cash");
   });
 
   // ---- Customer handlers (Phase 3 Wave 0 test-data layer) ----

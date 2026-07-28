@@ -124,7 +124,128 @@
       "active": "En cours",
       "closed": "Clôturé",
       "cancelled": "Annulé"
+    },
+    "title": "Contrats",
+    "searchPlaceholder": "Rechercher par plaque ou client",
+    "noResults": "Aucun contrat ne correspond à votre recherche.",
+    "loadError": "Impossible de charger les contrats.",
+    "retry": "Réessayer",
+    "empty": {
+      "heading": "Aucun contrat",
+      "body": "Aucun contrat de location n'a encore été créé."
+    },
+    "columns": {
+      "vehicle": "Véhicule",
+      "customer": "Client",
+      "period": "Période",
+      "status": "Statut"
+    },
+    "actions": {
+      "new": "Nouveau contrat",
+      "activate": "Activer le départ",
+      "close": "Clôturer",
+      "cancel": "Annuler",
+      "recordDeposit": "Enregistrer une caution",
+      "backToList": "Retour aux contrats"
+    },
+    "errors": {
+      "overlap": "Ce véhicule est déjà réservé sur cette période.",
+      "notReservable": "Ce contrat n'est plus réservable — il a déjà été activé ou clôturé.",
+      "notClosable": "Ce contrat n'est plus clôturable — son statut a changé.",
+      "notCancellable": "Ce contrat ne peut plus être annulé — son statut a changé.",
+      "createFailed": "Impossible de créer le contrat.",
+      "activateFailed": "Impossible d'activer le départ.",
+      "closeFailed": "Impossible de clôturer le contrat.",
+      "cancelFailed": "Impossible d'annuler le contrat.",
+      "endBeforeStart": "La date de fin doit être postérieure à la date de début.",
+      "reasonRequired": "Un motif d'annulation est requis.",
+      "invoiceLineRequired": "Au moins une ligne de facture est requise."
+    },
+    "deposit": {
+      "amount": "Montant de la caution",
+      "method": "Mode de paiement",
+      "cash": "Espèces",
+      "card": "Carte",
+      "transfer": "Virement"
+    },
+    "detail": {
+      "title": "Contrat de location",
+      "vehicle": "Véhicule",
+      "customer": "Client",
+      "period": "Période",
+      "status": "Statut",
+      "deposit": "Caution",
+      "departureMileage": "Kilométrage de départ",
+      "departureFuel": "Carburant au départ",
+      "returnMileage": "Kilométrage de retour",
+      "returnFuel": "Carburant au retour",
+      "cancelReason": "Motif d'annulation",
+      "notFoundHeading": "Contrat introuvable",
+      "notFoundBody": "Ce contrat n'existe pas ou n'est plus accessible.",
+      "notAuthorized": "Vous n'avez pas les droits nécessaires pour cette action."
+    },
+    "filter": {
+      "all": "Tous",
+      "reserved": "Réservés",
+      "active": "En cours",
+      "closed": "Clôturés",
+      "cancelled": "Annulés"
     }
+  },
+  "wizard": {
+    "title": "Nouveau contrat",
+    "steps": {
+      "vehicle": "Véhicule",
+      "customer": "Client",
+      "terms": "Conditions",
+      "departure": "Départ"
+    },
+    "nav": {
+      "back": "Précédent",
+      "next": "Suivant",
+      "finish": "Terminer"
+    },
+    "vehicle": {
+      "title": "Choisir un véhicule",
+      "pick": "Sélectionner ce véhicule",
+      "noneAvailable": "Aucun véhicule disponible."
+    },
+    "customer": {
+      "title": "Choisir un client",
+      "pickExisting": "Client existant",
+      "createNew": "Nouveau client",
+      "searchPlaceholder": "Rechercher un client"
+    },
+    "terms": {
+      "title": "Conditions du contrat",
+      "startsAt": "Début",
+      "endsAt": "Fin",
+      "depositOptional": "Caution (facultatif)"
+    },
+    "departure": {
+      "title": "État de départ",
+      "mileage": "Kilométrage de départ",
+      "fuel": "Niveau de carburant",
+      "activateNow": "Activer le départ maintenant",
+      "seamNote": "L'état des lieux photo détaillé sera disponible à l'étape suivante."
+    },
+    "finish": {
+      "creating": "Création du contrat…",
+      "reservedNoActivate": "Réservation créée ; activez le départ manuellement.",
+      "success": "Contrat créé avec succès."
+    }
+  },
+  "ops": {
+    "title": "Aujourd'hui",
+    "pickups": {
+      "title": "Départs du jour",
+      "empty": "Aucun départ prévu aujourd'hui."
+    },
+    "returns": {
+      "title": "Retours du jour",
+      "empty": "Aucun retour prévu aujourd'hui."
+    },
+    "emptyAll": "Rien de prévu aujourd'hui."
   },
   "customerCount_one": "{{count}} client",
   "customerCount_other": "{{count}} clients",

@@ -124,7 +124,128 @@
       "active": "Active",
       "closed": "Closed",
       "cancelled": "Cancelled"
+    },
+    "title": "Contracts",
+    "searchPlaceholder": "Search by plate or customer",
+    "noResults": "No contracts match your search.",
+    "loadError": "Couldn't load contracts.",
+    "retry": "Retry",
+    "empty": {
+      "heading": "No contracts",
+      "body": "No rental contracts have been created yet."
+    },
+    "columns": {
+      "vehicle": "Vehicle",
+      "customer": "Customer",
+      "period": "Period",
+      "status": "Status"
+    },
+    "actions": {
+      "new": "New contract",
+      "activate": "Start rental",
+      "close": "Close",
+      "cancel": "Cancel",
+      "recordDeposit": "Record deposit",
+      "backToList": "Back to contracts"
+    },
+    "errors": {
+      "overlap": "This vehicle is already booked for this period.",
+      "notReservable": "This contract can no longer be started — it has already been activated or closed.",
+      "notClosable": "This contract can no longer be closed — its status has changed.",
+      "notCancellable": "This contract can no longer be cancelled — its status has changed.",
+      "createFailed": "Couldn't create the contract.",
+      "activateFailed": "Couldn't start the rental.",
+      "closeFailed": "Couldn't close the contract.",
+      "cancelFailed": "Couldn't cancel the contract.",
+      "endBeforeStart": "The end date must be after the start date.",
+      "reasonRequired": "A cancellation reason is required.",
+      "invoiceLineRequired": "At least one invoice line is required."
+    },
+    "deposit": {
+      "amount": "Deposit amount",
+      "method": "Payment method",
+      "cash": "Cash",
+      "card": "Card",
+      "transfer": "Transfer"
+    },
+    "detail": {
+      "title": "Rental contract",
+      "vehicle": "Vehicle",
+      "customer": "Customer",
+      "period": "Period",
+      "status": "Status",
+      "deposit": "Deposit",
+      "departureMileage": "Departure mileage",
+      "departureFuel": "Departure fuel level",
+      "returnMileage": "Return mileage",
+      "returnFuel": "Return fuel level",
+      "cancelReason": "Cancellation reason",
+      "notFoundHeading": "Contract not found",
+      "notFoundBody": "This contract doesn't exist or is no longer accessible.",
+      "notAuthorized": "You don't have the required permissions for this action."
+    },
+    "filter": {
+      "all": "All",
+      "reserved": "Reserved",
+      "active": "Active",
+      "closed": "Closed",
+      "cancelled": "Cancelled"
     }
+  },
+  "wizard": {
+    "title": "New contract",
+    "steps": {
+      "vehicle": "Vehicle",
+      "customer": "Customer",
+      "terms": "Terms",
+      "departure": "Departure"
+    },
+    "nav": {
+      "back": "Back",
+      "next": "Next",
+      "finish": "Finish"
+    },
+    "vehicle": {
+      "title": "Choose a vehicle",
+      "pick": "Select this vehicle",
+      "noneAvailable": "No vehicles available."
+    },
+    "customer": {
+      "title": "Choose a customer",
+      "pickExisting": "Existing customer",
+      "createNew": "New customer",
+      "searchPlaceholder": "Search a customer"
+    },
+    "terms": {
+      "title": "Contract terms",
+      "startsAt": "Start",
+      "endsAt": "End",
+      "depositOptional": "Deposit (optional)"
+    },
+    "departure": {
+      "title": "Departure state",
+      "mileage": "Departure mileage",
+      "fuel": "Fuel level",
+      "activateNow": "Start the rental now",
+      "seamNote": "The detailed photo inspection will be available in the next step."
+    },
+    "finish": {
+      "creating": "Creating contract…",
+      "reservedNoActivate": "Reservation created; start the rental manually.",
+      "success": "Contract created successfully."
+    }
+  },
+  "ops": {
+    "title": "Today",
+    "pickups": {
+      "title": "Today's pickups",
+      "empty": "No pickups scheduled today."
+    },
+    "returns": {
+      "title": "Today's returns",
+      "empty": "No returns scheduled today."
+    },
+    "emptyAll": "Nothing scheduled today."
   },
   "customerCount_one": "{{count}} customer",
   "customerCount_other": "{{count}} customers",
