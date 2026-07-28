@@ -125,5 +125,79 @@
       "closed": "Closed",
       "cancelled": "Cancelled"
     }
+  },
+  "customerCount_one": "{{count}} customer",
+  "customerCount_other": "{{count}} customers",
+  "customers": {
+    "title": "Customers",
+    "searchPlaceholder": "Search by name, ID number or RC",
+    "noResults": "No customers match your search.",
+    "loadError": "Couldn't load customers.",
+    "retry": "Retry",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "identityDoc": "Identity document",
+      "phone": "Phone"
+    },
+    "type": {
+      "individual": "Individual",
+      "company": "Company"
+    },
+    "identityDocType": {
+      "cin": "National ID",
+      "passport": "Passport"
+    },
+    "empty": {
+      "heading": "No customers",
+      "body": "No customers are registered yet."
+    },
+    "create": {
+      "cta": "New customer",
+      "title": "New customer",
+      "submit": "Create customer",
+      "typeLegend": "Customer type",
+      "individualLabel": "Individual",
+      "companyLabel": "Company",
+      "success": "Customer created successfully."
+    },
+    "fields": {
+      "fullName": "Full name",
+      "legalName": "Legal name",
+      "identityDocType": "Identity document type",
+      "identityDocNumber": "Document number",
+      "rc": "Trade register (RC)",
+      "nif": "NIF",
+      "nis": "NIS",
+      "licenseNumber": "License number",
+      "licenseIssuedAt": "License issue date",
+      "licenseValidUntil": "License valid until",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "drivers": {
+      "title": "Designated drivers",
+      "add": "Add a driver",
+      "remove": "Remove",
+      "fullName": "Full name",
+      "licenseNumber": "License number",
+      "empty": "No designated drivers."
+    },
+    "errors": {
+      "cinRequired": "The national ID number is required.",
+      "licenseDateOrder": "The valid-until date must be after the issue date.",
+      "createFailed": "Couldn't create the customer.",
+      "driverFailed": "Couldn't add this driver.",
+      "partialSuccess": "Customer created, but some drivers couldn't be added."
+    },
+    "detail": {
+      "backToList": "Back to customers",
+      "identityTitle": "Identity",
+      "companyTitle": "Company",
+      "licenseTitle": "Driving license",
+      "driversTitle": "Designated drivers",
+      "notFoundHeading": "Customer not found",
+      "notFoundBody": "This customer doesn't exist or is no longer accessible."
+    }
   }
 }

@@ -125,5 +125,79 @@
       "closed": "Clôturé",
       "cancelled": "Annulé"
     }
+  },
+  "customerCount_one": "{{count}} client",
+  "customerCount_other": "{{count}} clients",
+  "customers": {
+    "title": "Clients",
+    "searchPlaceholder": "Rechercher par nom, CIN ou RC",
+    "noResults": "Aucun client ne correspond à votre recherche.",
+    "loadError": "Impossible de charger les clients.",
+    "retry": "Réessayer",
+    "columns": {
+      "name": "Nom",
+      "type": "Type",
+      "identityDoc": "Pièce d'identité",
+      "phone": "Téléphone"
+    },
+    "type": {
+      "individual": "Particulier",
+      "company": "Entreprise"
+    },
+    "identityDocType": {
+      "cin": "CIN",
+      "passport": "Passeport"
+    },
+    "empty": {
+      "heading": "Aucun client",
+      "body": "Aucun client n'est encore enregistré."
+    },
+    "create": {
+      "cta": "Nouveau client",
+      "title": "Nouveau client",
+      "submit": "Créer le client",
+      "typeLegend": "Type de client",
+      "individualLabel": "Particulier",
+      "companyLabel": "Entreprise",
+      "success": "Client créé avec succès."
+    },
+    "fields": {
+      "fullName": "Nom complet",
+      "legalName": "Raison sociale",
+      "identityDocType": "Type de pièce d'identité",
+      "identityDocNumber": "Numéro de pièce",
+      "rc": "Registre de commerce (RC)",
+      "nif": "NIF",
+      "nis": "NIS",
+      "licenseNumber": "Numéro de permis",
+      "licenseIssuedAt": "Date de délivrance du permis",
+      "licenseValidUntil": "Date de validité du permis",
+      "phone": "Téléphone",
+      "address": "Adresse"
+    },
+    "drivers": {
+      "title": "Conducteurs désignés",
+      "add": "Ajouter un conducteur",
+      "remove": "Retirer",
+      "fullName": "Nom complet",
+      "licenseNumber": "Numéro de permis",
+      "empty": "Aucun conducteur désigné."
+    },
+    "errors": {
+      "cinRequired": "Le numéro de CIN est requis.",
+      "licenseDateOrder": "La date de validité doit être postérieure à la date de délivrance.",
+      "createFailed": "Impossible de créer le client.",
+      "driverFailed": "Impossible d'ajouter ce conducteur.",
+      "partialSuccess": "Client créé, mais certains conducteurs n'ont pas pu être ajoutés."
+    },
+    "detail": {
+      "backToList": "Retour aux clients",
+      "identityTitle": "Identité",
+      "companyTitle": "Entreprise",
+      "licenseTitle": "Permis de conduire",
+      "driversTitle": "Conducteurs désignés",
+      "notFoundHeading": "Client introuvable",
+      "notFoundBody": "Ce client n'existe pas ou n'est plus accessible."
+    }
   }
 }
