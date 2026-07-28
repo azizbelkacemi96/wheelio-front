@@ -78,8 +78,17 @@ export function CustomerList() {
   // very Input holding that term, stranding the user with no way to clear it
   // (mirrors fleet VehicleList CR-01). Only a genuinely empty org (no search)
   // hides them.
-  const showControls = query.isSuccess && (customers.length > 0 || isSearchActive);
-  const showCount = query.isSuccess && customers.length > 0;
+  //
+  // Gated on `!query.isPending`, NOT `query.isSuccess`: with
+  // `placeholderData: keepPreviousData` (queries.ts), `isPending` is true
+  // ONLY on the very first load — every subsequent debounced search term
+  // keeps the previous result set (and a non-pending status) visible while
+  // the new request resolves in the background. Gating on `isSuccess`
+  // instead would flip these to `false` on nearly every completed debounce
+  // cycle (a query key that has never been fetched starts `pending`),
+  // unmounting the very Input holding the user's search text (review CR-02).
+  const showControls = !query.isPending && (customers.length > 0 || isSearchActive);
+  const showCount = !query.isPending && customers.length > 0;
 
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">

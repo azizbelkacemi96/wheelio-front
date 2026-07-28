@@ -124,6 +124,37 @@ describe("CustomerList — New customer CTA (CR-01)", () => {
   });
 });
 
+describe("CustomerList — search stays mounted mid-fetch (CR-02)", () => {
+  it("keeps the search input mounted (not swapped for a skeleton) while a subsequent search request is in flight", async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.get(`${API_URL}/customers`, async ({ request }) => {
+        const q = new URL(request.url).searchParams.get("q");
+        if (q) await delay(200);
+        return HttpResponse.json(customerFixtures);
+      }),
+    );
+    await mount();
+    await screen.findByRole("table");
+
+    await user.type(screen.getByRole("searchbox"), "hamdi");
+
+    // Past the 300ms debounce but before the slower (200ms) server
+    // response resolves, the query key has changed and a new request is
+    // in flight. Under the CR-02 bug, `showControls` gates on
+    // `query.isSuccess`, which flips to `false` the instant a
+    // never-before-fetched key starts loading — unmounting the very Input
+    // holding "hamdi". With `placeholderData: keepPreviousData`
+    // (queries.ts) the previous result set (and a non-pending status)
+    // stays visible, so the input survives across the whole cycle.
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    });
+    expect(screen.getByRole("searchbox")).toHaveValue("hamdi");
+    expect(screen.queryByTestId("customer-list-loading")).not.toBeInTheDocument();
+  }, 10000);
+});
+
 describe("CustomerList", () => {
   it("renders every fixture customer with its display name and a type badge", async () => {
     await mount();

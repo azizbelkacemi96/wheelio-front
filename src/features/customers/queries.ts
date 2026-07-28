@@ -15,17 +15,27 @@
  * POST each driver) intentionally does NOT live here — it belongs to
  * 03-03's mutations.ts alongside the create form.
  */
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   fetchCustomer,
   fetchCustomerDrivers,
   fetchCustomers,
 } from "./api";
 
+/**
+ * `placeholderData: keepPreviousData` keeps the previous search result set
+ * (and `isSuccess`) visible while a new `?q=` request is in flight, instead
+ * of resetting to `status: 'pending'` on every distinct debounced search
+ * term. Without this, CustomerList's own "controls stay mounted" invariant
+ * is defeated: `showControls`/`showCount` gate on `isPending`, which would
+ * otherwise flip on nearly every keystroke-driven search and unmount the
+ * very `<Input>` holding the user's search text (review CR-02).
+ */
 export function useCustomersQuery(q: string) {
   return useQuery({
     queryKey: ["customers", "list", { q }],
     queryFn: () => fetchCustomers(q),
+    placeholderData: keepPreviousData,
   });
 }
 
