@@ -14,12 +14,17 @@
  * identity numbers).
  *
  * Read/search only: no `currentAgencyId` read (customers are org-scoped,
- * 03-01), no create affordance (create lives in 03-03).
+ * 03-01). The header exposes a "New customer" link to `/clients/nouveau`
+ * (create form lives in 03-03), gated with `hasOrgRole(scope, "agent")` —
+ * the same org-wide gate `CustomerCreateForm` itself enforces — so
+ * unauthorized users never see a dead-end CTA (review CR-01).
  */
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import type { CustomerResponse } from "@/types/customer";
+import { useAuthStore } from "@/shared/auth/store";
+import { hasOrgRole } from "@/shared/auth/permissions";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -53,6 +58,8 @@ function customerIdentityValue(c: CustomerResponse): string | undefined {
 
 export function CustomerList() {
   const { t } = useTranslation();
+  const scope = useAuthStore((s) => s.scope);
+  const canCreate = scope !== null && hasOrgRole(scope, "agent");
 
   const [search, setSearch] = useState("");
   const [q, setQ] = useState("");
@@ -77,9 +84,16 @@ export function CustomerList() {
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
       <header className="flex flex-col gap-1">
-        <h1 className="font-heading text-xl font-semibold text-foreground">
-          {t("customers.title")}
-        </h1>
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="font-heading text-xl font-semibold text-foreground">
+            {t("customers.title")}
+          </h1>
+          {canCreate && (
+            <Button asChild>
+              <Link to="/clients/nouveau">{t("customers.create.cta")}</Link>
+            </Button>
+          )}
+        </div>
         {showCount && (
           <p className="text-sm text-muted-foreground">
             {t("customerCount", { count: customers.length })}

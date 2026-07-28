@@ -31,6 +31,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import i18n from "@/shared/i18n";
 import { server } from "@/test/mocks/server";
+import { useAuthStore } from "@/shared/auth/store";
+import { scopeFromMe } from "@/shared/auth/permissions";
+import { ownerFixture } from "@/test/fixtures/scope";
 import {
   customerCompany,
   customerFixtures,
@@ -40,6 +43,19 @@ import {
 import { CustomerList } from "./CustomerList";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
+
+function resetAuthStore() {
+  useAuthStore.setState({
+    accessToken: null,
+    accessTokenExpiresAt: null,
+    refreshToken: null,
+    scope: null,
+    user: null,
+    agencies: [],
+    currentAgencyId: null,
+  });
+  localStorage.clear();
+}
 
 function renderList() {
   const queryClient = new QueryClient({
@@ -84,8 +100,27 @@ async function mount() {
 }
 
 afterEach(async () => {
+  resetAuthStore();
   await act(async () => {
     await i18n.changeLanguage("fr");
+  });
+});
+
+describe("CustomerList — New customer CTA (CR-01)", () => {
+  it("does not render the New customer CTA when the user has no resolved scope", async () => {
+    await mount();
+    await screen.findByRole("table");
+
+    expect(screen.queryByRole("link", { name: "Nouveau client" })).not.toBeInTheDocument();
+  });
+
+  it("renders a New customer CTA linking to /clients/nouveau for an authorized (agent+) scope", async () => {
+    useAuthStore.setState({ scope: scopeFromMe(ownerFixture.me) });
+    await mount();
+    await screen.findByRole("table");
+
+    const cta = screen.getByRole("link", { name: "Nouveau client" });
+    expect(cta).toHaveAttribute("href", "/clients/nouveau");
   });
 });
 
