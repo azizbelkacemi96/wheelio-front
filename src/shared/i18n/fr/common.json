@@ -190,6 +190,7 @@
       "licenseDateOrder": "La date de validité doit être postérieure à la date de délivrance.",
       "createFailed": "Impossible de créer le client.",
       "driverFailed": "Impossible d'ajouter ce conducteur.",
+      "driverFailedValidation": "Données invalides — corrigez ce conducteur avant de réessayer.",
       "partialSuccess": "Client créé, mais certains conducteurs n'ont pas pu être ajoutés."
     },
     "detail": {

@@ -35,6 +35,7 @@ import type { Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { isHTTPError } from "ky";
 import { Loader2, Plus, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
@@ -60,6 +61,7 @@ import { useAuthStore } from "@/shared/auth/store";
 import { hasOrgRole } from "@/shared/auth/permissions";
 import { customerSchema, type CustomerFormValues } from "./schemas";
 import {
+  toCreateDriverBody,
   useAttachDriversMutation,
   useCreateCustomerMutation,
   type DriverAttachResult,
@@ -82,6 +84,21 @@ function translatedError(
   error?: { message?: string },
 ): Array<{ message?: string }> | undefined {
   return error?.message ? [{ message: t(error.message) }] : undefined;
+}
+
+/**
+ * Resolves the captured `DriverAttachResult.error` (mutations.ts) into a
+ * translated, failure-specific message instead of always showing the one
+ * generic `driverFailed` string for every distinct cause — a 400 (rejected
+ * data, retrying identical values will fail again) reads differently from
+ * any other failure (transient/server-side, retry may succeed) (review
+ * CR-04/WR-04).
+ */
+function driverFailureMessage(t: (key: string) => string, error: unknown): string {
+  if (isHTTPError(error) && error.response.status === 400) {
+    return t("customers.errors.driverFailedValidation");
+  }
+  return t("customers.errors.driverFailed");
 }
 
 export function CustomerCreateForm() {
@@ -118,6 +135,7 @@ function CustomerCreateFormInner() {
     control,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<CustomerFormValues>({
     resolver,
@@ -164,9 +182,21 @@ function CustomerCreateFormInner() {
   async function retryFailed() {
     if (!partialFailure) return;
     const failedRows = partialFailure.results.filter((r) => !r.success);
+    // Read CURRENT form values for each failed row, never the stale body
+    // captured at the original (already-known-invalid) submission — the
+    // driver-row inputs stay editable after a partial failure, so a user
+    // fixing a rejected row and clicking Retry must resubmit what they just
+    // typed, not the identical broken data (review CR-04). Falls back to
+    // the captured body only if the row was somehow removed from the form
+    // (`remove()` only wires up UI removal within the company drivers
+    // sub-form, not this retry path, but this keeps retry safe either way).
+    const currentDrivers = getValues("drivers") ?? [];
     const results = await attachMutation.mutateAsync({
       customerId: partialFailure.customerId,
-      drivers: failedRows.map((r) => r.body),
+      drivers: failedRows.map((r) => {
+        const current = currentDrivers[r.index];
+        return current ? toCreateDriverBody(current) : r.body;
+      }),
     });
 
     if (results.every((r) => r.success)) {
@@ -405,7 +435,7 @@ function CustomerCreateFormInner() {
                       .filter((r) => !r.success)
                       .map((r) => (
                         <li key={r.index}>
-                          {r.body.full_name} — {t("customers.errors.driverFailed")}
+                          {r.body.full_name} — {driverFailureMessage(t, r.error)}
                         </li>
                       ))}
                   </ul>

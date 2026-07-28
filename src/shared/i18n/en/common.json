@@ -190,6 +190,7 @@
       "licenseDateOrder": "The valid-until date must be after the issue date.",
       "createFailed": "Couldn't create the customer.",
       "driverFailed": "Couldn't add this driver.",
+      "driverFailedValidation": "Invalid data — fix this driver before retrying.",
       "partialSuccess": "Customer created, but some drivers couldn't be added."
     },
     "detail": {

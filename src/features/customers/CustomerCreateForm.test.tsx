@@ -367,4 +367,56 @@ describe("CustomerCreateForm — company + drivers", () => {
     // Still exactly one POST /customers across the whole flow (create + retry).
     expect(customerPosts).toBe(1);
   });
+
+  it("retry resubmits the CURRENT (edited) form values for a failed row, not the stale originally-submitted body (CR-04)", async () => {
+    const user = userEvent.setup();
+    let driverCallCount = 0;
+    const receivedBodies: CreateDriverBody[] = [];
+    mockCreateCustomer("retry-current-values");
+    server.use(
+      http.post(`${API_URL}/customers/:customerId/drivers`, async ({ request }) => {
+        driverCallCount += 1;
+        const body = (await request.json()) as CreateDriverBody;
+        receivedBodies.push(body);
+        if (driverCallCount === 1) {
+          return HttpResponse.json({ message: "invalid driver" }, { status: 400 });
+        }
+        return HttpResponse.json({ ...body, id: `d-${driverCallCount}` }, { status: 201 });
+      }),
+    );
+    await mount();
+
+    await user.click(screen.getByRole("radio", { name: /entreprise/i }));
+    await user.type(screen.getByLabelText(/raison sociale/i), "SARL Transport Hamdi");
+    await user.type(screen.getByLabelText(/registre de commerce/i), "16/00-1234567 B 21");
+
+    await user.click(screen.getByRole("button", { name: /ajouter un conducteur/i }));
+    const row0 = within(screen.getByTestId("driver-row-0"));
+    await user.type(row0.getByLabelText(/nom complet/i), "Karim Hamdi");
+    await user.type(row0.getByLabelText(/numéro de permis/i), "BAD-LICENSE");
+
+    await user.click(screen.getByRole("button", { name: /créer le client/i }));
+
+    expect(
+      await screen.findByText(/client créé, mais certains conducteurs/i),
+    ).toBeInTheDocument();
+    expect(receivedBodies[0]).toMatchObject({ license_number: "BAD-LICENSE" });
+    // The failure-specific translated message (400 -> driverFailedValidation).
+    expect(screen.getByText(/données invalides/i)).toBeInTheDocument();
+
+    // The failed row stays editable; the user fixes it in place.
+    const failedRow = within(screen.getByTestId("driver-row-0"));
+    const licenseInput = failedRow.getByLabelText(/numéro de permis/i);
+    await user.clear(licenseInput);
+    await user.type(licenseInput, "AL-2020-FIXED");
+
+    await user.click(screen.getByRole("button", { name: /réessayer/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/^detail:retry-current-values-1$/)).toBeInTheDocument();
+    });
+    // Retry must have sent the EDITED value, never the stale captured body.
+    expect(receivedBodies).toHaveLength(2);
+    expect(receivedBodies[1]).toMatchObject({ license_number: "AL-2020-FIXED" });
+  });
 });
