@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 3
+current_phase: 03
 current_phase_name: clients
-status: planning
-stopped_at: Phase 2 verified (passed) — starting Phase 3
-last_updated: "2026-07-27T20:00:00.000Z"
-last_activity: 2026-07-27
-last_activity_desc: Phase 2 (Fleet) verified — 2/2 criteria, review fixes landed
+status: executing
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-07-28T07:50:30.624Z"
+last_activity: 2026-07-28
+last_activity_desc: Phase 03 execution started
 progress:
-  total_phases: 6
+  total_phases: 3
   completed_phases: 2
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 14
+  completed_plans: 11
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-22)
 
 **Core value:** Une agence peut gérer tout son cycle de location — véhicule, client, contrat, état des lieux, facture — depuis une seule interface web professionnelle, aussi utilisable au comptoir que sur le terrain.
-**Current focus:** Phase 1 — foundations-auth-shell-i18n-design-system
+**Current focus:** Phase 03 — clients
 
 ## Current Position
 
-Phase: 1 (foundations-auth-shell-i18n-design-system) — EXECUTING
-Plan: 7 of 7
-Status: Phase complete — ready for verification
-Last activity: 2026-07-22 — Phase 1 execution started
+Phase: 03 (clients) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-07-28 — Phase 03 execution started
 
-Progress: [█████████░] 90%
+Progress: [████████░░] 79%
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Progress: [█████████░] 90%
 | Phase 01 P06 | 30 | 2 tasks | 18 files |
 | Phase 01 P07 | 45 | 2 tasks | 15 files |
 | Phase 02 P02 | 1 session | 2 tasks | 10 files |
+| Phase 03 P01 | 25 | 3 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,9 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-07]: Phase E2E ran in MOCKED API mode (plan-sanctioned fallback) — wheelio-api unreachable at execution time, and owner+agent role assertions need deterministic fixtures; Playwright page.route mocks reuse src/test/fixtures/scope.ts with CORS headers + OPTIONS preflight handling (fulfilled cross-origin responses still undergo browser CORS checks).
 - [Phase ?]: 02-02: Vehicle list uses server-side ?status= filter (in query key) + client-side useMemo text search; responsive table(md+)/cards(<md) both in DOM
 - [Phase ?]: 02-02: Created $vehicleId stub route as the typed link target (02-03 fills VehicleDetail); routeTree.gen.ts is gitignored, not committed
+- [Phase ?]: 03-01: hasOrgRole ported as a separate org-wide axis alongside per-agency canOperate/canRead/canManage — customer records use HasOrgRole, never the per-agency gate
+- [Phase ?]: 03-01: customer query keys carry no currentAgencyId — customers are org-scoped, contrasting with fleet's agency-keyed list
+- [Phase ?]: 03-01: MSW driver-create-with-unknown-parent returns 400 'unknown customer', mirroring service.go's ErrNotFound->ErrInvalid mapping
 
 ### Pending Todos
 
@@ -116,6 +120,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-27T11:28:18.348Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-07-28T07:50:30.619Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None

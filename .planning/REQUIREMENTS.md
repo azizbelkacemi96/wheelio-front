@@ -23,9 +23,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Clients
 
-- [ ] **CUST-01**: User can create an individual customer record (identity document, driving license)
-- [ ] **CUST-02**: User can create a company customer record (RC/NIF/NIS) with designated drivers
-- [ ] **CUST-03**: User can search for and find an existing customer
+- [x] **CUST-01**: User can create an individual customer record (identity document, driving license)
+- [x] **CUST-02**: User can create a company customer record (RC/NIF/NIS) with designated drivers
+- [x] **CUST-03**: User can search for and find an existing customer
 
 ### Contrats de location
 
@@ -98,9 +98,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-06 | Phase 1 | Complete |
 | FLEET-01 | Phase 2 | Complete |
 | FLEET-02 | Phase 2 | Complete |
-| CUST-01 | Phase 3 | Pending |
-| CUST-02 | Phase 3 | Pending |
-| CUST-03 | Phase 3 | Pending |
+| CUST-01 | Phase 3 | Complete |
+| CUST-02 | Phase 3 | Complete |
+| CUST-03 | Phase 3 | Complete |
 | RENT-01 | Phase 4 | Pending |
 | RENT-02 | Phase 4 | Pending |
 | RENT-03 | Phase 4 | Pending |

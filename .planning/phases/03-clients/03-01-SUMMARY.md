@@ -162,3 +162,7 @@ None - no external service configuration required.
 ---
 *Phase: 03-clients*
 *Completed: 2026-07-28*
+
+## Self-Check: PASSED
+
+All 8 declared artifacts found on disk; all 4 commit hashes (`d0246fe`, `d6db635`, `100b919`, `40ac825`) verified present in `git log --oneline --all`.
