@@ -6,8 +6,15 @@ import type {
 } from "@/types/identity";
 import type { VehicleResponse, VehicleStatus } from "@/types/fleet";
 import type { ContractResponse, ContractStatus } from "@/types/rental";
+import type {
+  CreateCustomerBody,
+  CreateDriverBody,
+  CustomerResponse,
+  DriverResponse,
+} from "@/types/customer";
 import { ownerFixture } from "../fixtures/scope";
 import { contractFixtures, vehicleFixtures } from "../fixtures/fleet";
+import { customerFixtures, driversByCustomerId } from "../fixtures/customers";
 
 /**
  * MSW handlers mirroring wheelio-api's confirmed endpoint shapes (see
@@ -142,4 +149,82 @@ export const handlers = [
       return HttpResponse.json<ContractResponse[]>(contracts, { status: 200 });
     },
   ),
+
+  // ---- Customers (Phase 3) ----
+  // Org-scoped, no agency_id anywhere (D-07/D-08) — MSW v2 matches paths
+  // only, each handler parses request.url's searchParams itself.
+
+  http.get(`${API_URL}/customers`, ({ request }) => {
+    const { searchParams } = new URL(request.url);
+    const q = searchParams.get("q")?.trim() ?? "";
+
+    if (q === "") {
+      return HttpResponse.json<CustomerResponse[]>(customerFixtures, {
+        status: 200,
+      });
+    }
+
+    const needle = q.toLowerCase();
+    const matches = customerFixtures.filter((c) => {
+      const haystack = [
+        c.full_name,
+        c.legal_name,
+        c.identity_doc_number,
+        c.rc,
+      ]
+        .filter((v): v is string => v !== undefined)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(needle);
+    });
+    return HttpResponse.json<CustomerResponse[]>(matches, { status: 200 });
+  }),
+
+  http.post(`${API_URL}/customers`, async ({ request }) => {
+    const body = (await request.json()) as CreateCustomerBody;
+    const now = new Date().toISOString();
+    const created: CustomerResponse = {
+      ...body,
+      id: crypto.randomUUID(),
+      created_at: now,
+      updated_at: now,
+    };
+    return HttpResponse.json<CustomerResponse>(created, { status: 201 });
+  }),
+
+  http.get(`${API_URL}/customers/:customerId`, ({ params }) => {
+    const customer = customerFixtures.find((c) => c.id === params.customerId);
+    if (!customer) {
+      return HttpResponse.json({ message: "customer not found" }, { status: 404 });
+    }
+    return HttpResponse.json<CustomerResponse>(customer, { status: 200 });
+  }),
+
+  http.post(
+    `${API_URL}/customers/:customerId/drivers`,
+    async ({ request, params }) => {
+      const customerId = params.customerId as string;
+      const parent = customerFixtures.find((c) => c.id === customerId);
+      if (!parent) {
+        // Mirrors service.go CreateDriver: unknown parent maps ErrNotFound
+        // to ErrInvalid -> 400 "unknown customer" (never a 404 here).
+        return HttpResponse.json({ message: "unknown customer" }, { status: 400 });
+      }
+      const body = (await request.json()) as CreateDriverBody;
+      const now = new Date().toISOString();
+      const created: DriverResponse = {
+        ...body,
+        id: crypto.randomUUID(),
+        customer_id: customerId,
+        created_at: now,
+        updated_at: now,
+      };
+      return HttpResponse.json<DriverResponse>(created, { status: 201 });
+    },
+  ),
+
+  http.get(`${API_URL}/customers/:customerId/drivers`, ({ params }) => {
+    const drivers = driversByCustomerId[params.customerId as string] ?? [];
+    return HttpResponse.json<DriverResponse[]>(drivers, { status: 200 });
+  }),
 ];

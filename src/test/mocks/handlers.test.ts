@@ -7,12 +7,17 @@ import {
   vehicleFixtures,
   vehicleRented,
 } from "../fixtures/fleet";
+import {
+  customerCompany,
+  customerFixtures,
+  driverHamdiA,
+} from "../fixtures/customers";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 describe("MSW handlers + Scope fixtures (Wave 0 test-data layer)", () => {
   it("registers a handler for every confirmed wheelio-api endpoint", () => {
-    expect(handlers.length).toBe(9);
+    expect(handlers.length).toBe(14);
   });
 
   it("GET /me returns the owner fixture shape via the real MSW server", async () => {
@@ -123,5 +128,86 @@ describe("MSW handlers + Scope fixtures (Wave 0 test-data layer)", () => {
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body).toEqual([]);
+  });
+
+  // ---- Customer handlers (Phase 3 Wave 0 test-data layer) ----
+
+  it("GET /customers?q= narrows results to matching fixtures (name/legal_name/CIN/RC)", async () => {
+    const res = await fetch(`${API_URL}/customers?q=Hamdi`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body).toHaveLength(1);
+    expect(body[0].id).toBe(customerCompany.id);
+  });
+
+  it("GET /customers with no q returns the full fixture slice", async () => {
+    const res = await fetch(`${API_URL}/customers`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body).toHaveLength(customerFixtures.length);
+  });
+
+  it("POST /customers echoes the body and returns 201 with a generated id", async () => {
+    const res = await fetch(`${API_URL}/customers`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "individual", full_name: "Test Client" }),
+    });
+    const body = await res.json();
+    expect(res.status).toBe(201);
+    expect(body.full_name).toBe("Test Client");
+    expect(body.id).toBeTruthy();
+    expect(body.created_at).toBeTruthy();
+  });
+
+  it("GET /customers/:customerId returns 404 for an unknown id", async () => {
+    const res = await fetch(
+      `${API_URL}/customers/00000000-0000-4000-8000-000000000000`,
+    );
+    expect(res.status).toBe(404);
+  });
+
+  it("GET /customers/:customerId returns the matching fixture", async () => {
+    const res = await fetch(`${API_URL}/customers/${customerCompany.id}`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.legal_name).toBe(customerCompany.legal_name);
+  });
+
+  it("POST /customers/:customerId/drivers returns 201 with the path customer_id", async () => {
+    const res = await fetch(
+      `${API_URL}/customers/${customerCompany.id}/drivers`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: "New Driver",
+          license_number: "AL-2026-000001",
+        }),
+      },
+    );
+    const body = await res.json();
+    expect(res.status).toBe(201);
+    expect(body.customer_id).toBe(customerCompany.id);
+    expect(body.full_name).toBe("New Driver");
+  });
+
+  it("POST /customers/:customerId/drivers returns 400 for an unknown parent customer", async () => {
+    const res = await fetch(
+      `${API_URL}/customers/00000000-0000-4000-8000-000000000000/drivers`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ full_name: "X", license_number: "Y" }),
+      },
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it("GET /customers/:customerId/drivers returns that customer's drivers", async () => {
+    const res = await fetch(`${API_URL}/customers/${customerCompany.id}/drivers`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.map((d: { id: string }) => d.id)).toContain(driverHamdiA.id);
   });
 });
