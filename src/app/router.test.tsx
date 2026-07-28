@@ -20,6 +20,7 @@ import { resetSession, ensureSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/shared/auth/store";
 import { TooltipProvider } from "@/shared/ui/tooltip";
 import { vehicleAvailable } from "@/test/fixtures/fleet";
+import { customerIndividualCin } from "@/test/fixtures/customers";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
@@ -134,6 +135,24 @@ describe("_authenticated route guard", () => {
     });
     expect(router.state.location.pathname).toBe(
       `/vehicules/${vehicleAvailable.id}`,
+    );
+  });
+
+  it("navigating to /clients/{id} resolves the detail screen through the real route tree", async () => {
+    useAuthStore.setState({ refreshToken: "valid-refresh-token" });
+
+    const { router } = await renderApp([`/clients/${customerIndividualCin.id}`]);
+
+    // The detail screen renders the customer's full name as its page heading,
+    // proving list/form -> detail routing works end-to-end via the generated
+    // tree + the plan 03-01 customer MSW handler.
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: customerIndividualCin.full_name }),
+      ).toBeInTheDocument();
+    });
+    expect(router.state.location.pathname).toBe(
+      `/clients/${customerIndividualCin.id}`,
     );
   });
 
