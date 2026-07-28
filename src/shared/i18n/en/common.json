@@ -198,6 +198,7 @@
       "companyTitle": "Company",
       "licenseTitle": "Driving license",
       "driversTitle": "Designated drivers",
+      "driversLoadError": "Couldn't load the designated drivers.",
       "notFoundHeading": "Customer not found",
       "notFoundBody": "This customer doesn't exist or is no longer accessible."
     }

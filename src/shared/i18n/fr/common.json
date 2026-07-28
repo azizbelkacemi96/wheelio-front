@@ -198,6 +198,7 @@
       "companyTitle": "Entreprise",
       "licenseTitle": "Permis de conduire",
       "driversTitle": "Conducteurs désignés",
+      "driversLoadError": "Impossible de charger les conducteurs désignés.",
       "notFoundHeading": "Client introuvable",
       "notFoundBody": "Ce client n'existe pas ou n'est plus accessible."
     }
