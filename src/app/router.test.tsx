@@ -103,6 +103,22 @@ describe("_authenticated route guard", () => {
     expect(router.state.location.pathname).toBe("/vehicules");
   });
 
+  it("navigating to /clients renders the real customer list, not the retired placeholder", async () => {
+    useAuthStore.setState({ refreshToken: "valid-refresh-token" });
+
+    const { router } = await renderApp(["/clients"]);
+
+    // The real list screen: its "Clients" page heading. The Phase 1
+    // placeholder's "Bientôt disponible" empty state must be gone.
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: "Clients" }),
+      ).toBeInTheDocument();
+    });
+    expect(screen.queryByText("Bientôt disponible")).not.toBeInTheDocument();
+    expect(router.state.location.pathname).toBe("/clients");
+  });
+
   it("navigating to /vehicules/{id} resolves the detail screen through the real route tree", async () => {
     useAuthStore.setState({ refreshToken: "valid-refresh-token" });
 
