@@ -8,6 +8,7 @@ import {
   canManage,
   canOperate,
   canRead,
+  hasOrgRole,
   roleInAgency,
   scopeFromMe,
   type Scope,
@@ -139,6 +140,55 @@ describe("canRead / canOperate / canManage rank gates", () => {
       expect(canOperate(memberScope, key)).toBe(false);
       expect(canManage(memberScope, key)).toBe(false);
     }
+  });
+});
+
+describe("hasOrgRole", () => {
+  it("org admin (owner) with empty agencyRoles is true for min 'viewer' and min 'agent' (admin shortcut)", () => {
+    const scope = scopeFromMe(ownerFixture.me);
+
+    expect(scope.agencyRoles).toEqual({});
+    expect(hasOrgRole(scope, "viewer")).toBe(true);
+    expect(hasOrgRole(scope, "agent")).toBe(true);
+  });
+
+  it("member with 'agent' in one agency is true for 'viewer' and 'agent'", () => {
+    const scope = scopeFromMe(agentFixture.me);
+
+    expect(hasOrgRole(scope, "viewer")).toBe(true);
+    expect(hasOrgRole(scope, "agent")).toBe(true);
+  });
+
+  it("member with 'manager' in one agency is true for 'viewer', 'agent', and 'manager'", () => {
+    const scope = scopeFromMe(managerFixture.me);
+
+    expect(hasOrgRole(scope, "viewer")).toBe(true);
+    expect(hasOrgRole(scope, "agent")).toBe(true);
+    expect(hasOrgRole(scope, "manager")).toBe(true);
+  });
+
+  it("member with ONLY 'viewer' in one agency is true for 'viewer' but false for 'agent'", () => {
+    const viewerOnlyScope: Scope = {
+      userId: "u-viewer-only",
+      orgId: "org1",
+      orgRole: "member",
+      agencyRoles: { [AGENCY_ALGER_ID]: "viewer" },
+    };
+
+    expect(hasOrgRole(viewerOnlyScope, "viewer")).toBe(true);
+    expect(hasOrgRole(viewerOnlyScope, "agent")).toBe(false);
+  });
+
+  it("member with EMPTY agencyRoles is false for 'viewer' and 'agent' (no admin shortcut, no membership)", () => {
+    const noMembershipScope: Scope = {
+      userId: "u-none",
+      orgId: "org1",
+      orgRole: "member",
+      agencyRoles: {},
+    };
+
+    expect(hasOrgRole(noMembershipScope, "viewer")).toBe(false);
+    expect(hasOrgRole(noMembershipScope, "agent")).toBe(false);
   });
 });
 

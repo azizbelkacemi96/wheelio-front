@@ -70,6 +70,27 @@ export function canManage(scope: Scope, agencyId: string): boolean {
 }
 
 /**
+ * Mirrors Scope.HasOrgRole (wheelio-api `internal/domain/identity/scope.go:51`)
+ * — the ORG-WIDE authorization axis, used for resources with no agency
+ * boundary at all (e.g. customers). Org admins (owner|admin) pass via the
+ * same implicit-manager shortcut as every other gate; otherwise true when
+ * ANY agency membership in `scope.agencyRoles` is at-or-above `min`.
+ *
+ * This is deliberately NOT `canOperate`/`canRead`/`canManage` above — those
+ * are the per-AGENCY axis (a specific `agencyId` must be passed and only
+ * that agency's role counts). Customer records have no agency_id, so gating
+ * them with `canOperate(scope, someAgencyId)` would be WRONG: a user with
+ * "agent" in agency A but no membership in agency B would be incorrectly
+ * denied create access to a customer even though HasOrgRole(agent) is true
+ * (agent-or-above in ANY agency). Use `hasOrgRole` for customer read/write
+ * gates only; keep using the per-agency helpers for fleet/rental resources.
+ */
+export function hasOrgRole(scope: Scope, min: AgencyRole): boolean {
+  if (isOrgAdmin(scope)) return true;
+  return Object.values(scope.agencyRoles).some((role) => RANK[role] >= RANK[min]);
+}
+
+/**
  * Builds a Scope from the `/me` response — the ONLY place this mapping
  * happens. Nothing else in the client should construct a Scope by hand.
  */
