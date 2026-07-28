@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: clients
 status: executing
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-07-28T07:59:59.189Z"
+stopped_at: Completed 03-03-PLAN.md
+last_updated: "2026-07-28T08:22:30.265Z"
 last_activity: 2026-07-28
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 03 (clients) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-07-28 — Phase 03 execution started
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -68,6 +68,7 @@ Progress: [█████████░] 86%
 | Phase 02 P02 | 1 session | 2 tasks | 10 files |
 | Phase 03 P01 | 25 | 3 tasks | 11 files |
 | Phase 03 P02 | 8 | 3 tasks | 10 files |
+| Phase 03 P03 | 15min | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,10 @@ Recent decisions affecting current work:
 - [Phase ?]: 03-01: MSW driver-create-with-unknown-parent returns 400 'unknown customer', mirroring service.go's ErrNotFound->ErrInvalid mapping
 - [Phase ?]: 03-02: Pulled the $customerId typed stub route forward from 03-03 (Rule 3) — CustomerList's row Link needs a registered route target to type-check under tsc -b, mirroring 02-02's vehicules/$vehicleId precedent
 - [Phase ?]: 03-02: Server-side ?q= search implemented via two local useState values (raw input + debounced-committed) rather than a shared debounce hook — no such hook exists yet and CustomerList is the only caller
+- [Phase ?]: 03-03: License fields render only in the individual branch UI (a company has no personal license, only its drivers do)
+- [Phase ?]: 03-03: Radix RadioGroup/Select wired via react-hook-form Controller (value/onValueChange), not register()
+- [Phase ?]: 03-03: translatedError(t, fieldError) helper resolves i18n-key Zod messages before FieldError renders them (first form whose schema messages are keys, not bare strings)
+- [Phase ?]: 03-03: Partial-failure retry re-attaches only the previously-failed driver rows against the existing customer id; onSubmit guards against ever re-POSTing /customers once a customer exists
 
 ### Pending Todos
 
@@ -123,6 +128,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-28T07:59:59.183Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-07-28T08:22:30.259Z
+Stopped at: Completed 03-03-PLAN.md
 Resume file: None
