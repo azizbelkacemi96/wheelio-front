@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundations — Auth, Shell, i18n, Design System** - Login with transparent session refresh, role-aware navigation, agency switching, FR/EN i18n, and a consistent design-token/component library
 - [x] **Phase 2: Fleet** - Vehicle list with live status and vehicle detail view
-- [ ] **Phase 3: Clients** - Individual/company customer creation, designated drivers, and search
+- [x] **Phase 3: Clients** - Individual/company customer creation, designated drivers, and search
 - [ ] **Phase 4: Contrats de location** - Full reservation → activation → closure → cancellation lifecycle as a guided wizard, plus a "today" overview
 - [ ] **Phase 5: État des lieux** - Departure/return inspections with zone-based damage entry and resilient on-site photo capture
 - [ ] **Phase 6: Identité fiscale & Facturation** - Fiscal-identity gate, invoice view, payments, credit notes, and authenticated PDF downloads
@@ -154,7 +154,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundations — Auth, Shell, i18n, Design System | 7/7 | Complete (2 visual backstop checks deferred to user's final review, see 01-VERIFICATION.md) | 2026-07-23 |
 | 2. Fleet | 3/3 | Complete | 2026-07-27 |
-| 3. Clients | 4/4 | In Progress|  |
+| 3. Clients | 4/4 | Complete (2 human checks deferred to final review, see 03-VERIFICATION.md) | 2026-07-28 |
 | 4. Contrats de location | 0/TBD | Not started | - |
 | 5. État des lieux | 0/TBD | Not started | - |
 | 6. Identité fiscale & Facturation | 0/TBD | Not started | - |
