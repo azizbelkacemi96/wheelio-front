@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: clients
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-07-28T07:50:30.624Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-07-28T07:59:59.189Z"
 last_activity: 2026-07-28
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 14
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 03 (clients) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-28 — Phase 03 execution started
 
-Progress: [████████░░] 79%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Progress: [████████░░] 79%
 | Phase 01 P07 | 45 | 2 tasks | 15 files |
 | Phase 02 P02 | 1 session | 2 tasks | 10 files |
 | Phase 03 P01 | 25 | 3 tasks | 11 files |
+| Phase 03 P02 | 8 | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,8 @@ Recent decisions affecting current work:
 - [Phase ?]: 03-01: hasOrgRole ported as a separate org-wide axis alongside per-agency canOperate/canRead/canManage — customer records use HasOrgRole, never the per-agency gate
 - [Phase ?]: 03-01: customer query keys carry no currentAgencyId — customers are org-scoped, contrasting with fleet's agency-keyed list
 - [Phase ?]: 03-01: MSW driver-create-with-unknown-parent returns 400 'unknown customer', mirroring service.go's ErrNotFound->ErrInvalid mapping
+- [Phase ?]: 03-02: Pulled the $customerId typed stub route forward from 03-03 (Rule 3) — CustomerList's row Link needs a registered route target to type-check under tsc -b, mirroring 02-02's vehicules/$vehicleId precedent
+- [Phase ?]: 03-02: Server-side ?q= search implemented via two local useState values (raw input + debounced-committed) rather than a shared debounce hook — no such hook exists yet and CustomerList is the only caller
 
 ### Pending Todos
 
@@ -120,6 +123,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-28T07:50:30.619Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-07-28T07:59:59.183Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
