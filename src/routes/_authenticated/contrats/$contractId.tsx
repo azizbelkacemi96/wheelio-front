@@ -1,12 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { EmptyState } from "@/shared/ui/empty-state";
+import { ContractDetail } from "@/features/contracts/ContractDetail";
 
 /**
- * /contrats/$contractId — typed EmptyState STUB, pulled forward so
- * ContractList's per-row Link (`to="/contrats/$contractId"`) type-checks under
- * `tsc -b` now (the 02-02 $vehicleId / 03-02 $customerId precedent). The real
- * contract-detail screen is filled by plan 04-03.
+ * /contrats/$contractId — contract detail route (RENT-02/03/04, D-03).
+ *
+ * No loader: component-level useQuery is the established idiom (clients/
+ * $customerId + vehicules/$vehicleId precedent). The id comes from the path
+ * param and is forwarded to ContractDetail, which composes useContractQuery +
+ * useVehicleQuery + useCustomerQuery. Replaces the 04-02 typed EmptyState stub.
  */
 export const Route = createFileRoute("/_authenticated/contrats/$contractId")({
-  component: EmptyState,
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  const { contractId } = Route.useParams();
+  return <ContractDetail contractId={contractId} />;
+}

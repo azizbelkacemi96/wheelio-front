@@ -18,7 +18,12 @@
  * wants, so no screen ever hand-rolls the *100.
  */
 import { z } from "zod";
-import type { ActivateBody, CloseBody, CloseInvoiceLine } from "@/types/rental";
+import type {
+  ActivateBody,
+  CloseBody,
+  CloseInvoiceLine,
+  DepositBody,
+} from "@/types/rental";
 
 const fuelLevel = z.enum(
   ["empty", "quarter", "half", "three_quarters", "full"],
@@ -71,10 +76,21 @@ export const cancelSchema = z.object({
     .min(1, { message: "contracts.errors.reasonRequired" }),
 });
 
+/** Deposit — the human enters DZD (D-10); toDepositBody converts to cents. */
+export const depositSchema = z.object({
+  amount_dzd: z.coerce
+    .number({ message: "contracts.errors.amountInvalid" })
+    .gt(0, { message: "contracts.errors.amountInvalid" }),
+  method: z.enum(["cash", "card", "transfer"], {
+    message: "contracts.errors.amountInvalid",
+  }),
+});
+
 export type ActivateFormValues = z.infer<typeof activateSchema>;
 export type CloseFormValues = z.infer<typeof closeSchema>;
 export type CloseLineValues = z.infer<typeof lineSchema>;
 export type CancelFormValues = z.infer<typeof cancelSchema>;
+export type DepositFormValues = z.infer<typeof depositSchema>;
 
 /** Assemble the activate body, omitting `actual_at` when the field is empty. */
 export function toActivateBody(values: ActivateFormValues): ActivateBody {
@@ -103,5 +119,13 @@ export function toCloseBody(values: CloseFormValues): CloseBody {
         vat_rate: line.vat_rate,
       }),
     ),
+  };
+}
+
+/** Assemble the deposit body — DZD amount -> integer `amount_cents`. */
+export function toDepositBody(values: DepositFormValues): DepositBody {
+  return {
+    amount_cents: Math.round(values.amount_dzd * 100),
+    method: values.method,
   };
 }

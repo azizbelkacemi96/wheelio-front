@@ -165,7 +165,8 @@
       "descriptionRequired": "La description est requise.",
       "quantityInvalid": "La quantité doit être supérieure à 0.",
       "amountInvalid": "Saisissez un montant valide.",
-      "vatInvalid": "Saisissez un taux de TVA valide."
+      "vatInvalid": "Saisissez un taux de TVA valide.",
+      "recordDepositFailed": "Impossible d'enregistrer la caution."
     },
     "deposit": {
       "amount": "Montant de la caution",
@@ -199,7 +200,11 @@
       "cancelReason": "Motif d'annulation",
       "notFoundHeading": "Contrat introuvable",
       "notFoundBody": "Ce contrat n'existe pas ou n'est plus accessible.",
-      "notAuthorized": "Vous n'avez pas les droits nécessaires pour cette action."
+      "notAuthorized": "Vous n'avez pas les droits nécessaires pour cette action.",
+      "infoTitle": "Détails du contrat",
+      "actionsTitle": "Actions",
+      "vehicleUnavailable": "Véhicule indisponible.",
+      "customerUnavailable": "Client indisponible."
     },
     "filter": {
       "all": "Tous",

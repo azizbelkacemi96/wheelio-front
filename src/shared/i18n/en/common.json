@@ -165,7 +165,8 @@
       "descriptionRequired": "A description is required.",
       "quantityInvalid": "Quantity must be greater than 0.",
       "amountInvalid": "Enter a valid amount.",
-      "vatInvalid": "Enter a valid VAT rate."
+      "vatInvalid": "Enter a valid VAT rate.",
+      "recordDepositFailed": "Couldn't record the deposit."
     },
     "deposit": {
       "amount": "Deposit amount",
@@ -199,7 +200,11 @@
       "cancelReason": "Cancellation reason",
       "notFoundHeading": "Contract not found",
       "notFoundBody": "This contract doesn't exist or is no longer accessible.",
-      "notAuthorized": "You don't have the required permissions for this action."
+      "notAuthorized": "You don't have the required permissions for this action.",
+      "infoTitle": "Contract details",
+      "actionsTitle": "Actions",
+      "vehicleUnavailable": "Vehicle unavailable.",
+      "customerUnavailable": "Customer unavailable."
     },
     "filter": {
       "all": "All",

@@ -18,10 +18,20 @@ export function useVehiclesQuery(status: VehicleStatus | null) {
   });
 }
 
-export function useVehicleQuery(vehicleId: string) {
+/**
+ * `options.enabled` lets a dependent caller (e.g. ContractDetail, which only
+ * knows the vehicle id AFTER the contract loads) gate this query on the parent
+ * data instead of firing `fetchVehicle("")` on the first render. Defaults to
+ * enabled so existing callers (VehicleDetail) are unaffected.
+ */
+export function useVehicleQuery(
+  vehicleId: string,
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: ["vehicles", "detail", vehicleId],
     queryFn: () => fetchVehicle(vehicleId),
+    enabled: options?.enabled ?? true,
   });
 }
 

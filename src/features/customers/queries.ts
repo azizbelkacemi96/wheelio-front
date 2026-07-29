@@ -39,10 +39,17 @@ export function useCustomersQuery(q: string) {
   });
 }
 
-export function useCustomerQuery(id: string) {
+/**
+ * `options.enabled` lets a dependent caller (e.g. ContractDetail, which only
+ * knows the customer id AFTER the contract loads) gate this query on the parent
+ * data instead of firing `fetchCustomer("")` on first render. Defaults to
+ * enabled so existing callers (CustomerDetail) are unaffected.
+ */
+export function useCustomerQuery(id: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["customers", "detail", id],
     queryFn: () => fetchCustomer(id),
+    enabled: options?.enabled ?? true,
   });
 }
 
