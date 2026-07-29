@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: contrats-de-location
 status: planning
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-07-28T21:40:04.119Z"
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-07-29T09:02:47.304Z"
 last_activity: 2026-07-28
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 20
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -32,7 +32,7 @@ Plan: 4 of 4
 Status: Phase complete — ready for verification
 Last activity: 2026-07-28 — Phase 03 execution started
 
-Progress: [████████░░] 75%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -71,6 +71,7 @@ Progress: [████████░░] 75%
 | Phase 03 P03 | 15min | 3 tasks | 10 files |
 | Phase 03 P04 | 10min | 2 tasks | 6 files |
 | Phase 04 P01 | 20m | 3 tasks | 15 files |
+| Phase 04 P03 | 35m | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -114,6 +115,7 @@ Recent decisions affecting current work:
 - [Phase ?]: 03-04: Phone/address rendered for both individual and company branches (DTO Shared fields present on real individual fixtures), not only company as the plan's literal action text named
 - [Phase ?]: 03-04: Drivers query fires unconditionally in parallel with the customer query (no waterfall); the drivers section itself is gated on customer.type === company, not the query result
 - [Phase ?]: 03-04: Date-only YYYY-MM-DD fields formatted via new Date(year, month-1, day) instead of new Date(dateOnlyString) to avoid a UTC-parse timezone shift
+- [Phase ?]: 04-03: dependent vehicle/customer queries gated via optional {enabled}; agency gate reads agency_id off the vehicle, never the contract
 
 ### Pending Todos
 
@@ -134,6 +136,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-28T21:40:04.113Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-07-29T09:02:33.410Z
+Stopped at: Completed 04-03-PLAN.md
 Resume file: None

@@ -112,11 +112,11 @@ Plans:
   4. User is guided through vehicle → customer → contract → departure inspection as one continuous wizard screen flow, not four disconnected screens.
   5. User sees a "today" overview on landing showing which vehicles are due for pickup or return today.
 
-**Plans**: 1/6 plans executed
+**Plans**: 2/6 plans executed
 
 - [x] 04-01-PLAN.md
 - [ ] 04-02-PLAN.md
-- [ ] 04-03-PLAN.md
+- [x] 04-03-PLAN.md
 - [ ] 04-04-PLAN.md
 - [ ] 04-05-PLAN.md
 - [ ] 04-06-PLAN.md
@@ -163,6 +163,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundations — Auth, Shell, i18n, Design System | 7/7 | Complete (2 visual backstop checks deferred to user's final review, see 01-VERIFICATION.md) | 2026-07-23 |
 | 2. Fleet | 3/3 | Complete | 2026-07-27 |
 | 3. Clients | 4/4 | Complete (2 human checks deferred to final review, see 03-VERIFICATION.md) | 2026-07-28 |
-| 4. Contrats de location | 1/6 | In Progress|  |
+| 4. Contrats de location | 2/6 | In Progress|  |
 | 5. État des lieux | 0/TBD | Not started | - |
 | 6. Identité fiscale & Facturation | 0/TBD | Not started | - |
