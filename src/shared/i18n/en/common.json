@@ -159,7 +159,13 @@
       "cancelFailed": "Couldn't cancel the contract.",
       "endBeforeStart": "The end date must be after the start date.",
       "reasonRequired": "A cancellation reason is required.",
-      "invoiceLineRequired": "At least one invoice line is required."
+      "invoiceLineRequired": "At least one invoice line is required.",
+      "mileageInvalid": "Enter a valid mileage (0 or more).",
+      "fuelRequired": "Select a fuel level.",
+      "descriptionRequired": "A description is required.",
+      "quantityInvalid": "Quantity must be greater than 0.",
+      "amountInvalid": "Enter a valid amount.",
+      "vatInvalid": "Enter a valid VAT rate."
     },
     "deposit": {
       "amount": "Deposit amount",
@@ -167,6 +173,17 @@
       "cash": "Cash",
       "card": "Card",
       "transfer": "Transfer"
+    },
+    "forms": {
+      "invoiceLines": "Invoice lines",
+      "lineDescription": "Description",
+      "lineQuantity": "Quantity",
+      "lineAmount": "Amount excl. tax (DZD)",
+      "lineVat": "VAT (%)",
+      "addLine": "Add a line",
+      "removeLine": "Remove line",
+      "reason": "Cancellation reason",
+      "cancelSubmit": "Cancel the contract"
     },
     "detail": {
       "title": "Rental contract",

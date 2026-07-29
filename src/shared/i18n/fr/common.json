@@ -159,7 +159,13 @@
       "cancelFailed": "Impossible d'annuler le contrat.",
       "endBeforeStart": "La date de fin doit être postérieure à la date de début.",
       "reasonRequired": "Un motif d'annulation est requis.",
-      "invoiceLineRequired": "Au moins une ligne de facture est requise."
+      "invoiceLineRequired": "Au moins une ligne de facture est requise.",
+      "mileageInvalid": "Saisissez un kilométrage valide (0 ou plus).",
+      "fuelRequired": "Sélectionnez un niveau de carburant.",
+      "descriptionRequired": "La description est requise.",
+      "quantityInvalid": "La quantité doit être supérieure à 0.",
+      "amountInvalid": "Saisissez un montant valide.",
+      "vatInvalid": "Saisissez un taux de TVA valide."
     },
     "deposit": {
       "amount": "Montant de la caution",
@@ -167,6 +173,17 @@
       "cash": "Espèces",
       "card": "Carte",
       "transfer": "Virement"
+    },
+    "forms": {
+      "invoiceLines": "Lignes de facture",
+      "lineDescription": "Description",
+      "lineQuantity": "Quantité",
+      "lineAmount": "Montant HT (DZD)",
+      "lineVat": "TVA (%)",
+      "addLine": "Ajouter une ligne",
+      "removeLine": "Supprimer la ligne",
+      "reason": "Motif d'annulation",
+      "cancelSubmit": "Annuler le contrat"
     },
     "detail": {
       "title": "Contrat de location",
