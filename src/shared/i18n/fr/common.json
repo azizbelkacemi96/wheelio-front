@@ -17,7 +17,18 @@
     "noAccountPrompt": "Pas encore de compte ?",
     "goToSignup": "Créer un compte",
     "hasAccountPrompt": "Déjà un compte ?",
-    "goToLogin": "Se connecter"
+    "goToLogin": "Se connecter",
+    "loginSubtitle": "Accédez à votre espace de gestion.",
+    "signupSubtitle": "Créez l'espace de votre agence.",
+    "brand": {
+      "name": "Wheelio",
+      "tagline": "La gestion complète de votre agence de location.",
+      "subtitle": "Véhicules, contrats, états des lieux et factures — un seul espace professionnel, du comptoir au terrain.",
+      "feature1": "Contrats de location guidés, sans double réservation",
+      "feature2": "États des lieux photo, résistants au réseau du terrain",
+      "feature3": "Factures conformes au décret 05-468",
+      "copyright": "© {{year}} Wheelio — Tous droits réservés"
+    }
   },
   "shell": {
     "meError": "Impossible de charger votre profil.",

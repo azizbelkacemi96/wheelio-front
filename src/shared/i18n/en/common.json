@@ -17,7 +17,18 @@
     "noAccountPrompt": "Don't have an account?",
     "goToSignup": "Create an account",
     "hasAccountPrompt": "Already have an account?",
-    "goToLogin": "Sign in"
+    "goToLogin": "Sign in",
+    "loginSubtitle": "Sign in to your management workspace.",
+    "signupSubtitle": "Create your agency's workspace.",
+    "brand": {
+      "name": "Wheelio",
+      "tagline": "The complete management of your car-rental agency.",
+      "subtitle": "Vehicles, contracts, inspections and invoices — one professional workspace, from the counter to the field.",
+      "feature1": "Guided rental contracts, no double-booking",
+      "feature2": "Photo inspections, resilient to field connectivity",
+      "feature3": "Invoices compliant with décret 05-468",
+      "copyright": "© {{year}} Wheelio — All rights reserved"
+    }
   },
   "shell": {
     "meError": "Couldn't load your profile.",

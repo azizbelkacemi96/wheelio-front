@@ -60,6 +60,7 @@ export function LoginForm() {
     <Card className="[--card-spacing:1.5rem]">
       <CardHeader>
         <CardTitle>{t("auth.loginTitle")}</CardTitle>
+        <CardDescription>{t("auth.loginSubtitle")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>

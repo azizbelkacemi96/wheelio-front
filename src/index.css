@@ -74,16 +74,41 @@
  * --spacing-* namespace: p-xs, gap-md, px-lg, size-touch, etc.
  */
 @theme {
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
-    --spacing-2xl: 48px;
-    --spacing-3xl: 64px;
-    /* Dense table/list row exception (D-04): tighter than `sm` default to
-       fit more rows per screen. Consumed from Phase 2 onward. */
+    /*
+     * NOTE: named --spacing-{xs,sm,md,lg,xl,2xl,3xl} tokens were REMOVED.
+     * In Tailwind v4 the max-width / width t-shirt utilities (max-w-sm,
+     * max-w-2xl, w-xs, ...) resolve their named sizes from the --spacing-*
+     * namespace, so those custom tokens HIJACKED `max-w-sm` → 8px,
+     * `max-w-2xl` → 48px, `max-w-3xl` → 64px and squished every centered
+     * screen into a sliver (login, invoice, inspection, fiscal identity).
+     * They were unused by any component (only referenced in these comments),
+     * so removing them is a pure fix. Use numeric spacing (p-2, gap-4, ...)
+     * — the standard Tailwind spacing scale — everywhere.
+     */
+
+    /* Dense table/list row exception (D-04): a non-colliding named token
+       (row-x is not a t-shirt width name), safe to keep. */
     --spacing-row-x: 12px;
+
+    /*
+     * ---- Container / max-width scale ----
+     * Restored explicitly (the shadcn import + custom @theme blocks strip
+     * Tailwind's default --container-* namespace). max-w-{sm,2xl,3xl,...}
+     * now resolve here to their standard widths.
+     */
+    --container-3xs: 16rem;
+    --container-2xs: 18rem;
+    --container-xs: 20rem;
+    --container-sm: 24rem;
+    --container-md: 28rem;
+    --container-lg: 32rem;
+    --container-xl: 36rem;
+    --container-2xl: 42rem;
+    --container-3xl: 48rem;
+    --container-4xl: 56rem;
+    --container-5xl: 64rem;
+    --container-6xl: 72rem;
+    --container-7xl: 80rem;
     /* Minimum touch target hit area for icon-only controls (44x44,
        Apple/Google baseline) — usable as size-touch (w+h) or w-touch/h-touch. */
     --spacing-touch: 44px;
