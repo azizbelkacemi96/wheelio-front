@@ -41,6 +41,7 @@ import { Separator } from "@/shared/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { useVehicleQuery } from "@/features/fleet/queries";
 import { useCustomerQuery } from "@/features/customers/queries";
+import { ContractInvoices } from "@/features/billing/ContractInvoices";
 import { ContractStatusBadge } from "./ContractStatusBadge";
 import { useContractQuery } from "./queries";
 import { ActivateForm } from "./forms/ActivateForm";
@@ -113,7 +114,13 @@ export function ContractDetail({ contractId }: { contractId: string }) {
   const showCancel = (status === "reserved" || status === "active") && mayOperate;
   const showDeposit =
     (status === "reserved" || status === "active") && mayOperate;
-  const hasAnyAction = showActivate || showClose || showCancel || showDeposit;
+  // État des lieux (Phase 5): a departure/return inspection can be run while
+  // the contract is reserved or active (inspection status is decoupled from
+  // contract status). Links out to the contract-scoped capture screen.
+  const showInspection =
+    (status === "reserved" || status === "active") && mayOperate;
+  const hasAnyAction =
+    showActivate || showClose || showCancel || showDeposit || showInspection;
 
   const closeOpenForm = () => setOpenForm(null);
 
@@ -174,6 +181,16 @@ export function ContractDetail({ contractId }: { contractId: string }) {
                   {t("contracts.actions.recordDeposit")}
                 </Button>
               )}
+              {showInspection && (
+                <Button asChild variant="outline">
+                  <Link
+                    to="/etats-des-lieux/$contractId"
+                    params={{ contractId }}
+                  >
+                    {t("contracts.actions.inspection")}
+                  </Link>
+                </Button>
+              )}
               {showCancel && (
                 <Button
                   variant="outline"
@@ -201,6 +218,9 @@ export function ContractDetail({ contractId }: { contractId: string }) {
           </CardContent>
         </Card>
       )}
+
+      {/* Billing block (BILL-02/05): contract PDF + issued invoices. */}
+      <ContractInvoices contractId={contractId} />
     </div>
   );
 }

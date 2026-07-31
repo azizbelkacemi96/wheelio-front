@@ -99,6 +99,12 @@ async function mockApi(page: Page, fixture: RoleFixture): Promise<ApiCallCounts>
     if (method === "GET" && path === "/customers") {
       return route.fulfill({ status: 200, headers: CORS_HEADERS, json: [] });
     }
+    // Contrats phase (04): the "/" landing (OPS-01 today) fans out per-vehicle
+    // rental-contracts. Serve an empty list so the dashboard renders its
+    // "nothing due today" state deterministically instead of 404-ing.
+    if (method === "GET" && path.startsWith("/vehicles/") && path.endsWith("/rental-contracts")) {
+      return route.fulfill({ status: 200, headers: CORS_HEADERS, json: [] });
+    }
     return route.fulfill({
       status: 404,
       headers: CORS_HEADERS,
@@ -147,19 +153,22 @@ test.describe("phase 01 happy path — login -> shell -> role-gated nav -> place
     await expect(switcher).toBeVisible();
     await expect(switcher).toContainText("Agence Alger Centre");
 
-    // The "/" landing itself renders the shared empty state.
-    await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
+    // The "/" landing is now the OPS-01 today overview (phase 04); with no
+    // contracts due today the mock returns empty, so it shows its own empty
+    // state rather than the generic placeholder.
+    await expect(page.getByRole("heading", { name: "Aujourd'hui" })).toBeVisible();
+    await expect(page.getByText("Rien de prévu aujourd'hui.")).toBeVisible();
 
-    // Base section navigation -> placeholder empty state. Uses "États des
-    // lieux" ("Véhicules" became real in phase 02, "Clients" in phase 03).
+    // Base section navigation. "États des lieux" became real in Phase 05, so
+    // it now lands on the InspectionsIndex (its own empty state), not the
+    // shared placeholder.
     await page.getByRole("link", { name: "États des lieux" }).click();
     await expect(page).toHaveURL("/etats-des-lieux");
-    await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
-    await expect(
-      page.getByText("Cette fonctionnalité arrive dans une prochaine mise à jour de Wheelio."),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "États des lieux" })).toBeVisible();
+    await expect(page.getByText("Aucun contrat à inspecter")).toBeVisible();
 
-    // Admin section navigation (owner-only segment) -> same shared empty state.
+    // Admin section navigation (owner-only segment) -> the shared empty state
+    // (admin/* are the last remaining placeholders).
     await page.getByRole("link", { name: "Gestion agences" }).click();
     await expect(page).toHaveURL("/admin/agences");
     await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
@@ -182,10 +191,10 @@ test.describe("phase 01 happy path — login -> shell -> role-gated nav -> place
     // No agency switcher for a non-org-admin.
     await expect(page.getByRole("button", { name: "Changer d'agence" })).toHaveCount(0);
 
-    // Placeholders are reachable for the agent too.
+    // The real inspections index is reachable for the agent too (base nav).
     await page.getByRole("link", { name: "États des lieux" }).click();
     await expect(page).toHaveURL("/etats-des-lieux");
-    await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "États des lieux" })).toBeVisible();
   });
 
   test("owner: agency switch is in-place — no navigation reset, zero /me or /auth/refresh calls (D-10/D-11)", async ({
@@ -218,17 +227,17 @@ test.describe("phase 01 happy path — login -> shell -> role-gated nav -> place
     await mockApi(page, ownerFixture);
     await login(page);
 
-    // "États des lieux" is still a placeholder (Véhicules became real in
-    // phase 02, Clients in phase 03).
-    await page.getByRole("link", { name: "États des lieux" }).click();
-    await expect(page).toHaveURL("/etats-des-lieux");
+    // "Gestion agences" (owner-only admin) is still a placeholder — use it for
+    // the placeholder-copy locale check now that "États des lieux" is real.
+    await page.getByRole("link", { name: "Gestion agences" }).click();
+    await expect(page).toHaveURL("/admin/agences");
     // FR is the hard default with nothing stored.
     await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
 
     await page.getByRole("button", { name: "Changer de langue" }).click();
 
     // Same route, live-switched copy: placeholder + nav + chrome all EN.
-    await expect(page).toHaveURL("/etats-des-lieux");
+    await expect(page).toHaveURL("/admin/agences");
     await expect(page.getByRole("heading", { name: "Coming soon" })).toBeVisible();
     await expect(
       page.getByText("This feature is coming in a future Wheelio update."),

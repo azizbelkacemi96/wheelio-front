@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 03
-current_phase_name: contrats-de-location
-status: planning
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-07-29T09:02:47.304Z"
-last_activity: 2026-07-28
-last_activity_desc: Phase 03 execution started
+current_phase: 06
+current_phase_name: facturation
+status: complete
+stopped_at: ALL PHASES COMPLETE — Phase 6 (facturation) done. 314 vitest + 4 E2E green, tsc + build clean. Milestone v1.0 feature-complete (25/25 requirements).
+last_updated: "2026-07-30T16:35:00.000Z"
+last_activity: 2026-07-30
+last_activity_desc: Phase 06 (identité fiscale & facturation) complete, verified — milestone feature-complete
 progress:
-  total_phases: 4
-  completed_phases: 3
+  total_phases: 6
+  completed_phases: 6
   total_plans: 20
-  completed_plans: 16
+  completed_plans: 20
 ---
 
 # Project State

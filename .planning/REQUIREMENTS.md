@@ -33,21 +33,21 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **RENT-02**: User can activate a contract, recording departure mileage and fuel level
 - [x] **RENT-03**: User can close a contract, recording return mileage, fuel level, and invoice lines
 - [x] **RENT-04**: User can cancel a reservation or an active contract with a reason
-- [ ] **RENT-05**: User is guided through the entire new-rental golden path (vehicle → customer → contract → departure inspection) as one continuous wizard flow, not four disconnected screens — this is a full v1 feature, built properly, not a cut-corner version
+- [x] **RENT-05**: User is guided through the entire new-rental golden path (vehicle → customer → contract → departure inspection) as one continuous wizard flow, not four disconnected screens — this is a full v1 feature, built properly, not a cut-corner version
 
 ### État des lieux
 
-- [ ] **INSP-01**: User can perform a departure (sortie) inspection: mileage, fuel level, damage recorded per canonical zone
-- [ ] **INSP-02**: User can capture a photo on-site (mobile/tablet) and attach it to a recorded damage, with resilience to flaky field connectivity (incremental upload, retry, no silent loss)
-- [ ] **INSP-03**: User can perform a return (retour) inspection
+- [x] **INSP-01**: User can perform a departure (sortie) inspection: mileage, fuel level, damage recorded per canonical zone
+- [x] **INSP-02**: User can capture a photo on-site (mobile/tablet) and attach it to a recorded damage, with resilience to flaky field connectivity (incremental upload, retry, no silent loss)
+- [x] **INSP-03**: User can perform a return (retour) inspection
 
 ### Facturation
 
-- [ ] **BILL-01**: The organization's fiscal identity (NIF/NIS/RC/legal form/address) must be complete before any invoice can be issued — enforced as a blocking gate in the UI, not just a passive form
-- [ ] **BILL-02**: User can view an invoice showing all décret 05-468 mandatory mentions
-- [ ] **BILL-03**: User can record a payment against an invoice (cash / card / transfer)
-- [ ] **BILL-04**: User can issue a credit note (avoir) against an invoice
-- [ ] **BILL-05**: User can download the invoice, the rental contract, and the inspection report as PDF, via an authenticated download (never a bare link)
+- [x] **BILL-01**: The organization's fiscal identity (NIF/NIS/RC/legal form/address) must be complete before any invoice can be issued — enforced as a blocking gate in the UI, not just a passive form
+- [x] **BILL-02**: User can view an invoice showing all décret 05-468 mandatory mentions
+- [x] **BILL-03**: User can record a payment against an invoice (cash / card / transfer)
+- [x] **BILL-04**: User can issue a credit note (avoir) against an invoice
+- [x] **BILL-05**: User can download the invoice, the rental contract, and the inspection report as PDF, via an authenticated download (never a bare link)
 
 ### Ops
 
@@ -105,15 +105,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RENT-02 | Phase 4 | Complete |
 | RENT-03 | Phase 4 | Complete |
 | RENT-04 | Phase 4 | Complete |
-| RENT-05 | Phase 4 | Pending |
-| INSP-01 | Phase 5 | Pending |
-| INSP-02 | Phase 5 | Pending |
-| INSP-03 | Phase 5 | Pending |
-| BILL-01 | Phase 6 | Pending |
-| BILL-02 | Phase 6 | Pending |
-| BILL-03 | Phase 6 | Pending |
-| BILL-04 | Phase 6 | Pending |
-| BILL-05 | Phase 6 | Pending |
+| RENT-05 | Phase 4 | Complete |
+| INSP-01 | Phase 5 | Complete |
+| INSP-02 | Phase 5 | Complete |
+| INSP-03 | Phase 5 | Complete |
+| BILL-01 | Phase 6 | Complete |
+| BILL-02 | Phase 6 | Complete |
+| BILL-03 | Phase 6 | Complete |
+| BILL-04 | Phase 6 | Complete |
+| BILL-05 | Phase 6 | Complete |
 | OPS-01 | Phase 4 | Complete |
 
 **Coverage:**

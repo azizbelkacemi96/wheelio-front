@@ -146,6 +146,7 @@
       "close": "Close",
       "cancel": "Cancel",
       "recordDeposit": "Record deposit",
+      "inspection": "Inspection",
       "backToList": "Back to contracts"
     },
     "errors": {
@@ -350,6 +351,200 @@
       "driversLoadError": "Couldn't load the designated drivers.",
       "notFoundHeading": "Customer not found",
       "notFoundBody": "This customer doesn't exist or is no longer accessible."
+    }
+  },
+  "inspections": {
+    "title": "Inspections",
+    "index": {
+      "subtitle": "Pick a contract to carry out its inspection.",
+      "open": "Inspection",
+      "loadError": "Couldn't load contracts.",
+      "retry": "Retry",
+      "columns": {
+        "vehicle": "Vehicle",
+        "customer": "Customer",
+        "period": "Period",
+        "status": "Status"
+      },
+      "empty": {
+        "heading": "No contract to inspect",
+        "body": "No reserved or active contract needs an inspection right now."
+      }
+    },
+    "kind": {
+      "departure": "Departure inspection",
+      "return": "Return inspection"
+    },
+    "status": {
+      "draft": "Draft",
+      "validated": "Validated"
+    },
+    "zone": {
+      "front_bumper": "Front bumper",
+      "rear_bumper": "Rear bumper",
+      "door_fl": "Front-left door",
+      "door_fr": "Front-right door",
+      "door_rl": "Rear-left door",
+      "door_rr": "Rear-right door",
+      "hood": "Hood",
+      "roof": "Roof",
+      "windshield": "Windshield",
+      "wheels": "Wheels"
+    },
+    "damageType": {
+      "scratch": "Scratch",
+      "dent": "Dent",
+      "crack": "Crack",
+      "broken": "Broken"
+    },
+    "severity": {
+      "minor": "Minor",
+      "moderate": "Moderate",
+      "severe": "Severe"
+    },
+    "capture": {
+      "backToContract": "Back to contract",
+      "chooseKind": "Inspection type",
+      "mileage": "Mileage",
+      "fuel": "Fuel level",
+      "start": "Start inspection",
+      "selectPlaceholder": "Select…",
+      "addDamageTitle": "Add a damage",
+      "zone": "Zone",
+      "damageType": "Damage type",
+      "severity": "Severity",
+      "position": "Position (optional)",
+      "description": "Description (optional)",
+      "recordDamage": "Add damage",
+      "damagesTitle": "Recorded damage",
+      "noDamages": "No damage recorded yet.",
+      "validate": "Validate inspection",
+      "validateHint": "Each damage must have at least one photo before validation.",
+      "validatedHeading": "Inspection validated",
+      "validatedBody": "The inspection has been recorded and validated.",
+      "notAuthorizedHeading": "Access denied",
+      "notAuthorizedBody": "You don't have the permissions to carry out an inspection on this vehicle."
+    },
+    "photos": {
+      "title": "Photos",
+      "add": "Add photos",
+      "empty": "At least one photo is required for this damage.",
+      "retry": "Retry",
+      "remove": "Remove",
+      "status": {
+        "queued": "Queued",
+        "compressing": "Compressing…",
+        "uploading": "Uploading…",
+        "uploaded": "Uploaded",
+        "attaching": "Attaching…",
+        "attached": "Saved",
+        "failed": "Failed"
+      }
+    },
+    "errors": {
+      "createFailed": "Couldn't start the inspection.",
+      "needDeparture": "A validated departure inspection is required before a return inspection.",
+      "recordDamageFailed": "Couldn't record the damage.",
+      "validateFailed": "Couldn't validate the inspection.",
+      "photoRequired": "Each damage must have at least one photo.",
+      "zoneRequired": "Select a zone.",
+      "typeRequired": "Select a damage type.",
+      "severityRequired": "Select a severity.",
+      "mileageInvalid": "Enter a valid mileage (0 or more).",
+      "fuelRequired": "Select a fuel level."
+    }
+  },
+  "billing": {
+    "invoiceStatus": {
+      "issued": "Issued",
+      "partially_paid": "Partially paid",
+      "paid": "Paid",
+      "voided": "Voided"
+    },
+    "method": {
+      "cash": "Cash",
+      "card": "Card",
+      "transfer": "Transfer"
+    },
+    "contract": {
+      "invoicesTitle": "Invoices",
+      "noInvoices": "No invoice for this contract.",
+      "invoicesLoadError": "Couldn't load invoices.",
+      "viewInvoice": "View invoice",
+      "downloadContractPdf": "Contract (PDF)"
+    },
+    "invoice": {
+      "backToContract": "Back to contract",
+      "title": "Invoice",
+      "number": "Number",
+      "issuedAt": "Issue date",
+      "status": "Status",
+      "linesTitle": "Lines",
+      "columns": {
+        "description": "Description",
+        "quantity": "Qty",
+        "unitPriceHt": "Unit ex-VAT",
+        "vat": "VAT",
+        "lineHt": "Amount ex-VAT",
+        "lineVat": "VAT"
+      },
+      "totalHt": "Total ex-VAT",
+      "totalVat": "Total VAT",
+      "totalTtc": "Total incl. VAT",
+      "totalInWords": "Amount in words",
+      "downloadPdf": "Invoice (PDF)",
+      "notFoundHeading": "Invoice not found",
+      "notFoundBody": "This invoice doesn't exist or is no longer accessible.",
+      "loadError": "Couldn't load the invoice.",
+      "retry": "Retry",
+      "voidedNote": "This invoice was voided by a credit note."
+    },
+    "payment": {
+      "title": "Payments",
+      "record": "Record a payment",
+      "method": "Payment method",
+      "amount": "Amount (DZD)",
+      "paidAt": "Payment date (optional)",
+      "submit": "Record",
+      "selectPlaceholder": "Select…"
+    },
+    "creditNote": {
+      "title": "Credit note",
+      "issue": "Issue a credit note",
+      "reason": "Credit note reason",
+      "submit": "Issue credit note",
+      "issued": "Credit note {{number}} issued."
+    },
+    "fiscal": {
+      "title": "Company fiscal identity",
+      "subtitle": "These details appear on every invoice (décret 05-468). NIF, NIS, legal form and address are required before an invoice can be issued.",
+      "legalForm": "Legal form",
+      "nif": "NIF",
+      "nis": "NIS",
+      "taxArticleNumber": "Tax article number",
+      "commerceRegisterNumber": "Commerce register (RC)",
+      "addressLine": "Address",
+      "city": "City",
+      "postalCode": "Postal code",
+      "submit": "Save",
+      "success": "Fiscal identity saved.",
+      "requiredHint": "Required to issue invoices.",
+      "notAuthorizedHeading": "Access denied",
+      "notAuthorizedBody": "Only an organization admin can edit the fiscal identity."
+    },
+    "errors": {
+      "paymentInvalid": "Invalid amount — it may exceed the balance due.",
+      "paymentFailed": "Couldn't record the payment.",
+      "alreadyVoided": "This invoice has already been voided.",
+      "creditNoteFailed": "Couldn't issue the credit note.",
+      "fiscalFailed": "Couldn't save the fiscal identity.",
+      "legalFormRequired": "Legal form is required.",
+      "nifRequired": "NIF is required.",
+      "nisRequired": "NIS is required.",
+      "addressRequired": "Address is required.",
+      "amountInvalid": "Enter a valid amount.",
+      "reasonRequired": "A reason is required.",
+      "downloadFailed": "Couldn't download the PDF."
     }
   }
 }

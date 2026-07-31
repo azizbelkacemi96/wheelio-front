@@ -16,9 +16,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundations — Auth, Shell, i18n, Design System** - Login with transparent session refresh, role-aware navigation, agency switching, FR/EN i18n, and a consistent design-token/component library
 - [x] **Phase 2: Fleet** - Vehicle list with live status and vehicle detail view
 - [x] **Phase 3: Clients** - Individual/company customer creation, designated drivers, and search
-- [ ] **Phase 4: Contrats de location** - Full reservation → activation → closure → cancellation lifecycle as a guided wizard, plus a "today" overview
-- [ ] **Phase 5: État des lieux** - Departure/return inspections with zone-based damage entry and resilient on-site photo capture
-- [ ] **Phase 6: Identité fiscale & Facturation** - Fiscal-identity gate, invoice view, payments, credit notes, and authenticated PDF downloads
+- [x] **Phase 4: Contrats de location** - Full reservation → activation → closure → cancellation lifecycle as a guided wizard, plus a "today" overview
+- [x] **Phase 5: État des lieux** - Departure/return inspections with zone-based damage entry and resilient on-site photo capture
+- [x] **Phase 6: Identité fiscale & Facturation** - Fiscal-identity gate, invoice view, payments, credit notes, and authenticated PDF downloads
 
 ## Phase Details
 

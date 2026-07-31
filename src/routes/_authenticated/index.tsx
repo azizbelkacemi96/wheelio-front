@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { EmptyState } from "@/shared/ui/empty-state";
+import { OpsToday } from "@/features/contracts/OpsToday";
 
 /**
- * "Aujourd'hui" landing route — the authenticated "/" placeholder. Renders
- * the shared, i18n-driven empty state like every other nav destination this
- * phase; the real "Aujourd'hui" dashboard is Phase 4 (OPS-01) scope.
+ * "Aujourd'hui" landing route ("/") — the OPS-01 today overview (pickups +
+ * returns due today, Africa/Algiers). Replaces the phase-1 placeholder.
  */
 export const Route = createFileRoute("/_authenticated/")({
-  component: EmptyState,
+  component: OpsToday,
 });

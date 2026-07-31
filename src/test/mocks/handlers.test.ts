@@ -22,7 +22,9 @@ const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/v1";
 
 describe("MSW handlers + Scope fixtures (Wave 0 test-data layer)", () => {
   it("registers a handler for every confirmed wheelio-api endpoint", () => {
-    expect(handlers.length).toBe(20);
+    // +7 Phase-5 inspection handlers, +8 Phase-6 billing handlers (invoices
+    // list/detail, payment, credit-note, fiscal-identity, 3 PDF downloads).
+    expect(handlers.length).toBe(35);
   });
 
   it("GET /me returns the owner fixture shape via the real MSW server", async () => {

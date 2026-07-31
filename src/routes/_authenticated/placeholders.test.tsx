@@ -14,9 +14,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import i18n from "@/shared/i18n";
-import { Route as IndexRoute } from "./index";
-import { Route as EtatsDesLieuxRoute } from "./etats-des-lieux";
-import { Route as AdminIdentiteFiscaleRoute } from "./admin/identite-fiscale";
 import { Route as AdminAgencesRoute } from "./admin/agences";
 import { Route as AdminFacturationRoute } from "./admin/facturation";
 
@@ -31,10 +28,14 @@ const EN_BODY = "This feature is coming in a future Wheelio update.";
 // the real CustomerList screen, so it is intentionally absent here.
 // NOTE: /contrats is no longer a placeholder — plan 04-02 replaced it with
 // the real ContractList screen, so it is intentionally absent here.
+// NOTE: "/" is no longer a placeholder — plan 04-06 replaced it with the
+// real OPS-01 OpsToday dashboard, so it is intentionally absent here.
+// NOTE: /etats-des-lieux is no longer a placeholder — Phase 5 replaced it with
+// the real InspectionsIndex + capture screens.
+// NOTE: /admin/identite-fiscale is no longer a placeholder — Phase 6 (BILL-01)
+// replaced it with the real FiscalIdentityForm, so it is intentionally absent.
+// /admin/agences and /admin/facturation are the only remaining placeholders.
 const allPlaceholderRoutes = {
-  "/": IndexRoute,
-  "/etats-des-lieux": EtatsDesLieuxRoute,
-  "/admin/identite-fiscale": AdminIdentiteFiscaleRoute,
   "/admin/agences": AdminAgencesRoute,
   "/admin/facturation": AdminFacturationRoute,
 } as const;
@@ -54,8 +55,8 @@ afterEach(async () => {
 
 describe("placeholder routes — shared empty state", () => {
   it("renders the FR 'Bientôt disponible' copy by default on a base placeholder route", () => {
-    const EtatsDesLieux = componentOf(EtatsDesLieuxRoute);
-    render(<EtatsDesLieux />);
+    const AdminAgences = componentOf(AdminAgencesRoute);
+    render(<AdminAgences />);
 
     expect(screen.getByRole("heading", { name: FR_HEADING })).toBeInTheDocument();
     expect(screen.getByText(FR_BODY)).toBeInTheDocument();
@@ -63,8 +64,8 @@ describe("placeholder routes — shared empty state", () => {
   });
 
   it("switches to the EN 'Coming soon' copy live on locale change, and back to FR", async () => {
-    const EtatsDesLieux = componentOf(EtatsDesLieuxRoute);
-    render(<EtatsDesLieux />);
+    const AdminAgences = componentOf(AdminAgencesRoute);
+    render(<AdminAgences />);
     expect(screen.getByRole("heading", { name: FR_HEADING })).toBeInTheDocument();
 
     await act(async () => {

@@ -146,6 +146,7 @@
       "close": "Clôturer",
       "cancel": "Annuler",
       "recordDeposit": "Enregistrer une caution",
+      "inspection": "État des lieux",
       "backToList": "Retour aux contrats"
     },
     "errors": {
@@ -350,6 +351,200 @@
       "driversLoadError": "Impossible de charger les conducteurs désignés.",
       "notFoundHeading": "Client introuvable",
       "notFoundBody": "Ce client n'existe pas ou n'est plus accessible."
+    }
+  },
+  "inspections": {
+    "title": "États des lieux",
+    "index": {
+      "subtitle": "Sélectionnez un contrat pour réaliser son état des lieux.",
+      "open": "État des lieux",
+      "loadError": "Impossible de charger les contrats.",
+      "retry": "Réessayer",
+      "columns": {
+        "vehicle": "Véhicule",
+        "customer": "Client",
+        "period": "Période",
+        "status": "Statut"
+      },
+      "empty": {
+        "heading": "Aucun contrat à inspecter",
+        "body": "Aucun contrat réservé ou en cours ne nécessite d'état des lieux pour l'instant."
+      }
+    },
+    "kind": {
+      "departure": "État de sortie",
+      "return": "État de retour"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "validated": "Validé"
+    },
+    "zone": {
+      "front_bumper": "Pare-chocs avant",
+      "rear_bumper": "Pare-chocs arrière",
+      "door_fl": "Porte avant gauche",
+      "door_fr": "Porte avant droite",
+      "door_rl": "Porte arrière gauche",
+      "door_rr": "Porte arrière droite",
+      "hood": "Capot",
+      "roof": "Toit",
+      "windshield": "Pare-brise",
+      "wheels": "Roues"
+    },
+    "damageType": {
+      "scratch": "Rayure",
+      "dent": "Bosse",
+      "crack": "Fissure",
+      "broken": "Cassé"
+    },
+    "severity": {
+      "minor": "Léger",
+      "moderate": "Modéré",
+      "severe": "Grave"
+    },
+    "capture": {
+      "backToContract": "Retour au contrat",
+      "chooseKind": "Type d'état des lieux",
+      "mileage": "Kilométrage",
+      "fuel": "Niveau de carburant",
+      "start": "Démarrer l'état des lieux",
+      "selectPlaceholder": "Sélectionner…",
+      "addDamageTitle": "Ajouter un dommage",
+      "zone": "Zone",
+      "damageType": "Type de dommage",
+      "severity": "Gravité",
+      "position": "Emplacement (facultatif)",
+      "description": "Description (facultatif)",
+      "recordDamage": "Ajouter le dommage",
+      "damagesTitle": "Dommages constatés",
+      "noDamages": "Aucun dommage constaté pour l'instant.",
+      "validate": "Valider l'état des lieux",
+      "validateHint": "Chaque dommage doit comporter au moins une photo avant validation.",
+      "validatedHeading": "État des lieux validé",
+      "validatedBody": "L'état des lieux a été enregistré et validé.",
+      "notAuthorizedHeading": "Accès non autorisé",
+      "notAuthorizedBody": "Vous n'avez pas les droits nécessaires pour réaliser un état des lieux sur ce véhicule."
+    },
+    "photos": {
+      "title": "Photos",
+      "add": "Ajouter des photos",
+      "empty": "Au moins une photo est requise pour ce dommage.",
+      "retry": "Réessayer",
+      "remove": "Retirer",
+      "status": {
+        "queued": "En attente",
+        "compressing": "Compression…",
+        "uploading": "Envoi…",
+        "uploaded": "Envoyée",
+        "attaching": "Association…",
+        "attached": "Enregistrée",
+        "failed": "Échec"
+      }
+    },
+    "errors": {
+      "createFailed": "Impossible de démarrer l'état des lieux.",
+      "needDeparture": "Un état des lieux de sortie validé est requis avant un état de retour.",
+      "recordDamageFailed": "Impossible d'enregistrer le dommage.",
+      "validateFailed": "Impossible de valider l'état des lieux.",
+      "photoRequired": "Chaque dommage doit comporter au moins une photo.",
+      "zoneRequired": "Sélectionnez une zone.",
+      "typeRequired": "Sélectionnez un type de dommage.",
+      "severityRequired": "Sélectionnez une gravité.",
+      "mileageInvalid": "Saisissez un kilométrage valide (0 ou plus).",
+      "fuelRequired": "Sélectionnez un niveau de carburant."
+    }
+  },
+  "billing": {
+    "invoiceStatus": {
+      "issued": "Émise",
+      "partially_paid": "Partiellement payée",
+      "paid": "Payée",
+      "voided": "Annulée"
+    },
+    "method": {
+      "cash": "Espèces",
+      "card": "Carte",
+      "transfer": "Virement"
+    },
+    "contract": {
+      "invoicesTitle": "Factures",
+      "noInvoices": "Aucune facture pour ce contrat.",
+      "invoicesLoadError": "Impossible de charger les factures.",
+      "viewInvoice": "Voir la facture",
+      "downloadContractPdf": "Contrat (PDF)"
+    },
+    "invoice": {
+      "backToContract": "Retour au contrat",
+      "title": "Facture",
+      "number": "Numéro",
+      "issuedAt": "Date d'émission",
+      "status": "Statut",
+      "linesTitle": "Lignes",
+      "columns": {
+        "description": "Description",
+        "quantity": "Qté",
+        "unitPriceHt": "PU HT",
+        "vat": "TVA",
+        "lineHt": "Montant HT",
+        "lineVat": "TVA"
+      },
+      "totalHt": "Total HT",
+      "totalVat": "Total TVA",
+      "totalTtc": "Total TTC",
+      "totalInWords": "Arrêtée à la somme de",
+      "downloadPdf": "Facture (PDF)",
+      "notFoundHeading": "Facture introuvable",
+      "notFoundBody": "Cette facture n'existe pas ou n'est plus accessible.",
+      "loadError": "Impossible de charger la facture.",
+      "retry": "Réessayer",
+      "voidedNote": "Cette facture a été annulée par un avoir."
+    },
+    "payment": {
+      "title": "Encaissements",
+      "record": "Enregistrer un encaissement",
+      "method": "Mode de paiement",
+      "amount": "Montant (DZD)",
+      "paidAt": "Date d'encaissement (facultatif)",
+      "submit": "Enregistrer",
+      "selectPlaceholder": "Sélectionner…"
+    },
+    "creditNote": {
+      "title": "Avoir",
+      "issue": "Émettre un avoir",
+      "reason": "Motif de l'avoir",
+      "submit": "Émettre l'avoir",
+      "issued": "Avoir {{number}} émis."
+    },
+    "fiscal": {
+      "title": "Identité fiscale de la société",
+      "subtitle": "Ces mentions figurent sur chaque facture (décret 05-468). Le NIF, le NIS, la forme juridique et l'adresse sont requis avant d'émettre une facture.",
+      "legalForm": "Forme juridique",
+      "nif": "NIF",
+      "nis": "NIS",
+      "taxArticleNumber": "Article d'imposition",
+      "commerceRegisterNumber": "Registre de commerce (RC)",
+      "addressLine": "Adresse",
+      "city": "Ville",
+      "postalCode": "Code postal",
+      "submit": "Enregistrer",
+      "success": "Identité fiscale enregistrée.",
+      "requiredHint": "Requis pour émettre des factures.",
+      "notAuthorizedHeading": "Accès non autorisé",
+      "notAuthorizedBody": "Seul un administrateur de l'organisation peut modifier l'identité fiscale."
+    },
+    "errors": {
+      "paymentInvalid": "Montant invalide — il dépasse peut-être le solde dû.",
+      "paymentFailed": "Impossible d'enregistrer l'encaissement.",
+      "alreadyVoided": "Cette facture a déjà été annulée.",
+      "creditNoteFailed": "Impossible d'émettre l'avoir.",
+      "fiscalFailed": "Impossible d'enregistrer l'identité fiscale.",
+      "legalFormRequired": "La forme juridique est requise.",
+      "nifRequired": "Le NIF est requis.",
+      "nisRequired": "Le NIS est requis.",
+      "addressRequired": "L'adresse est requise.",
+      "amountInvalid": "Saisissez un montant valide.",
+      "reasonRequired": "Un motif est requis.",
+      "downloadFailed": "Impossible de télécharger le PDF."
     }
   }
 }

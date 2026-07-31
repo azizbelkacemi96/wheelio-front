@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { EmptyState } from "@/shared/ui/empty-state";
+import { ContractWizard } from "@/features/contracts/wizard/ContractWizard";
 
 /**
- * /contrats/nouveau — typed EmptyState STUB, pulled forward so ContractList's
- * "New contract" CTA Link (`to="/contrats/nouveau"`) type-checks under
- * `tsc -b` now. Being a STATIC segment it outranks the `$contractId` dynamic
- * route. The real new-contract wizard is filled by plan 04-04.
+ * /contrats/nouveau — the guided rental wizard (RENT-05). Static segment,
+ * outranks the $contractId dynamic route. The component owns its multi-step
+ * flow; no route loader.
  */
 export const Route = createFileRoute("/_authenticated/contrats/nouveau")({
-  component: EmptyState,
+  component: ContractWizard,
 });

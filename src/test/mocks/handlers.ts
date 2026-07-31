@@ -19,10 +19,35 @@ import type {
   CreateContractBody,
   DepositBody,
 } from "@/types/rental";
+import type {
+  CreateInspectionBody,
+  DamageResponse,
+  DocumentResponse,
+  InspectionResponse,
+  RecordDamageBody,
+} from "@/types/inspection";
 import { ownerFixture } from "../fixtures/scope";
 import { vehicleFixtures } from "../fixtures/fleet";
 import { contractFixtures, contractsByVehicleId } from "../fixtures/contracts";
 import { customerFixtures, driversByCustomerId } from "../fixtures/customers";
+import type {
+  CreditNoteBody,
+  CreditNoteResponse,
+  FiscalIdentityBody,
+  InvoiceResponse,
+  OrgFiscalIdentityResponse,
+  RecordPaymentBody,
+} from "@/types/billing";
+import {
+  inspectionDraftFixture,
+  inspectionValidatedFixture,
+  uploadedDocumentFixture,
+} from "../fixtures/inspections";
+import {
+  creditNoteFixture,
+  invoiceIssuedFixture,
+  orgFiscalIdentityFixture,
+} from "../fixtures/billing";
 
 /**
  * MSW handlers mirroring wheelio-api's confirmed endpoint shapes (see
@@ -417,4 +442,139 @@ export const handlers = [
     const drivers = driversByCustomerId[params.customerId as string] ?? [];
     return HttpResponse.json<DriverResponse[]>(drivers, { status: 200 });
   }),
+
+  // ---- Inspections (Phase 5) ----
+  // The happy path: create returns a draft inspection echoing kind/mileage/
+  // fuel; record-damage echoes the body; attach returns 204; validate returns
+  // a validated inspection; the photo upload returns a fresh documentResponse.
+  // A per-test server.use(...) override forces the 409 (return-without-
+  // departure), the 400 (validate photo gate), or a fail-then-succeed upload.
+
+  http.post(
+    `${API_URL}/rental-contracts/:contractId/inspections`,
+    async ({ request, params }) => {
+      const body = (await request.json()) as CreateInspectionBody;
+      const now = new Date().toISOString();
+      return HttpResponse.json<InspectionResponse>(
+        {
+          id: crypto.randomUUID(),
+          contract_id: params.contractId as string,
+          agency_id: vehicleFixtures[0].agency_id,
+          kind: body.kind,
+          status: "draft",
+          mileage: body.mileage,
+          fuel_level: body.fuel,
+          created_at: now,
+          updated_at: now,
+        },
+        { status: 201 },
+      );
+    },
+  ),
+
+  http.get(`${API_URL}/inspections/:inspectionId`, ({ params }) => {
+    return HttpResponse.json<InspectionResponse>(
+      { ...inspectionDraftFixture, id: params.inspectionId as string },
+      { status: 200 },
+    );
+  }),
+
+  http.post(
+    `${API_URL}/inspections/:inspectionId/damages`,
+    async ({ request, params }) => {
+      const body = (await request.json()) as RecordDamageBody;
+      const now = new Date().toISOString();
+      return HttpResponse.json<DamageResponse>(
+        {
+          id: crypto.randomUUID(),
+          inspection_id: params.inspectionId as string,
+          zone: body.zone,
+          damage_type: body.damage_type,
+          severity: body.severity,
+          position: body.position,
+          description: body.description,
+          created_at: now,
+        },
+        { status: 201 },
+      );
+    },
+  ),
+
+  http.get(`${API_URL}/inspections/:inspectionId/damages`, () => {
+    return HttpResponse.json<DamageResponse[]>([], { status: 200 });
+  }),
+
+  http.post(`${API_URL}/inspections/:inspectionId/validate`, ({ params }) => {
+    const now = new Date().toISOString();
+    return HttpResponse.json<InspectionResponse>(
+      { ...inspectionValidatedFixture, id: params.inspectionId as string, validated_at: now },
+      { status: 200 },
+    );
+  }),
+
+  http.post(`${API_URL}/inspection-damages/:damageId/photos`, () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post(`${API_URL}/vehicles/:vehicleId/documents`, () => {
+    return HttpResponse.json<DocumentResponse>(
+      { ...uploadedDocumentFixture, id: crypto.randomUUID() },
+      { status: 201 },
+    );
+  }),
+
+  // ---- Billing (Phase 6) ----
+  // Invoices are created by the backend at contract close; here the list and
+  // detail serve the issued fixture. Payment recomputes the status (paid when
+  // the amount clears the TTC due, else partially_paid). Credit-note voids.
+  // Fiscal-identity PATCH echoes the posted body. PDFs stream a minimal blob.
+
+  http.get(`${API_URL}/rental-contracts/:contractId/invoices`, () => {
+    return HttpResponse.json<InvoiceResponse[]>([invoiceIssuedFixture], { status: 200 });
+  }),
+
+  http.get(`${API_URL}/invoices/:invoiceId`, ({ params }) => {
+    return HttpResponse.json<InvoiceResponse>(
+      { ...invoiceIssuedFixture, id: params.invoiceId as string },
+      { status: 200 },
+    );
+  }),
+
+  http.post(`${API_URL}/invoices/:invoiceId/payments`, async ({ request, params }) => {
+    const body = (await request.json()) as RecordPaymentBody;
+    const status =
+      body.amount_cents >= invoiceIssuedFixture.total_ttc_cents ? "paid" : "partially_paid";
+    return HttpResponse.json<InvoiceResponse>(
+      { ...invoiceIssuedFixture, id: params.invoiceId as string, status },
+      { status: 200 },
+    );
+  }),
+
+  http.post(`${API_URL}/invoices/:invoiceId/credit-notes`, async ({ request, params }) => {
+    const body = (await request.json()) as CreditNoteBody;
+    return HttpResponse.json<CreditNoteResponse>(
+      { ...creditNoteFixture, invoice_id: params.invoiceId as string, reason: body.reason },
+      { status: 201 },
+    );
+  }),
+
+  http.patch(`${API_URL}/organization/fiscal-identity`, async ({ request }) => {
+    const body = (await request.json()) as FiscalIdentityBody;
+    return HttpResponse.json<OrgFiscalIdentityResponse>(
+      { ...orgFiscalIdentityFixture, ...body },
+      { status: 200 },
+    );
+  }),
+
+  http.get(`${API_URL}/invoices/:invoiceId/pdf`, () => pdfResponse()),
+  http.get(`${API_URL}/rental-contracts/:contractId/pdf`, () => pdfResponse()),
+  http.get(`${API_URL}/inspections/:inspectionId/pdf`, () => pdfResponse()),
 ];
+
+/** A minimal application/pdf response for the BILL-05 download handlers. */
+function pdfResponse(): Response {
+  return new HttpResponse(new Blob(["%PDF-1.4 mock"], { type: "application/pdf" }), {
+    status: 200,
+    headers: { "Content-Type": "application/pdf" },
+  });
+}
