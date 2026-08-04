@@ -17,6 +17,7 @@ import {
   issueCreditNote,
   recordPayment,
   updateFiscalIdentity,
+  uploadOrgLogo,
 } from "./api";
 
 export const FISCAL_IDENTITY_KEY = ["billing", "fiscalIdentity"] as const;
@@ -50,6 +51,10 @@ export function useIssueCreditNote(invoiceId: string, contractId?: string) {
       }
     },
   });
+}
+
+export function useUploadOrgLogo() {
+  return useMutation({ mutationFn: (file: File) => uploadOrgLogo(file) });
 }
 
 export function useUpdateFiscalIdentity() {

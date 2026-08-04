@@ -19,8 +19,11 @@ import type { Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2, Plus, X } from "lucide-react";
+import { Loader2, Plus, Wand2, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { ContractResponse } from "@/types/rental";
+import { previewQuote } from "@/features/pricing/api";
+import { useRentalExtrasQuery, useVehicleClassesQuery } from "@/features/pricing/queries";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import {
@@ -50,9 +53,11 @@ const resolver = zodResolver(closeSchema) as unknown as Resolver<CloseFormValues
 export function CloseForm({
   contract,
   onDone,
+  defaultClassId,
 }: {
   contract: ContractResponse;
   onDone: () => void;
+  defaultClassId?: string;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -75,7 +80,7 @@ export function CloseForm({
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "invoice_lines",
   });
@@ -151,6 +156,14 @@ export function CloseForm({
 
         <FieldSet>
           <FieldLegend>{t("contracts.forms.invoiceLines")}</FieldLegend>
+          {/* Pré-remplissage depuis le moteur tarifaire (devis) : classe +
+              options → lignes de facture, ajustables avant clôture. */}
+          <QuotePrefill
+            startsAt={contract.starts_at}
+            endsAt={contract.ends_at}
+            defaultClassId={defaultClassId}
+            onApply={(lines) => replace(lines)}
+          />
           {fields.map((field, index) => (
             <div
               key={field.id}
@@ -247,5 +260,137 @@ export function CloseForm({
         </Button>
       </FieldGroup>
     </form>
+  );
+}
+
+const prefillFieldCls =
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+type PrefillLine = CloseFormValues["invoice_lines"][number];
+
+/** Pricing-engine bridge inside the close form: pick the vehicle class + any
+ * extras, compute a quote for the contract's dates, and replace the invoice
+ * lines with the result (a rental line + one line per extra) — the agent edits
+ * before closing. Uses GET /vehicle-classes + /rental-extras (readable by any
+ * member) and POST /quotes/preview. Silent when no class is configured. */
+function QuotePrefill({
+  startsAt,
+  endsAt,
+  defaultClassId,
+  onApply,
+}: {
+  startsAt: string;
+  endsAt: string;
+  defaultClassId?: string;
+  onApply: (lines: PrefillLine[]) => void;
+}) {
+  const { t } = useTranslation();
+  const classesQ = useVehicleClassesQuery();
+  const extrasQ = useRentalExtrasQuery();
+  const [classId, setClassId] = useState(defaultClassId ?? "");
+  const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const classes = (classesQ.data ?? []).filter((c) => c.active);
+  const extras = (extrasQ.data ?? []).filter((e) => e.active);
+
+  if (classesQ.isSuccess && classes.length === 0) {
+    return (
+      <p className="text-xs text-muted-foreground">{t("contracts.close.prefill.noClasses")}</p>
+    );
+  }
+
+  async function apply() {
+    setError(false);
+    setLoading(true);
+    try {
+      const q = await previewQuote({
+        class_id: classId,
+        start_at: startsAt,
+        end_at: endsAt,
+        extra_ids: selectedExtras,
+      });
+      const lines: PrefillLine[] = [
+        {
+          description: t("contracts.close.prefill.rentalLine", { days: q.duration_days }),
+          quantity: 1,
+          amount_dzd: q.rental_cents / 100,
+          vat_rate: 19,
+        },
+        ...q.extras.map((e) => ({
+          description: e.name,
+          quantity: 1,
+          amount_dzd: e.amount_cents / 100,
+          vat_rate: 19,
+        })),
+      ];
+      onApply(lines);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-3 rounded-lg border border-primary/25 bg-primary/5 p-3">
+      <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+        <Wand2 className="size-4 text-primary" aria-hidden="true" />
+        {t("contracts.close.prefill.title")}
+      </span>
+      <select
+        className={prefillFieldCls}
+        value={classId}
+        onChange={(e) => setClassId(e.target.value)}
+        aria-label={t("contracts.close.prefill.class")}
+      >
+        <option value="">{t("contracts.close.prefill.pickClass")}</option>
+        {classes.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.name}
+          </option>
+        ))}
+      </select>
+      {extras.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {extras.map((e) => {
+            const on = selectedExtras.includes(e.id);
+            return (
+              <button
+                type="button"
+                key={e.id}
+                onClick={() =>
+                  setSelectedExtras((cur) =>
+                    cur.includes(e.id) ? cur.filter((x) => x !== e.id) : [...cur, e.id],
+                  )
+                }
+                className={cn(
+                  "rounded-full border px-3 py-1 text-xs transition-colors",
+                  on
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border text-muted-foreground hover:bg-muted",
+                )}
+              >
+                {e.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={classId === "" || loading}
+          onClick={apply}
+        >
+          {loading && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
+          {t("contracts.close.prefill.apply")}
+        </Button>
+      </div>
+      {error && <p className="text-xs text-destructive">{t("contracts.close.prefill.error")}</p>}
+    </div>
   );
 }

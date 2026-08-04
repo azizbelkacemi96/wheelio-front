@@ -37,6 +37,7 @@
     "userMenu": "User menu",
     "agencySwitcher": "Switch agency",
     "languageSwitcher": "Switch language",
+    "themeSwitcher": "Toggle theme",
     "openNav": "Open navigation menu"
   },
   "roles": {
@@ -54,13 +55,16 @@
   "nav": {
     "mainLabel": "Main navigation",
     "today": "Today",
+    "planning": "Planning",
     "vehicles": "Vehicles",
     "customers": "Customers",
     "contracts": "Contracts",
     "inspections": "Inspections",
     "admin": {
       "fiscalIdentity": "Company fiscal identity",
+      "pricing": "Pricing",
       "agencies": "Agency management",
+      "users": "Users",
       "billing": "Cross-agency billing"
     }
   },
@@ -198,6 +202,17 @@
       "reason": "Cancellation reason",
       "cancelSubmit": "Cancel the contract"
     },
+    "close": {
+      "prefill": {
+        "title": "Pre-fill from pricing",
+        "class": "Vehicle class",
+        "pickClass": "Pick a class",
+        "apply": "Pre-fill the invoice",
+        "rentalLine": "Rental — {{days}} days",
+        "noClasses": "No pricing class configured — see Pricing.",
+        "error": "Could not compute the quote for this class."
+      }
+    },
     "detail": {
       "title": "Rental contract",
       "vehicle": "Vehicle",
@@ -215,6 +230,38 @@
       "notAuthorized": "You don't have the required permissions for this action.",
       "infoTitle": "Contract details",
       "actionsTitle": "Actions",
+      "nextStep": "Next step",
+      "otherActions": "Other actions",
+      "closedNote": "Rental completed. The invoice is available below.",
+      "cancelledNote": "This contract was cancelled.",
+      "checkout": {
+        "title": "Vehicle check-out",
+        "subtitle": "When handing the vehicle to the customer, in order:",
+        "inspection": {
+          "label": "Departure condition report",
+          "desc": "Photograph the bodywork and note the fuel level — protects both parties."
+        },
+        "record": {
+          "label": "Record the departure",
+          "desc": "Departure mileage and fuel: starts the rental."
+        }
+      },
+      "checkin": {
+        "title": "Vehicle check-in",
+        "subtitle": "When the customer brings the vehicle back, in order:",
+        "inspection": {
+          "label": "Return condition report",
+          "desc": "Compare with departure and note any damage."
+        },
+        "record": {
+          "label": "Close the rental",
+          "desc": "Mileage, fuel and invoice lines — the invoice is generated automatically."
+        }
+      },
+      "hints": {
+        "activate": "Record the departure mileage and fuel level to start the rental.",
+        "close": "Record the return (mileage, fuel, invoice lines) — the invoice is generated automatically."
+      },
       "vehicleUnavailable": "Vehicle unavailable.",
       "customerUnavailable": "Customer unavailable."
     },
@@ -271,6 +318,19 @@
   },
   "ops": {
     "title": "Today",
+    "subtitle": "An overview of your fleet and today's activity.",
+    "stats": {
+      "fleet": "Vehicles",
+      "available": "Available",
+      "rented": "Rented",
+      "maintenance": "In maintenance",
+      "pickups": "Pickups today",
+      "returns": "Returns today",
+      "utilization": "Utilization",
+      "revenue": "Month revenue",
+      "deposits": "Deposits held",
+      "expiring": "Docs expiring"
+    },
     "pickups": {
       "title": "Today's pickups",
       "empty": "No pickups scheduled today."
@@ -280,6 +340,215 @@
       "empty": "No returns scheduled today."
     },
     "emptyAll": "Nothing scheduled today."
+  },
+  "booking": {
+    "admin": {
+      "title": "Online booking",
+      "help": "Set a public link where your customers book online (no account). You confirm and collect payment at the counter.",
+      "slugLabel": "Public identifier (slug)",
+      "save": "Save",
+      "error": "Could not save (slug already taken or invalid).",
+      "publicLink": "Public booking link"
+    },
+    "public": {
+      "brand": "Booking",
+      "tagline": "Book your vehicle online",
+      "notFound": "Booking page not found.",
+      "searchTitle": "Find a vehicle",
+      "pickup": "Pickup date",
+      "return": "Return date",
+      "options": "Extras",
+      "code": "Promo code",
+      "search": "Search",
+      "searchError": "Search failed. Check the dates.",
+      "noAvailability": "No vehicle available for this period.",
+      "availableCount_one": "{{count}} vehicle available",
+      "availableCount_other": "{{count}} vehicles available",
+      "durationDays_one": "{{count}} day",
+      "durationDays_other": "{{count}} days",
+      "choose": "Choose",
+      "back": "Back",
+      "yourDetails": "Your details",
+      "fullName": "Full name",
+      "phone": "Phone",
+      "cin": "ID number (optional)",
+      "license": "License number (optional)",
+      "total": "Total (excl. tax)",
+      "deposit": "Deposit",
+      "confirm": "Confirm booking",
+      "bookError": "Booking failed. The vehicle may have just been taken — please retry.",
+      "confirmedTitle": "Booking confirmed",
+      "confirmedBody": "Your booking is recorded. The agency will contact you to finalise.",
+      "ref": "Reference",
+      "period": "Period",
+      "payAtCounter": "Payment and deposit are handled at the counter on pickup.",
+      "newBooking": "New booking"
+    }
+  },
+  "planning": {
+    "title": "Fleet planning",
+    "subtitle": "Vehicle availability, bookings and unavailability at a glance.",
+    "view": { "week": "Week", "month": "Month" },
+    "prev": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "vehicle": "Vehicle",
+    "unavailable": "Unavailable",
+    "loadError": "Could not load the planning.",
+    "retry": "Retry",
+    "emptyHeading": "No vehicles",
+    "emptyBody": "Add vehicles to your fleet to see them on the planning.",
+    "reason": {
+      "breakdown": "Breakdown",
+      "maintenance_hold": "Maintenance hold",
+      "other": "Unavailable"
+    }
+  },
+  "onboarding": {
+    "title": "Get started",
+    "subtitle": "Set up these few things so you can rent out a vehicle.",
+    "configure": "Configure",
+    "start": "Start",
+    "steps": {
+      "fiscal": {
+        "label": "Fiscal identity & logo",
+        "desc": "Tax ID, address and company logo — shown on invoices and contracts."
+      },
+      "agency": {
+        "label": "Create an agency",
+        "desc": "At least one agency to hold your vehicles and rentals."
+      },
+      "vehicle": {
+        "label": "Add a vehicle",
+        "desc": "Register your first vehicle in the fleet."
+      },
+      "customer": {
+        "label": "Add a customer",
+        "desc": "Create a first customer record to draw up a contract."
+      }
+    }
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Vehicle classes, seasons and the rate grid — plus an instant quote calculator.",
+    "notAuthorizedHeading": "Access denied",
+    "notAuthorizedBody": "Only an org admin can manage pricing.",
+    "actions": {
+      "addClass": "Add class",
+      "addRate": "Add rate",
+      "addSeason": "Add season",
+      "addExtra": "Add extra",
+      "addDiscount": "Add discount",
+      "addDepositRule": "Add rule",
+      "delete": "Delete"
+    },
+    "fields": {
+      "class": "Class",
+      "className": "Class name",
+      "deposit": "Deposit",
+      "depositDzd": "Deposit (DZD)",
+      "season": "Season",
+      "seasonName": "Season name",
+      "daily": "Day",
+      "weekly": "Week",
+      "monthly": "Month",
+      "dailyDzd": "Day (DZD)",
+      "weeklyDzd": "Week (DZD)",
+      "monthlyDzd": "Month (DZD)",
+      "start": "Start",
+      "end": "End",
+      "priority": "Priority",
+      "extraName": "Extra name",
+      "category": "Category",
+      "mode": "Pricing",
+      "amountDzd": "Amount (DZD)",
+      "percent": "Percentage (%)",
+      "kind": "Kind",
+      "discountName": "Discount name",
+      "codeOptional": "Code (optional)",
+      "classScope": "Scope",
+      "validFrom": "Valid from",
+      "validTo": "Valid to"
+    },
+    "quote": {
+      "title": "Quote calculator",
+      "pickClass": "Pick a class",
+      "start": "Pickup",
+      "end": "Return",
+      "extras": "Extras",
+      "code": "Promo code",
+      "codePlaceholder": "e.g. SUMMER10",
+      "compute": "Compute quote",
+      "duration": "Duration",
+      "days": "days",
+      "season": "Applied season",
+      "rental": "Rental (excl. tax)",
+      "subtotal": "Subtotal (excl. tax)",
+      "total": "Total (excl. tax)",
+      "deposit": "Deposit",
+      "vatNote": "VAT and stamp duty are applied at invoicing.",
+      "error": "Could not compute the quote. Check that a rate is set for this class."
+    },
+    "discounts": {
+      "title": "Discounts & promo codes",
+      "help": "Automatic or code-based discounts, fixed amount or percentage — applied to the quote subtotal.",
+      "empty": "No discounts yet.",
+      "createError": "Could not create the discount (code already used?).",
+      "allClasses": "All classes",
+      "auto": "Automatic",
+      "autoApply": "Apply automatically (no code)",
+      "inactive": "inactive",
+      "kind": {
+        "fixed": "Fixed amount",
+        "percent": "Percentage"
+      }
+    },
+    "depositRules": {
+      "title": "Conditional deposit",
+      "help": "Adjust the deposit by class and/or a required extra; otherwise the class default deposit applies.",
+      "empty": "No rules yet. The class default deposit applies.",
+      "createError": "Could not create the rule.",
+      "anyClass": "All classes",
+      "noExtra": "No extra condition",
+      "requiresExtra": "Required extra"
+    },
+    "extras": {
+      "title": "Extras & add-ons",
+      "help": "Insurance, GPS, child seat, additional driver… added to the quote.",
+      "empty": "No extras yet. Create some to enrich your quotes.",
+      "perDayShort": "day",
+      "createError": "Could not create the extra.",
+      "category": {
+        "protection": "Protection",
+        "equipment": "Equipment",
+        "service": "Service",
+        "fee": "Fee"
+      },
+      "mode": {
+        "per_day": "Per day",
+        "flat": "Flat",
+        "percent": "% of rental"
+      }
+    },
+    "classes": {
+      "title": "Vehicle classes",
+      "empty": "No classes yet. Create one to set rates.",
+      "noDeposit": "No default deposit",
+      "manageRates": "Click to manage rates",
+      "namePlaceholder": "Economy, SUV…",
+      "createError": "Could not create the class (name already used?)."
+    },
+    "rates": {
+      "title": "Rates — {{class}}",
+      "base": "Base rate",
+      "empty": "No rates yet. Add at least a base rate.",
+      "createError": "Could not add the rate (already set for this season?)."
+    },
+    "seasons": {
+      "title": "Rate seasons",
+      "help": "Define periods (high season, event); priority breaks overlaps.",
+      "createError": "Could not create the season."
+    }
   },
   "customerCount_one": "{{count}} customer",
   "customerCount_other": "{{count}} customers",
@@ -479,7 +748,7 @@
     },
     "contract": {
       "invoicesTitle": "Invoices",
-      "noInvoices": "No invoice for this contract.",
+      "noInvoices": "No invoice yet — it is generated automatically when the contract is closed.",
       "invoicesLoadError": "Couldn't load invoices.",
       "viewInvoice": "View invoice",
       "downloadContractPdf": "Contract (PDF)"
@@ -540,6 +809,12 @@
       "submit": "Save",
       "success": "Fiscal identity saved.",
       "requiredHint": "Required to issue invoices.",
+      "logoTitle": "Company logo",
+      "logoHint": "This logo appears in the contract PDF header. Formats: JPEG, PNG, WebP (max 5 MB).",
+      "logoChoose": "Choose a logo",
+      "logoUpload": "Upload logo",
+      "logoSuccess": "Logo saved.",
+      "logoError": "Couldn't upload the logo.",
       "notAuthorizedHeading": "Access denied",
       "notAuthorizedBody": "Only an organization admin can edit the fiscal identity."
     },
@@ -556,6 +831,169 @@
       "amountInvalid": "Enter a valid amount.",
       "reasonRequired": "A reason is required.",
       "downloadFailed": "Couldn't download the PDF."
+    }
+  },
+  "fleet": {
+    "backToList": "Back to vehicles",
+    "backToDetail": "Back to vehicle",
+    "create": {
+      "cta": "New vehicle",
+      "title": "New vehicle",
+      "submit": "Create vehicle"
+    },
+    "edit": {
+      "title": "Edit vehicle",
+      "submit": "Save"
+    },
+    "form": {
+      "agency": "Agency",
+      "vin": "VIN (17 characters)",
+      "plate": "License plate",
+      "brand": "Brand",
+      "model": "Model",
+      "modelYear": "Year",
+      "color": "Color",
+      "seats": "Seats",
+      "fuelType": "Fuel type",
+      "transmission": "Transmission",
+      "purchaseDate": "Purchase date",
+      "purchasePrice": "Purchase price (DZD)",
+      "notes": "Notes",
+      "initialMileage": "Initial mileage",
+      "class": "Pricing class",
+      "noClass": "None",
+      "selectPlaceholder": "Select…"
+    },
+    "manage": {
+      "title": "Vehicle management",
+      "status": "Status",
+      "edit": "Edit",
+      "archive": "Archive",
+      "archiveConfirm": "Archive this vehicle?",
+      "archiveYes": "Confirm",
+      "cancel": "Cancel"
+    },
+    "mileage": {
+      "title": "Mileage",
+      "current": "Current mileage",
+      "new": "New reading (km)",
+      "log": "Log",
+      "logError": "Couldn't log the reading.",
+      "source": {
+        "manual": "Manual",
+        "contract": "Contract",
+        "maintenance": "Maintenance"
+      }
+    },
+    "errors": {
+      "plateRequired": "Plate is required.",
+      "brandRequired": "Brand is required.",
+      "modelRequired": "Model is required.",
+      "vinLength": "VIN must be exactly 17 characters.",
+      "agencyRequired": "Select an agency.",
+      "createFailed": "Couldn't create the vehicle.",
+      "updateFailed": "Couldn't update the vehicle.",
+      "statusConflict": "Status change not allowed in the vehicle's current state.",
+      "statusFailed": "Couldn't change the status."
+    }
+  },
+  "documents": {
+    "title": "Documents & photos",
+    "empty": "No document.",
+    "loadError": "Couldn't load documents.",
+    "upload": "Upload",
+    "uploadError": "Couldn't upload the document.",
+    "chooseFile": "Choose a file",
+    "download": "Open",
+    "delete": "Delete",
+    "type": "Type",
+    "docTitle": "Label",
+    "issuedAt": "Issue date",
+    "expiresAt": "Expiry date",
+    "expired": "Expired",
+    "expiresOn": "Expires on {{date}}",
+    "docType": {
+      "registration_card": "Registration card",
+      "insurance": "Insurance",
+      "technical_inspection": "Technical inspection",
+      "rental_contract": "Rental contract",
+      "invoice": "Invoice",
+      "other": "Photo / other"
+    },
+    "expiring": {
+      "title": "Documents nearing expiry"
+    }
+  },
+  "admin": {
+    "notAuthorizedHeading": "Access denied",
+    "notAuthorizedBody": "Only an organization admin can access this section.",
+    "users": {
+      "title": "Users",
+      "subtitle": "Manage your organization's accounts.",
+      "listTitle": "Accounts",
+      "createTitle": "New user",
+      "createSubmit": "Create user",
+      "created": "User created.",
+      "loadError": "Couldn't load users.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "since": "Since"
+      },
+      "fields": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "password": "Password",
+        "role": "Role"
+      },
+      "errors": {
+        "firstNameRequired": "First name is required.",
+        "lastNameRequired": "Last name is required.",
+        "emailInvalid": "Invalid email.",
+        "passwordShort": "Password must be at least 8 characters.",
+        "emailInUse": "This email is already in use.",
+        "createFailed": "Couldn't create the user."
+      }
+    },
+    "agencies": {
+      "title": "Agencies",
+      "subtitle": "Create and configure your agencies and their teams.",
+      "createTitle": "New agency",
+      "createSubmit": "Create agency",
+      "created": "Agency created.",
+      "createFailed": "Couldn't create the agency.",
+      "updateFailed": "Couldn't update the agency.",
+      "loadError": "Couldn't load agencies.",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "noDetails": "No contact details.",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "address": "Address",
+        "city": "City",
+        "postalCode": "Postal code",
+        "countryCode": "Country (2-letter code)"
+      },
+      "errors": {
+        "nameRequired": "Name is required.",
+        "countryCode": "Country code must be 2 letters."
+      }
+    },
+    "members": {
+      "title": "Members",
+      "empty": "No member in this agency.",
+      "role": "Role",
+      "remove": "Remove",
+      "addUser": "Add a member",
+      "selectUser": "Select a user",
+      "add": "Add"
     }
   }
 }

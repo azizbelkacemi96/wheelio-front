@@ -156,6 +156,7 @@ function CustomerListBody({ query, customers, isSearchActive }: BodyProps) {
       <EmptyState
         titleKey="customers.empty.heading"
         descriptionKey="customers.empty.body"
+        car
       />
     );
   }

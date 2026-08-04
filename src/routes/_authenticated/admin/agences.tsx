@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { EmptyState } from "@/shared/ui/empty-state";
+import { AgenciesAdmin } from "@/features/admin/AgenciesAdmin";
 
 /**
- * "Gestion agences" placeholder — owner-only admin section (D-09). Nav-gated
- * UX only; backend re-authorises real actions in later phases (T-01-rbac).
+ * "Gestion agences" (Phase 9) — org-admin only (D-09). Create/edit agencies +
+ * manage members and roles. Replaces the 01-07 placeholder; the component
+ * itself re-checks isOrgAdmin and the backend re-enforces every action.
  */
 export const Route = createFileRoute("/_authenticated/admin/agences")({
-  component: EmptyState,
+  component: AgenciesAdmin,
 });

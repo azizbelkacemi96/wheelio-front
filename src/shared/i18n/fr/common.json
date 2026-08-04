@@ -37,6 +37,7 @@
     "userMenu": "Menu utilisateur",
     "agencySwitcher": "Changer d'agence",
     "languageSwitcher": "Changer de langue",
+    "themeSwitcher": "Changer de thème",
     "openNav": "Ouvrir le menu de navigation"
   },
   "roles": {
@@ -54,13 +55,16 @@
   "nav": {
     "mainLabel": "Navigation principale",
     "today": "Aujourd'hui",
+    "planning": "Planning",
     "vehicles": "Véhicules",
     "customers": "Clients",
     "contracts": "Contrats",
     "inspections": "États des lieux",
     "admin": {
       "fiscalIdentity": "Identité fiscale société",
+      "pricing": "Tarification",
       "agencies": "Gestion agences",
+      "users": "Utilisateurs",
       "billing": "Facturation transverse"
     }
   },
@@ -198,6 +202,17 @@
       "reason": "Motif d'annulation",
       "cancelSubmit": "Annuler le contrat"
     },
+    "close": {
+      "prefill": {
+        "title": "Pré-remplir depuis le tarif",
+        "class": "Classe de véhicule",
+        "pickClass": "Choisir une classe",
+        "apply": "Pré-remplir la facture",
+        "rentalLine": "Location {{days}} jours",
+        "noClasses": "Aucune classe tarifaire configurée — voir Tarification.",
+        "error": "Impossible de calculer le devis pour cette classe."
+      }
+    },
     "detail": {
       "title": "Contrat de location",
       "vehicle": "Véhicule",
@@ -215,6 +230,38 @@
       "notAuthorized": "Vous n'avez pas les droits nécessaires pour cette action.",
       "infoTitle": "Détails du contrat",
       "actionsTitle": "Actions",
+      "nextStep": "Prochaine étape",
+      "otherActions": "Autres actions",
+      "closedNote": "Location terminée. La facture est disponible ci-dessous.",
+      "cancelledNote": "Ce contrat a été annulé.",
+      "checkout": {
+        "title": "Départ du véhicule",
+        "subtitle": "Au moment de remettre le véhicule au client, dans l'ordre :",
+        "inspection": {
+          "label": "État des lieux de départ",
+          "desc": "Photographiez la carrosserie et relevez le carburant — protège les deux parties."
+        },
+        "record": {
+          "label": "Enregistrer le départ",
+          "desc": "Kilométrage et carburant au départ : démarre la location."
+        }
+      },
+      "checkin": {
+        "title": "Retour du véhicule",
+        "subtitle": "Quand le client rapporte le véhicule, dans l'ordre :",
+        "inspection": {
+          "label": "État des lieux de retour",
+          "desc": "Comparez avec le départ et relevez les éventuels dommages."
+        },
+        "record": {
+          "label": "Clôturer la location",
+          "desc": "Kilométrage, carburant et lignes de facture — la facture est générée automatiquement."
+        }
+      },
+      "hints": {
+        "activate": "Enregistrez le kilométrage et le carburant au départ pour démarrer la location.",
+        "close": "Enregistrez le retour (kilométrage, carburant, lignes de facture) — la facture sera générée automatiquement."
+      },
       "vehicleUnavailable": "Véhicule indisponible.",
       "customerUnavailable": "Client indisponible."
     },
@@ -271,6 +318,19 @@
   },
   "ops": {
     "title": "Aujourd'hui",
+    "subtitle": "Vue d'ensemble de votre flotte et de votre activité du jour.",
+    "stats": {
+      "fleet": "Véhicules",
+      "available": "Disponibles",
+      "rented": "Loués",
+      "maintenance": "En maintenance",
+      "pickups": "Départs aujourd'hui",
+      "returns": "Retours aujourd'hui",
+      "utilization": "Taux d'utilisation",
+      "revenue": "CA du mois",
+      "deposits": "Cautions en cours",
+      "expiring": "Docs à échéance"
+    },
     "pickups": {
       "title": "Départs du jour",
       "empty": "Aucun départ prévu aujourd'hui."
@@ -280,6 +340,215 @@
       "empty": "Aucun retour prévu aujourd'hui."
     },
     "emptyAll": "Rien de prévu aujourd'hui."
+  },
+  "booking": {
+    "admin": {
+      "title": "Réservation en ligne",
+      "help": "Définissez un lien public où vos clients réservent en ligne (sans compte). Vous confirmez et encaissez au comptoir.",
+      "slugLabel": "Identifiant public (slug)",
+      "save": "Enregistrer",
+      "error": "Impossible d'enregistrer (slug déjà pris ou invalide).",
+      "publicLink": "Lien public de réservation"
+    },
+    "public": {
+      "brand": "Réservation",
+      "tagline": "Réservez votre véhicule en ligne",
+      "notFound": "Page de réservation introuvable.",
+      "searchTitle": "Rechercher un véhicule",
+      "pickup": "Date de départ",
+      "return": "Date de retour",
+      "options": "Options",
+      "code": "Code promo",
+      "search": "Rechercher",
+      "searchError": "Recherche impossible. Vérifiez les dates.",
+      "noAvailability": "Aucun véhicule disponible sur cette période.",
+      "availableCount_one": "{{count}} véhicule disponible",
+      "availableCount_other": "{{count}} véhicules disponibles",
+      "durationDays_one": "{{count}} jour",
+      "durationDays_other": "{{count}} jours",
+      "choose": "Choisir",
+      "back": "Retour",
+      "yourDetails": "Vos coordonnées",
+      "fullName": "Nom complet",
+      "phone": "Téléphone",
+      "cin": "N° CIN (facultatif)",
+      "license": "N° permis (facultatif)",
+      "total": "Total (HT)",
+      "deposit": "Caution",
+      "confirm": "Confirmer la réservation",
+      "bookError": "Réservation impossible. Le véhicule vient peut-être d'être pris — réessayez.",
+      "confirmedTitle": "Réservation confirmée",
+      "confirmedBody": "Votre réservation est enregistrée. L'agence vous contactera pour finaliser.",
+      "ref": "Référence",
+      "period": "Période",
+      "payAtCounter": "Paiement et caution réglés au comptoir lors du retrait.",
+      "newBooking": "Nouvelle réservation"
+    }
+  },
+  "planning": {
+    "title": "Planning de flotte",
+    "subtitle": "Disponibilité des véhicules, réservations et indisponibilités en un coup d'œil.",
+    "view": { "week": "Semaine", "month": "Mois" },
+    "prev": "Précédent",
+    "next": "Suivant",
+    "today": "Aujourd'hui",
+    "vehicle": "Véhicule",
+    "unavailable": "Indisponible",
+    "loadError": "Impossible de charger le planning.",
+    "retry": "Réessayer",
+    "emptyHeading": "Aucun véhicule",
+    "emptyBody": "Ajoutez des véhicules à votre flotte pour les voir sur le planning.",
+    "reason": {
+      "breakdown": "Panne",
+      "maintenance_hold": "Immobilisation entretien",
+      "other": "Indisponible"
+    }
+  },
+  "onboarding": {
+    "title": "Pour démarrer",
+    "subtitle": "Configurez ces quelques éléments pour pouvoir louer un véhicule.",
+    "configure": "Configurer",
+    "start": "Commencer",
+    "steps": {
+      "fiscal": {
+        "label": "Identité fiscale & logo",
+        "desc": "NIF, adresse et logo de la société — repris sur factures et contrats."
+      },
+      "agency": {
+        "label": "Créer une agence",
+        "desc": "Au moins une agence pour rattacher vos véhicules et vos locations."
+      },
+      "vehicle": {
+        "label": "Ajouter un véhicule",
+        "desc": "Enregistrez votre premier véhicule dans la flotte."
+      },
+      "customer": {
+        "label": "Ajouter un client",
+        "desc": "Créez une première fiche client pour établir un contrat."
+      }
+    }
+  },
+  "pricing": {
+    "title": "Tarification",
+    "subtitle": "Classes de véhicules, saisons et grille de tarifs — et un calcul de devis instantané.",
+    "notAuthorizedHeading": "Accès non autorisé",
+    "notAuthorizedBody": "Seul un administrateur de l'organisation peut gérer la tarification.",
+    "actions": {
+      "addClass": "Ajouter la classe",
+      "addRate": "Ajouter le tarif",
+      "addSeason": "Ajouter la saison",
+      "addExtra": "Ajouter l'option",
+      "addDiscount": "Ajouter la remise",
+      "addDepositRule": "Ajouter la règle",
+      "delete": "Supprimer"
+    },
+    "fields": {
+      "class": "Classe",
+      "className": "Nom de la classe",
+      "deposit": "Caution",
+      "depositDzd": "Caution (DZD)",
+      "season": "Saison",
+      "seasonName": "Nom de la saison",
+      "daily": "Jour",
+      "weekly": "Semaine",
+      "monthly": "Mois",
+      "dailyDzd": "Jour (DZD)",
+      "weeklyDzd": "Semaine (DZD)",
+      "monthlyDzd": "Mois (DZD)",
+      "start": "Début",
+      "end": "Fin",
+      "priority": "Priorité",
+      "extraName": "Nom de l'option",
+      "category": "Catégorie",
+      "mode": "Tarification",
+      "amountDzd": "Montant (DZD)",
+      "percent": "Pourcentage (%)",
+      "kind": "Nature",
+      "discountName": "Nom de la remise",
+      "codeOptional": "Code (facultatif)",
+      "classScope": "Portée",
+      "validFrom": "Valide du",
+      "validTo": "Valide au"
+    },
+    "quote": {
+      "title": "Calcul de devis",
+      "pickClass": "Choisir une classe",
+      "start": "Départ",
+      "end": "Retour",
+      "extras": "Options",
+      "code": "Code promo",
+      "codePlaceholder": "ex. ETE10",
+      "compute": "Calculer le devis",
+      "duration": "Durée",
+      "days": "jours",
+      "season": "Saison appliquée",
+      "rental": "Location (HT)",
+      "subtotal": "Sous-total (HT)",
+      "total": "Total (HT)",
+      "deposit": "Caution",
+      "vatNote": "La TVA et le timbre sont appliqués à la facturation.",
+      "error": "Impossible de calculer le devis. Vérifiez qu'un tarif est configuré pour cette classe."
+    },
+    "discounts": {
+      "title": "Remises & codes promo",
+      "help": "Remises automatiques ou via code, montant fixe ou pourcentage — appliquées au sous-total du devis.",
+      "empty": "Aucune remise.",
+      "createError": "Impossible de créer la remise (code déjà utilisé ?).",
+      "allClasses": "Toutes les classes",
+      "auto": "Automatique",
+      "autoApply": "Appliquer automatiquement (sans code)",
+      "inactive": "inactive",
+      "kind": {
+        "fixed": "Montant fixe",
+        "percent": "Pourcentage"
+      }
+    },
+    "depositRules": {
+      "title": "Caution conditionnelle",
+      "help": "Ajustez la caution selon la classe et/ou une option requise ; sinon la caution par défaut de la classe s'applique.",
+      "empty": "Aucune règle. La caution par défaut de la classe s'applique.",
+      "createError": "Impossible de créer la règle.",
+      "anyClass": "Toutes les classes",
+      "noExtra": "Sans condition d'option",
+      "requiresExtra": "Option requise"
+    },
+    "extras": {
+      "title": "Options & suppléments",
+      "help": "Assurances, GPS, siège enfant, conducteur additionnel… ajoutés au devis.",
+      "empty": "Aucune option. Créez-en pour enrichir vos devis.",
+      "perDayShort": "j",
+      "createError": "Impossible de créer l'option.",
+      "category": {
+        "protection": "Protection",
+        "equipment": "Équipement",
+        "service": "Service",
+        "fee": "Frais"
+      },
+      "mode": {
+        "per_day": "Par jour",
+        "flat": "Forfait",
+        "percent": "% de la location"
+      }
+    },
+    "classes": {
+      "title": "Classes de véhicules",
+      "empty": "Aucune classe. Créez-en une pour définir des tarifs.",
+      "noDeposit": "Sans caution par défaut",
+      "manageRates": "Cliquez pour gérer les tarifs",
+      "namePlaceholder": "Économique, SUV…",
+      "createError": "Impossible de créer la classe (nom déjà utilisé ?)."
+    },
+    "rates": {
+      "title": "Tarifs — {{class}}",
+      "base": "Tarif de base",
+      "empty": "Aucun tarif. Ajoutez au moins un tarif de base.",
+      "createError": "Impossible d'ajouter le tarif (déjà défini pour cette saison ?)."
+    },
+    "seasons": {
+      "title": "Saisons tarifaires",
+      "help": "Définissez des périodes (haute saison, événement) ; la priorité tranche les chevauchements.",
+      "createError": "Impossible de créer la saison."
+    }
   },
   "customerCount_one": "{{count}} client",
   "customerCount_other": "{{count}} clients",
@@ -479,7 +748,7 @@
     },
     "contract": {
       "invoicesTitle": "Factures",
-      "noInvoices": "Aucune facture pour ce contrat.",
+      "noInvoices": "Aucune facture — elle est générée automatiquement à la clôture du contrat.",
       "invoicesLoadError": "Impossible de charger les factures.",
       "viewInvoice": "Voir la facture",
       "downloadContractPdf": "Contrat (PDF)"
@@ -540,6 +809,12 @@
       "submit": "Enregistrer",
       "success": "Identité fiscale enregistrée.",
       "requiredHint": "Requis pour émettre des factures.",
+      "logoTitle": "Logo de la société",
+      "logoHint": "Ce logo apparaît en en-tête des contrats PDF. Formats : JPEG, PNG, WebP (max 5 Mo).",
+      "logoChoose": "Choisir un logo",
+      "logoUpload": "Téléverser le logo",
+      "logoSuccess": "Logo enregistré.",
+      "logoError": "Impossible de téléverser le logo.",
       "notAuthorizedHeading": "Accès non autorisé",
       "notAuthorizedBody": "Seul un administrateur de l'organisation peut modifier l'identité fiscale."
     },
@@ -556,6 +831,169 @@
       "amountInvalid": "Saisissez un montant valide.",
       "reasonRequired": "Un motif est requis.",
       "downloadFailed": "Impossible de télécharger le PDF."
+    }
+  },
+  "fleet": {
+    "backToList": "Retour aux véhicules",
+    "backToDetail": "Retour au véhicule",
+    "create": {
+      "cta": "Nouveau véhicule",
+      "title": "Nouveau véhicule",
+      "submit": "Créer le véhicule"
+    },
+    "edit": {
+      "title": "Modifier le véhicule",
+      "submit": "Enregistrer"
+    },
+    "form": {
+      "agency": "Agence",
+      "vin": "VIN (17 caractères)",
+      "plate": "Plaque d'immatriculation",
+      "brand": "Marque",
+      "model": "Modèle",
+      "modelYear": "Année",
+      "color": "Couleur",
+      "seats": "Places",
+      "fuelType": "Carburant",
+      "transmission": "Transmission",
+      "purchaseDate": "Date d'achat",
+      "purchasePrice": "Prix d'achat (DZD)",
+      "notes": "Notes",
+      "initialMileage": "Kilométrage initial",
+      "class": "Classe tarifaire",
+      "noClass": "Aucune",
+      "selectPlaceholder": "Sélectionner…"
+    },
+    "manage": {
+      "title": "Gestion du véhicule",
+      "status": "Statut",
+      "edit": "Modifier",
+      "archive": "Archiver",
+      "archiveConfirm": "Archiver ce véhicule ?",
+      "archiveYes": "Confirmer",
+      "cancel": "Annuler"
+    },
+    "mileage": {
+      "title": "Kilométrage",
+      "current": "Kilométrage actuel",
+      "new": "Nouveau relevé (km)",
+      "log": "Enregistrer",
+      "logError": "Impossible d'enregistrer le relevé.",
+      "source": {
+        "manual": "Manuel",
+        "contract": "Contrat",
+        "maintenance": "Maintenance"
+      }
+    },
+    "errors": {
+      "plateRequired": "La plaque est requise.",
+      "brandRequired": "La marque est requise.",
+      "modelRequired": "Le modèle est requis.",
+      "vinLength": "Le VIN doit comporter exactement 17 caractères.",
+      "agencyRequired": "Sélectionnez une agence.",
+      "createFailed": "Impossible de créer le véhicule.",
+      "updateFailed": "Impossible de modifier le véhicule.",
+      "statusConflict": "Changement de statut impossible dans l'état actuel du véhicule.",
+      "statusFailed": "Impossible de changer le statut."
+    }
+  },
+  "documents": {
+    "title": "Documents & photos",
+    "empty": "Aucun document.",
+    "loadError": "Impossible de charger les documents.",
+    "upload": "Téléverser",
+    "uploadError": "Impossible de téléverser le document.",
+    "chooseFile": "Choisir un fichier",
+    "download": "Ouvrir",
+    "delete": "Supprimer",
+    "type": "Type",
+    "docTitle": "Libellé",
+    "issuedAt": "Date d'émission",
+    "expiresAt": "Date d'expiration",
+    "expired": "Expiré",
+    "expiresOn": "Expire le {{date}}",
+    "docType": {
+      "registration_card": "Carte grise",
+      "insurance": "Assurance",
+      "technical_inspection": "Contrôle technique",
+      "rental_contract": "Contrat de location",
+      "invoice": "Facture",
+      "other": "Photo / autre"
+    },
+    "expiring": {
+      "title": "Documents à échéance"
+    }
+  },
+  "admin": {
+    "notAuthorizedHeading": "Accès non autorisé",
+    "notAuthorizedBody": "Seul un administrateur de l'organisation peut accéder à cette section.",
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle": "Gérez les comptes de votre organisation.",
+      "listTitle": "Comptes",
+      "createTitle": "Nouvel utilisateur",
+      "createSubmit": "Créer l'utilisateur",
+      "created": "Utilisateur créé.",
+      "loadError": "Impossible de charger les utilisateurs.",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "columns": {
+        "name": "Nom",
+        "email": "Email",
+        "role": "Rôle",
+        "status": "Statut",
+        "since": "Depuis"
+      },
+      "fields": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "password": "Mot de passe",
+        "role": "Rôle"
+      },
+      "errors": {
+        "firstNameRequired": "Le prénom est requis.",
+        "lastNameRequired": "Le nom est requis.",
+        "emailInvalid": "Email invalide.",
+        "passwordShort": "Le mot de passe doit comporter au moins 8 caractères.",
+        "emailInUse": "Cet email est déjà utilisé.",
+        "createFailed": "Impossible de créer l'utilisateur."
+      }
+    },
+    "agencies": {
+      "title": "Agences",
+      "subtitle": "Créez et configurez vos agences et leurs équipes.",
+      "createTitle": "Nouvelle agence",
+      "createSubmit": "Créer l'agence",
+      "created": "Agence créée.",
+      "createFailed": "Impossible de créer l'agence.",
+      "updateFailed": "Impossible de modifier l'agence.",
+      "loadError": "Impossible de charger les agences.",
+      "edit": "Modifier",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "noDetails": "Aucune coordonnée renseignée.",
+      "fields": {
+        "name": "Nom",
+        "phone": "Téléphone",
+        "address": "Adresse",
+        "city": "Ville",
+        "postalCode": "Code postal",
+        "countryCode": "Pays (code 2 lettres)"
+      },
+      "errors": {
+        "nameRequired": "Le nom est requis.",
+        "countryCode": "Le code pays doit comporter 2 lettres."
+      }
+    },
+    "members": {
+      "title": "Membres",
+      "empty": "Aucun membre dans cette agence.",
+      "role": "Rôle",
+      "remove": "Retirer",
+      "addUser": "Ajouter un membre",
+      "selectUser": "Sélectionner un utilisateur",
+      "add": "Ajouter"
     }
   }
 }

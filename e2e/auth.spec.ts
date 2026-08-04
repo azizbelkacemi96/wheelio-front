@@ -130,8 +130,8 @@ async function login(page: Page) {
   ).toBeVisible();
 }
 
-const BASE_NAV_FR = ["Aujourd'hui", "Véhicules", "Clients", "Contrats", "États des lieux"];
-const ADMIN_NAV_FR = ["Identité fiscale société", "Gestion agences", "Facturation transverse"];
+const BASE_NAV_FR = ["Aujourd'hui", "Planning", "Véhicules", "Clients", "Contrats", "États des lieux"];
+const ADMIN_NAV_FR = ["Identité fiscale société", "Tarification", "Gestion agences", "Utilisateurs"];
 
 test.describe("phase 01 happy path — login -> shell -> role-gated nav -> placeholder", () => {
   test("owner: logs in, sees full nav + admin sections + agency switcher, navigates to placeholders", async ({
@@ -167,11 +167,11 @@ test.describe("phase 01 happy path — login -> shell -> role-gated nav -> place
     await expect(page.getByRole("heading", { name: "États des lieux" })).toBeVisible();
     await expect(page.getByText("Aucun contrat à inspecter")).toBeVisible();
 
-    // Admin section navigation (owner-only segment) -> the shared empty state
-    // (admin/* are the last remaining placeholders).
-    await page.getByRole("link", { name: "Gestion agences" }).click();
-    await expect(page).toHaveURL("/admin/agences");
-    await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
+    // Admin section navigation (owner-only segment) -> a real admin screen
+    // (all admin sections are real now; the placeholder was removed).
+    await page.getByRole("link", { name: "Utilisateurs" }).click();
+    await expect(page).toHaveURL("/admin/utilisateurs");
+    await expect(page.getByRole("heading", { name: "Utilisateurs" })).toBeVisible();
   });
 
   test("agent: logs in, sees the identical base nav but NO admin sections and NO agency switcher", async ({
@@ -227,21 +227,13 @@ test.describe("phase 01 happy path — login -> shell -> role-gated nav -> place
     await mockApi(page, ownerFixture);
     await login(page);
 
-    // "Gestion agences" (owner-only admin) is still a placeholder — use it for
-    // the placeholder-copy locale check now that "États des lieux" is real.
-    await page.getByRole("link", { name: "Gestion agences" }).click();
-    await expect(page).toHaveURL("/admin/agences");
-    // FR is the hard default with nothing stored.
-    await expect(page.getByRole("heading", { name: "Bientôt disponible" })).toBeVisible();
+    // FR is the hard default with nothing stored: base nav renders in French.
+    await expect(page.getByRole("link", { name: "Véhicules" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Changer de langue" })).toBeVisible();
 
+    // Switch to EN — nav + chrome update live, no navigation.
     await page.getByRole("button", { name: "Changer de langue" }).click();
 
-    // Same route, live-switched copy: placeholder + nav + chrome all EN.
-    await expect(page).toHaveURL("/admin/agences");
-    await expect(page.getByRole("heading", { name: "Coming soon" })).toBeVisible();
-    await expect(
-      page.getByText("This feature is coming in a future Wheelio update."),
-    ).toBeVisible();
     await expect(page.getByRole("link", { name: "Vehicles" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Inspections" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Switch language" })).toBeVisible();

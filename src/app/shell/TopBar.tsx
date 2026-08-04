@@ -6,12 +6,14 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Building2, Check, Globe, LogOut, Menu } from "lucide-react";
+import { Building2, Check, Globe, LogOut, Menu, Moon, Sun } from "lucide-react";
 import { api } from "@/shared/api/client";
 import { logout } from "@/features/auth/api";
 import { isOrgAdmin, type Scope } from "@/shared/auth/permissions";
 import { resetSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/shared/auth/store";
+import { useTheme } from "@/shared/ui/theme-provider";
+import { WheelioLogo } from "@/shared/ui/brand";
 import { useLocale } from "@/shared/i18n/useLocale";
 import type { AgencyResponse } from "@/types/identity";
 import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
@@ -120,6 +122,37 @@ function LanguageSwitcher() {
   );
 }
 
+function ThemeToggle() {
+  const { t } = useTranslation();
+  const { theme, setTheme } = useTheme();
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t("shell.themeSwitcher")}
+          className="min-h-11 min-w-11 md:min-h-0 md:min-w-0"
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+        >
+          {isDark ? (
+            <Sun className="size-4" aria-hidden={true} />
+          ) : (
+            <Moon className="size-4" aria-hidden={true} />
+          )}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>{t("shell.themeSwitcher")}</TooltipContent>
+    </Tooltip>
+  );
+}
+
 function UserMenu({ scope }: { scope: Scope }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -202,7 +235,9 @@ export function TopBar({ scope }: TopBarProps) {
         </Tooltip>
         <SheetContent side="left" className="w-64">
           <SheetHeader>
-            <SheetTitle>Wheelio</SheetTitle>
+            <SheetTitle className="flex items-center">
+              <WheelioLogo />
+            </SheetTitle>
           </SheetHeader>
           <div className="px-4 pb-4">
             <NavRail scope={scope} />
@@ -214,6 +249,7 @@ export function TopBar({ scope }: TopBarProps) {
 
       <div className="flex items-center gap-2">
         <AgencySwitcher scope={scope} />
+        <ThemeToggle />
         <LanguageSwitcher />
         <UserMenu scope={scope} />
       </div>

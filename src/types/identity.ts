@@ -63,3 +63,33 @@ export interface AuthResponse {
   user: UserResponse;
   organization: OrganizationResponse;
 }
+
+/* -------------------------------------------------------------------------
+ * Request DTOs — mirror wheelio-api `dto.go` request structs verbatim.
+ * ---------------------------------------------------------------------- */
+
+/** POST /users (createUserRequest). org_role is admin | member only (owner is
+ * reserved to the signup founder). password min 8. */
+export interface CreateUserBody {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  org_role: "admin" | "member";
+}
+
+/** POST /agencies + PATCH /agencies/:id (agencyRequest). country_code is a
+ * 2-letter ISO code when provided. */
+export interface AgencyBody {
+  name: string;
+  address_line?: string;
+  city?: string;
+  postal_code?: string;
+  country_code?: string;
+  phone?: string;
+}
+
+/** PUT /agencies/:id/members/:userID (setMemberRequest). */
+export interface SetMemberBody {
+  role: AgencyRole;
+}

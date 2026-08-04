@@ -231,6 +231,7 @@ function ContractListBody({
       <EmptyState
         titleKey="contracts.empty.heading"
         descriptionKey="contracts.empty.body"
+        car
       />
     );
   }

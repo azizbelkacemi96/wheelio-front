@@ -9,10 +9,12 @@
  * from the PATCH response cached this session (FISCAL_IDENTITY_KEY); on a cold
  * load it starts empty and the admin (re)enters the mandatory mentions.
  */
+import { useRef, useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
+import { Loader2, Upload } from "lucide-react";
 import { useAuthStore } from "@/shared/auth/store";
 import { isOrgAdmin } from "@/shared/auth/permissions";
 import { Button } from "@/shared/ui/button";
@@ -22,7 +24,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Field, FieldError, FieldLabel } from "@/shared/ui/field";
 import type { FiscalIdentityBody, OrgFiscalIdentityResponse } from "@/types/billing";
 import { fiscalIdentitySchema, type FiscalIdentityValues } from "./schema";
-import { FISCAL_IDENTITY_KEY, useUpdateFiscalIdentity } from "./mutations";
+import {
+  FISCAL_IDENTITY_KEY,
+  useUpdateFiscalIdentity,
+  useUploadOrgLogo,
+} from "./mutations";
 
 export function FiscalIdentityForm() {
   const { t } = useTranslation();
@@ -83,6 +89,8 @@ export function FiscalIdentityForm() {
         </h1>
         <p className="text-sm text-muted-foreground">{t("billing.fiscal.subtitle")}</p>
       </header>
+
+      <LogoCard />
 
       <Card>
         <CardHeader>
@@ -178,5 +186,76 @@ function RequiredField({
       <FieldError errors={error ? [{ message: t(error) }] : undefined} />
       <span className="text-xs text-muted-foreground">{t("billing.fiscal.requiredHint")}</span>
     </Field>
+  );
+}
+
+/** Company logo upload (embedded in the contract PDF header). */
+function LogoCard() {
+  const { t } = useTranslation();
+  const mutation = useUploadOrgLogo();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState("");
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const onFile = (f?: File) => {
+    if (!f) return;
+    setName(f.name);
+    setPreview(URL.createObjectURL(f));
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("billing.fiscal.logoTitle")}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3">
+        <p className="text-sm text-muted-foreground">{t("billing.fiscal.logoHint")}</p>
+        <div className="flex flex-wrap items-center gap-3">
+          {preview && (
+            <img
+              src={preview}
+              alt=""
+              className="h-12 max-w-[150px] rounded border border-border bg-white object-contain p-1"
+            />
+          )}
+          <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
+            <Upload className="size-4" aria-hidden={true} />
+            {t("billing.fiscal.logoChoose")}
+          </Button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            aria-label={t("billing.fiscal.logoChoose")}
+            onChange={(e) => onFile(e.target.files?.[0])}
+          />
+          {name && <span className="truncate text-sm text-muted-foreground">{name}</span>}
+          <Button
+            type="button"
+            size="sm"
+            className="ml-auto"
+            disabled={!name || mutation.isPending}
+            onClick={() => {
+              const f = fileRef.current?.files?.[0];
+              if (f) mutation.mutate(f);
+            }}
+          >
+            {mutation.isPending && <Loader2 className="size-4 animate-spin" aria-hidden={true} />}
+            {t("billing.fiscal.logoUpload")}
+          </Button>
+        </div>
+        {mutation.isError && (
+          <p role="alert" className="text-sm text-destructive">
+            {t("billing.fiscal.logoError")}
+          </p>
+        )}
+        {mutation.isSuccess && (
+          <p role="status" className="text-sm text-emerald-600 dark:text-emerald-400">
+            {t("billing.fiscal.logoSuccess")}
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }

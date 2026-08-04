@@ -58,6 +58,19 @@ export function updateFiscalIdentity(
 }
 
 /**
+ * Uploads the company logo (embedded in the contract PDF header). Multipart
+ * PUT — the browser sets the boundary; never set Content-Type manually. One
+ * logo per organization (replaces the previous).
+ */
+export function uploadOrgLogo(file: File): Promise<void> {
+  const form = new FormData();
+  form.append("file", file, file.name);
+  return api
+    .put("organization/logo", { body: form, timeout: 60_000 })
+    .then(() => undefined);
+}
+
+/**
  * Authenticated PDF download (BILL-05). Fetches the bytes through the ky
  * client (Bearer auth + single-flight refresh), then triggers a browser
  * download from an in-memory object URL — never a bare link, so the token is

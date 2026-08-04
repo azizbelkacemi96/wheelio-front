@@ -19,12 +19,15 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import { useAuthStore } from "@/shared/auth/store";
+import { hasOrgRole, isOrgAdmin } from "@/shared/auth/permissions";
 import { useLocale } from "@/shared/i18n/useLocale";
 import type { VehicleResponse, VehicleStatus } from "@/types/fleet";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { EmptyState } from "@/shared/ui/empty-state";
+import { PlateBadge } from "@/shared/ui/plate-badge";
+import { VehicleThumbnail } from "./VehicleThumbnail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
   Table,
@@ -65,6 +68,8 @@ export function VehicleList() {
   const { t } = useTranslation();
   const { locale } = useLocale();
   const agencies = useAuthStore((s) => s.agencies);
+  const scope = useAuthStore((s) => s.scope);
+  const canCreate = scope != null && (isOrgAdmin(scope) || hasOrgRole(scope, "manager"));
 
   const [status, setStatus] = useState<VehicleStatus | null>(null);
   const [search, setSearch] = useState("");
@@ -99,9 +104,16 @@ export function VehicleList() {
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
       <header className="flex flex-col gap-1">
-        <h1 className="font-heading text-xl font-semibold text-foreground">
-          {t("vehicles.title")}
-        </h1>
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="font-heading text-xl font-semibold text-foreground">
+            {t("vehicles.title")}
+          </h1>
+          {canCreate && (
+            <Button asChild>
+              <Link to="/vehicules/nouveau">{t("fleet.create.cta")}</Link>
+            </Button>
+          )}
+        </div>
         {showCount && (
           <p className="text-sm text-muted-foreground">
             {t("vehicleCount", { count: filtered.length })}
@@ -200,6 +212,7 @@ function VehicleListBody({
       <EmptyState
         titleKey="vehicles.empty.heading"
         descriptionKey="vehicles.empty.body"
+        car
       />
     );
   }
@@ -272,9 +285,10 @@ function VehicleTable({
               <Link
                 to="/vehicules/$vehicleId"
                 params={{ vehicleId: v.id }}
-                className="text-primary hover:underline"
+                className="inline-flex items-center gap-2 hover:opacity-80"
               >
-                {v.registration_plate}
+                <VehicleThumbnail vehicleId={v.id} />
+                <PlateBadge plate={v.registration_plate} />
               </Link>
             </TableCell>
             <TableCell className="px-3 py-2">{vehicleLabel(v)}</TableCell>
@@ -313,9 +327,10 @@ function VehicleCard({ vehicle, showAgency, agencyName, formatMileage }: CardPro
           <Link
             to="/vehicules/$vehicleId"
             params={{ vehicleId: vehicle.id }}
-            className="text-primary hover:underline"
+            className="inline-flex items-center gap-2 hover:opacity-80"
           >
-            {vehicle.registration_plate}
+            <VehicleThumbnail vehicleId={vehicle.id} />
+            <PlateBadge plate={vehicle.registration_plate} />
           </Link>
         </CardTitle>
         <StatusBadge status={vehicle.status} />

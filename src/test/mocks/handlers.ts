@@ -1,10 +1,21 @@
 import { http, HttpResponse } from "msw";
 import type {
+  AgencyBody,
   AgencyResponse,
   AuthResponse,
+  CreateUserBody,
   MeResponse,
+  MembershipResponse,
+  SetMemberBody,
+  UserResponse,
 } from "@/types/identity";
-import type { VehicleResponse, VehicleStatus } from "@/types/fleet";
+import type {
+  ChangeStatusBody,
+  CreateVehicleBody,
+  MileageLogResponse,
+  VehicleResponse,
+  VehicleStatus,
+} from "@/types/fleet";
 import type { ContractResponse, ContractStatus } from "@/types/rental";
 import type {
   CreateCustomerBody,
@@ -43,6 +54,7 @@ import {
   inspectionValidatedFixture,
   uploadedDocumentFixture,
 } from "../fixtures/inspections";
+import type { DashboardResponse } from "@/types/dashboard";
 import {
   creditNoteFixture,
   invoiceIssuedFixture,
@@ -569,6 +581,189 @@ export const handlers = [
   http.get(`${API_URL}/invoices/:invoiceId/pdf`, () => pdfResponse()),
   http.get(`${API_URL}/rental-contracts/:contractId/pdf`, () => pdfResponse()),
   http.get(`${API_URL}/inspections/:inspectionId/pdf`, () => pdfResponse()),
+
+  // ---- Fleet management (Phase 8) ----
+  // Create echoes the body as a new `available` vehicle; PATCH/status echo the
+  // mutation onto the first fixture; archive is 204; mileage log/list are the
+  // odometer history (empty by default).
+
+  http.post(`${API_URL}/vehicles`, async ({ request }) => {
+    const body = (await request.json()) as CreateVehicleBody;
+    const now = new Date().toISOString();
+    return HttpResponse.json<VehicleResponse>(
+      {
+        id: crypto.randomUUID(),
+        agency_id: body.agency_id,
+        vin: body.vin,
+        registration_plate: body.registration_plate,
+        brand: body.brand,
+        model: body.model,
+        model_year: body.model_year,
+        color: body.color,
+        fuel_type: body.fuel_type,
+        transmission: body.transmission,
+        seats: body.seats,
+        current_mileage: body.initial_mileage,
+        status: "available",
+        purchase_date: body.purchase_date,
+        purchase_price_cents: body.purchase_price_cents,
+        notes: body.notes,
+        created_at: now,
+        updated_at: now,
+      },
+      { status: 201 },
+    );
+  }),
+
+  http.patch(`${API_URL}/vehicles/:vehicleId`, async ({ request, params }) => {
+    const base =
+      vehicleFixtures.find((v) => v.id === params.vehicleId) ?? vehicleFixtures[0];
+    const body = (await request.json()) as Partial<VehicleResponse>;
+    return HttpResponse.json<VehicleResponse>(
+      { ...base, ...body, id: params.vehicleId as string, updated_at: new Date().toISOString() },
+      { status: 200 },
+    );
+  }),
+
+  http.patch(`${API_URL}/vehicles/:vehicleId/status`, async ({ request, params }) => {
+    const base =
+      vehicleFixtures.find((v) => v.id === params.vehicleId) ?? vehicleFixtures[0];
+    const body = (await request.json()) as ChangeStatusBody;
+    return HttpResponse.json<VehicleResponse>(
+      { ...base, id: params.vehicleId as string, status: body.status, updated_at: new Date().toISOString() },
+      { status: 200 },
+    );
+  }),
+
+  http.delete(`${API_URL}/vehicles/:vehicleId`, () => new HttpResponse(null, { status: 204 })),
+
+  http.post(`${API_URL}/vehicles/:vehicleId/mileage`, async ({ request }) => {
+    const body = (await request.json()) as { mileage: number };
+    return HttpResponse.json<MileageLogResponse>(
+      {
+        id: crypto.randomUUID(),
+        mileage: body.mileage,
+        source: "manual",
+        recorded_at: new Date().toISOString(),
+      },
+      { status: 201 },
+    );
+  }),
+
+  http.get(`${API_URL}/vehicles/:vehicleId/mileage`, () =>
+    HttpResponse.json<MileageLogResponse[]>([], { status: 200 }),
+  ),
+
+  // ---- Documents (Phase 8) ----
+  http.get(`${API_URL}/vehicles/:vehicleId/documents`, () =>
+    HttpResponse.json([], { status: 200 }),
+  ),
+  http.get(`${API_URL}/documents/:documentId/download-url`, ({ params }) =>
+    HttpResponse.json(
+      {
+        url: `${API_URL}/files/${params.documentId as string}?sig=mock`,
+        expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
+      },
+      { status: 200 },
+    ),
+  ),
+  http.delete(`${API_URL}/documents/:documentId`, () => new HttpResponse(null, { status: 204 })),
+  http.get(`${API_URL}/documents/expiring`, () => HttpResponse.json([], { status: 200 })),
+
+  // ---- Dashboard aggregate (KPIs) ----
+  http.get(`${API_URL}/dashboard`, () =>
+    HttpResponse.json<DashboardResponse>(
+      {
+        vehicles: { total: 5, available: 3, rented: 1, maintenance: 1 },
+        contracts: { active: 1, reserved: 2 },
+        today: { pickups: 1, returns: 1 },
+        revenue_month_ttc_cents: 3129700,
+        deposits_held_cents: 5000000,
+        expiring_documents: 0,
+        utilization_pct: 20,
+        setup: { has_fiscal_identity: true, agencies: 1, vehicles: 5, customers: 3 },
+      },
+      { status: 200 },
+    ),
+  ),
+
+  // ---- Admin: users, agencies, members (Phase 9) ----
+  http.get(`${API_URL}/users`, () =>
+    HttpResponse.json<UserResponse[]>(adminUsers, { status: 200 }),
+  ),
+  http.post(`${API_URL}/users`, async ({ request }) => {
+    const body = (await request.json()) as CreateUserBody;
+    return HttpResponse.json<UserResponse>(
+      {
+        id: crypto.randomUUID(),
+        email: body.email,
+        first_name: body.first_name,
+        last_name: body.last_name,
+        org_role: body.org_role,
+        is_active: true,
+        created_at: new Date().toISOString(),
+      },
+      { status: 201 },
+    );
+  }),
+  http.post(`${API_URL}/agencies`, async ({ request }) => {
+    const body = (await request.json()) as AgencyBody;
+    const now = new Date().toISOString();
+    return HttpResponse.json<AgencyResponse>(
+      {
+        id: crypto.randomUUID(),
+        name: body.name,
+        address_line: body.address_line,
+        city: body.city,
+        postal_code: body.postal_code,
+        country_code: body.country_code ?? "DZ",
+        phone: body.phone,
+        created_at: now,
+        updated_at: now,
+      },
+      { status: 201 },
+    );
+  }),
+  http.patch(`${API_URL}/agencies/:agencyId`, async ({ request, params }) => {
+    const base = defaultAgencies.find((a) => a.id === params.agencyId) ?? defaultAgencies[0];
+    const body = (await request.json()) as AgencyBody;
+    return HttpResponse.json<AgencyResponse>(
+      { ...base, ...body, id: params.agencyId as string, updated_at: new Date().toISOString() },
+      { status: 200 },
+    );
+  }),
+  http.get(`${API_URL}/agencies/:agencyId/members`, () =>
+    HttpResponse.json<MembershipResponse[]>([], { status: 200 }),
+  ),
+  http.put(`${API_URL}/agencies/:agencyId/members/:userId`, async ({ request, params }) => {
+    const body = (await request.json()) as SetMemberBody;
+    return HttpResponse.json<MembershipResponse>(
+      {
+        agency_id: params.agencyId as string,
+        user_id: params.userId as string,
+        role: body.role,
+        created_at: new Date().toISOString(),
+      },
+      { status: 200 },
+    );
+  }),
+  http.delete(`${API_URL}/agencies/:agencyId/members/:userId`, () =>
+    new HttpResponse(null, { status: 204 }),
+  ),
+];
+
+/** Users for the admin screens (Phase 9): the owner founder + one member. */
+const adminUsers: UserResponse[] = [
+  ownerFixture.me.user,
+  {
+    id: "99999999-9999-4999-8999-999999999999",
+    email: "nadia@wheelio.dz",
+    first_name: "Nadia",
+    last_name: "Agent",
+    org_role: "member",
+    is_active: true,
+    created_at: "2026-02-01T00:00:00.000Z",
+  },
 ];
 
 /** A minimal application/pdf response for the BILL-05 download handlers. */

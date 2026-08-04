@@ -25,9 +25,12 @@
  * flows through i18n; raw data (plate, customer name) renders via JSX escaping.
  */
 import { useState } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { isHTTPError } from "ky";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
+import { ClipboardCheck, FileCheck2, KeyRound } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useLocale } from "@/shared/i18n/useLocale";
 import type { Locale } from "@/shared/i18n/useLocale";
 import type { ContractResponse } from "@/types/rental";
@@ -43,6 +46,7 @@ import { useVehicleQuery } from "@/features/fleet/queries";
 import { useCustomerQuery } from "@/features/customers/queries";
 import { ContractInvoices } from "@/features/billing/ContractInvoices";
 import { ContractStatusBadge } from "./ContractStatusBadge";
+import { RentalStepper } from "./RentalStepper";
 import { useContractQuery } from "./queries";
 import { ActivateForm } from "./forms/ActivateForm";
 import { CloseForm } from "./forms/CloseForm";
@@ -119,8 +123,6 @@ export function ContractDetail({ contractId }: { contractId: string }) {
   // contract status). Links out to the contract-scoped capture screen.
   const showInspection =
     (status === "reserved" || status === "active") && mayOperate;
-  const hasAnyAction =
-    showActivate || showClose || showCancel || showDeposit || showInspection;
 
   const closeOpenForm = () => setOpenForm(null);
 
@@ -137,6 +139,136 @@ export function ContractDetail({ contractId }: { contractId: string }) {
         </div>
       </header>
 
+      {/* Lifecycle stepper — the user always knows the current stage. */}
+      <RentalStepper status={status} />
+
+      {/* Guided check-out (départ) / check-in (retour): the handover reads as an
+          ordered ritual — état des lieux first, then the km/fuel record that
+          flips the status — mirroring how rental tools sequence the counter. */}
+      {(status === "reserved" || status === "active") && mayOperate && (
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {status === "reserved"
+                ? t("contracts.detail.checkout.title")
+                : t("contracts.detail.checkin.title")}
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {status === "reserved"
+                ? t("contracts.detail.checkout.subtitle")
+                : t("contracts.detail.checkin.subtitle")}
+            </p>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <ol className="flex flex-col gap-2">
+              {showInspection && (
+                <GuidedStep
+                  index={1}
+                  icon={ClipboardCheck}
+                  label={t(
+                    status === "reserved"
+                      ? "contracts.detail.checkout.inspection.label"
+                      : "contracts.detail.checkin.inspection.label",
+                  )}
+                  desc={t(
+                    status === "reserved"
+                      ? "contracts.detail.checkout.inspection.desc"
+                      : "contracts.detail.checkin.inspection.desc",
+                  )}
+                >
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/etats-des-lieux/$contractId" params={{ contractId }}>
+                      {t("contracts.actions.inspection")}
+                    </Link>
+                  </Button>
+                </GuidedStep>
+              )}
+              <GuidedStep
+                index={showInspection ? 2 : 1}
+                icon={status === "reserved" ? KeyRound : FileCheck2}
+                label={t(
+                  status === "reserved"
+                    ? "contracts.detail.checkout.record.label"
+                    : "contracts.detail.checkin.record.label",
+                )}
+                desc={t(
+                  status === "reserved"
+                    ? "contracts.detail.checkout.record.desc"
+                    : "contracts.detail.checkin.record.desc",
+                )}
+                highlight
+              >
+                {showActivate && (
+                  <Button
+                    size="sm"
+                    onClick={() => setOpenForm((f) => (f === "activate" ? null : "activate"))}
+                  >
+                    {t("contracts.actions.activate")}
+                  </Button>
+                )}
+                {showClose && (
+                  <Button
+                    size="sm"
+                    onClick={() => setOpenForm((f) => (f === "close" ? null : "close"))}
+                  >
+                    {t("contracts.actions.close")}
+                  </Button>
+                )}
+              </GuidedStep>
+            </ol>
+
+            {openForm === "activate" && showActivate && (
+              <ActivateForm contract={loadedContract} onDone={closeOpenForm} />
+            )}
+            {openForm === "close" && showClose && (
+              <CloseForm
+                contract={loadedContract}
+                onDone={closeOpenForm}
+                defaultClassId={vehicle?.class_id}
+              />
+            )}
+
+            <Separator />
+
+            <div className="flex flex-col gap-2">
+              <span className="text-sm font-medium text-foreground">
+                {t("contracts.detail.otherActions")}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {showDeposit && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenForm((f) => (f === "deposit" ? null : "deposit"))}
+                  >
+                    {t("contracts.actions.recordDeposit")}
+                  </Button>
+                )}
+                {showCancel && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenForm((f) => (f === "cancel" ? null : "cancel"))}
+                  >
+                    {t("contracts.actions.cancel")}
+                  </Button>
+                )}
+              </div>
+              {openForm === "deposit" && showDeposit && (
+                <DepositForm contract={loadedContract} onDone={closeOpenForm} />
+              )}
+              {openForm === "cancel" && showCancel && (
+                <CancelForm contract={loadedContract} onDone={closeOpenForm} />
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {status === "closed" && (
+        <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+          {t("contracts.detail.closedNote")}
+        </div>
+      )}
+
       <ContractInfoCard
         contract={loadedContract}
         vehicle={vehicle}
@@ -145,79 +277,6 @@ export function ContractDetail({ contractId }: { contractId: string }) {
         customerError={customerQuery.isError}
         locale={locale}
       />
-
-      {hasAnyAction && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("contracts.detail.actionsTitle")}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="flex flex-wrap gap-2">
-              {showActivate && (
-                <Button
-                  onClick={() =>
-                    setOpenForm((f) => (f === "activate" ? null : "activate"))
-                  }
-                >
-                  {t("contracts.actions.activate")}
-                </Button>
-              )}
-              {showClose && (
-                <Button
-                  onClick={() =>
-                    setOpenForm((f) => (f === "close" ? null : "close"))
-                  }
-                >
-                  {t("contracts.actions.close")}
-                </Button>
-              )}
-              {showDeposit && (
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setOpenForm((f) => (f === "deposit" ? null : "deposit"))
-                  }
-                >
-                  {t("contracts.actions.recordDeposit")}
-                </Button>
-              )}
-              {showInspection && (
-                <Button asChild variant="outline">
-                  <Link
-                    to="/etats-des-lieux/$contractId"
-                    params={{ contractId }}
-                  >
-                    {t("contracts.actions.inspection")}
-                  </Link>
-                </Button>
-              )}
-              {showCancel && (
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setOpenForm((f) => (f === "cancel" ? null : "cancel"))
-                  }
-                >
-                  {t("contracts.actions.cancel")}
-                </Button>
-              )}
-            </div>
-
-            {openForm === "activate" && showActivate && (
-              <ActivateForm contract={loadedContract} onDone={closeOpenForm} />
-            )}
-            {openForm === "close" && showClose && (
-              <CloseForm contract={loadedContract} onDone={closeOpenForm} />
-            )}
-            {openForm === "deposit" && showDeposit && (
-              <DepositForm contract={loadedContract} onDone={closeOpenForm} />
-            )}
-            {openForm === "cancel" && showCancel && (
-              <CancelForm contract={loadedContract} onDone={closeOpenForm} />
-            )}
-          </CardContent>
-        </Card>
-      )}
 
       {/* Billing block (BILL-02/05): contract PDF + issued invoices. */}
       <ContractInvoices contractId={contractId} />
@@ -231,6 +290,51 @@ function BackLink() {
     <Link to="/contrats" className="text-sm text-primary hover:underline">
       {t("contracts.actions.backToList")}
     </Link>
+  );
+}
+
+/** One numbered row in the guided check-out/check-in list: a step number, an
+ * icon + label + one-line description, and the step's action on the right.
+ * `highlight` marks the status-changing step (the emphasized primary). */
+function GuidedStep({
+  index,
+  icon: Icon,
+  label,
+  desc,
+  highlight = false,
+  children,
+}: {
+  index: number;
+  icon: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
+  label: string;
+  desc: string;
+  highlight?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <li
+      className={cn(
+        "flex items-center gap-3 rounded-lg border p-3",
+        highlight ? "border-primary/40 bg-primary/5" : "border-border",
+      )}
+    >
+      <span
+        className={cn(
+          "flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
+          highlight ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+        )}
+      >
+        {index}
+      </span>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <p className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+          <Icon className="size-3.5 shrink-0 opacity-70" aria-hidden={true} />
+          {label}
+        </p>
+        <p className="text-xs text-muted-foreground">{desc}</p>
+      </div>
+      <div className="shrink-0">{children}</div>
+    </li>
   );
 }
 

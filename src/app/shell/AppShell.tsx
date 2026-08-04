@@ -14,12 +14,13 @@
  * /login exactly like the guard would (AUTH-02).
  */
 import { useCallback, useEffect, useState } from "react";
-import { Outlet, useNavigate } from "@tanstack/react-router";
+import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { ensureSession, resetSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/shared/auth/store";
 import { Button } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
+import { WheelioLogo } from "@/shared/ui/brand";
 import { NavRail } from "./NavRail";
 import { TopBar } from "./TopBar";
 
@@ -98,7 +99,10 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-svh">
-      <aside className="hidden w-56 shrink-0 border-r bg-secondary/40 p-4 md:flex md:flex-col">
+      <aside className="hidden w-56 shrink-0 border-r bg-secondary/40 p-4 md:flex md:flex-col md:gap-4">
+        <Link to="/" className="px-1.5">
+          <WheelioLogo />
+        </Link>
         <NavRail scope={scope} />
       </aside>
       <div className="flex flex-1 flex-col">

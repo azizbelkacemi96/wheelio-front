@@ -7,7 +7,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/auth/store";
 import type { VehicleStatus } from "@/types/fleet";
-import { fetchActiveContract, fetchVehicle, fetchVehicles } from "./api";
+import {
+  fetchActiveContract,
+  fetchVehicle,
+  fetchVehicles,
+  listMileage,
+} from "./api";
 
 export function useVehiclesQuery(status: VehicleStatus | null) {
   // Permanently null for non-admins by design — do NOT gate the query on it.
@@ -39,5 +44,13 @@ export function useActiveContractQuery(vehicleId: string) {
   return useQuery({
     queryKey: ["vehicles", "detail", vehicleId, "active-contract"],
     queryFn: () => fetchActiveContract(vehicleId),
+  });
+}
+
+export function useMileageQuery(vehicleId: string, enabled = true) {
+  return useQuery({
+    queryKey: ["vehicles", "detail", vehicleId, "mileage"],
+    queryFn: () => listMileage(vehicleId),
+    enabled: enabled && vehicleId !== "",
   });
 }

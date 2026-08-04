@@ -116,6 +116,7 @@ function IndexBody({
       <EmptyState
         titleKey="inspections.index.empty.heading"
         descriptionKey="inspections.index.empty.body"
+        car
       />
     );
   }

@@ -110,7 +110,7 @@ describe("AppShell — role-gated nav", () => {
     const { unmount: unmountAgent } = await renderShell();
     expect(screen.queryByText("Identité fiscale société")).not.toBeInTheDocument();
     expect(screen.queryByText("Gestion agences")).not.toBeInTheDocument();
-    expect(screen.queryByText("Facturation transverse")).not.toBeInTheDocument();
+    expect(screen.queryByText("Utilisateurs")).not.toBeInTheDocument();
     unmountAgent();
     resetAuthStore();
 
@@ -118,7 +118,7 @@ describe("AppShell — role-gated nav", () => {
     const { unmount: unmountManager } = await renderShell();
     expect(screen.queryByText("Identité fiscale société")).not.toBeInTheDocument();
     expect(screen.queryByText("Gestion agences")).not.toBeInTheDocument();
-    expect(screen.queryByText("Facturation transverse")).not.toBeInTheDocument();
+    expect(screen.queryByText("Utilisateurs")).not.toBeInTheDocument();
     unmountManager();
     resetAuthStore();
 
@@ -126,7 +126,7 @@ describe("AppShell — role-gated nav", () => {
     const { unmount: unmountOwner } = await renderShell();
     expect(screen.getByText("Identité fiscale société")).toBeInTheDocument();
     expect(screen.getByText("Gestion agences")).toBeInTheDocument();
-    expect(screen.getByText("Facturation transverse")).toBeInTheDocument();
+    expect(screen.getByText("Utilisateurs")).toBeInTheDocument();
     unmountOwner();
   });
 });

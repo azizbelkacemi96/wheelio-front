@@ -5,7 +5,8 @@
  */
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Car, Check } from "lucide-react";
+import { Check } from "lucide-react";
+import { WheelioMark } from "@/shared/ui/brand";
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -48,25 +49,15 @@ function BrandPanel() {
         aria-hidden="true"
         style={{ background: "#2563eb" }}
       />
-      {/* Violet glow bottom-right */}
+      {/* Teal glow bottom-right (brand accent) */}
       <div
         className="absolute -right-32 -bottom-32 size-96 rounded-full opacity-20 blur-3xl"
         aria-hidden="true"
-        style={{ background: "#7c3aed" }}
+        style={{ background: "#17b3c3" }}
       />
 
       <div className="relative z-10 flex max-w-sm flex-col gap-8">
-        <div className="flex items-center gap-3">
-          <div
-            className="flex size-12 items-center justify-center rounded-2xl border border-white/10 shadow-2xl"
-            style={{ background: "var(--gradient-auth)" }}
-          >
-            <Car className="size-6 text-white" aria-hidden="true" />
-          </div>
-          <span className="font-heading text-2xl font-bold tracking-tight text-white">
-            {t("auth.brand.name")}
-          </span>
-        </div>
+        <WheelioMark className="size-28 rounded-3xl shadow-2xl ring-1 ring-white/10" />
 
         <div className="flex flex-col gap-3">
           <h1 className="text-3xl font-bold leading-tight tracking-tight text-white">
@@ -94,18 +85,9 @@ function BrandPanel() {
 
 /** Compact brand mark shown above the form on narrow screens (brand panel hidden). */
 function MobileBrand() {
-  const { t } = useTranslation();
   return (
-    <div className="mb-8 flex flex-col items-center gap-3 lg:hidden">
-      <div
-        className="flex size-14 items-center justify-center rounded-2xl shadow-md"
-        style={{ background: "var(--gradient-auth)" }}
-      >
-        <Car className="size-7 text-white" aria-hidden="true" />
-      </div>
-      <span className="font-heading text-xl font-bold text-foreground">
-        {t("auth.brand.name")}
-      </span>
+    <div className="mb-8 flex justify-center lg:hidden">
+      <WheelioMark className="size-20 rounded-2xl shadow-md" />
     </div>
   );
 }

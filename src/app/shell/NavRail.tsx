@@ -16,12 +16,14 @@ import { Link, useMatchRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import {
   Building2,
+  CalendarDays,
   Car,
   ClipboardCheck,
   FileText,
   Home,
   Landmark,
-  Receipt,
+  Tags,
+  UserCog,
   Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -29,13 +31,15 @@ import { isOrgAdmin, type Scope } from "@/shared/auth/permissions";
 
 type NavPath =
   | "/"
+  | "/planning"
   | "/vehicules"
   | "/clients"
   | "/contrats"
   | "/etats-des-lieux"
   | "/admin/identite-fiscale"
+  | "/admin/tarification"
   | "/admin/agences"
-  | "/admin/facturation";
+  | "/admin/utilisateurs";
 
 interface NavItemDef {
   key: string;
@@ -46,6 +50,7 @@ interface NavItemDef {
 
 const BASE_NAV_ITEMS: NavItemDef[] = [
   { key: "today", labelKey: "nav.today", icon: Home, to: "/" },
+  { key: "planning", labelKey: "nav.planning", icon: CalendarDays, to: "/planning" },
   { key: "vehicles", labelKey: "nav.vehicles", icon: Car, to: "/vehicules" },
   { key: "customers", labelKey: "nav.customers", icon: Users, to: "/clients" },
   { key: "contracts", labelKey: "nav.contracts", icon: FileText, to: "/contrats" },
@@ -64,8 +69,9 @@ const ADMIN_NAV_ITEMS: NavItemDef[] = [
     icon: Landmark,
     to: "/admin/identite-fiscale",
   },
+  { key: "pricing", labelKey: "nav.admin.pricing", icon: Tags, to: "/admin/tarification" },
   { key: "agencies", labelKey: "nav.admin.agencies", icon: Building2, to: "/admin/agences" },
-  { key: "billing", labelKey: "nav.admin.billing", icon: Receipt, to: "/admin/facturation" },
+  { key: "users", labelKey: "nav.admin.users", icon: UserCog, to: "/admin/utilisateurs" },
 ];
 
 const itemClassName = (isActive: boolean) =>

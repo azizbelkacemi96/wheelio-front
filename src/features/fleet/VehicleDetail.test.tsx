@@ -125,10 +125,11 @@ describe("VehicleDetail", () => {
     // brand + model (+ model_year) subline
     expect(screen.getByText(/Dacia Sandero Stepway/)).toBeInTheDocument();
 
-    // locale-formatted mileage + km unit
+    // locale-formatted mileage + km unit (shown in the info card AND the
+    // Phase-8 mileage-management card, so assert at least one occurrence).
     expect(
-      screen.getByText(kmText(vehicleRented.current_mileage)),
-    ).toBeInTheDocument();
+      screen.getAllByText(kmText(vehicleRented.current_mileage)).length,
+    ).toBeGreaterThan(0);
 
     // translated fuel TYPE (diesel) — the vehicle card never shows a fuel LEVEL
     expect(screen.getByText("Diesel")).toBeInTheDocument();

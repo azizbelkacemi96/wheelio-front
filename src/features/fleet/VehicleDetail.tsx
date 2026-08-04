@@ -30,12 +30,17 @@ import { useLocale } from "@/shared/i18n/useLocale";
 import type { Locale } from "@/shared/i18n/useLocale";
 import type { VehicleResponse } from "@/types/fleet";
 import type { ContractResponse } from "@/types/rental";
+import { useAuthStore } from "@/shared/auth/store";
+import { canManage, canOperate } from "@/shared/auth/permissions";
 import { Button } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { Separator } from "@/shared/ui/separator";
+import { PlateBadge } from "@/shared/ui/plate-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { VehicleDocuments } from "@/features/documents/VehicleDocuments";
 import { StatusBadge } from "./StatusBadge";
 import { useActiveContractQuery, useVehicleQuery } from "./queries";
+import { VehicleActionsCard, MileageCard } from "./VehicleManage";
 
 function isNotFound(error: unknown): boolean {
   return isHTTPError(error) && error.response.status === 404;
@@ -44,6 +49,7 @@ function isNotFound(error: unknown): boolean {
 export function VehicleDetail({ vehicleId }: { vehicleId: string }) {
   const { t } = useTranslation();
   const { locale } = useLocale();
+  const scope = useAuthStore((s) => s.scope);
 
   // Two parallel queries — no conditional/waterfall between them.
   const vehicleQuery = useVehicleQuery(vehicleId);
@@ -74,6 +80,8 @@ export function VehicleDetail({ vehicleId }: { vehicleId: string }) {
   }
 
   const vehicle = vehicleQuery.data;
+  const mayManage = scope != null && canManage(scope, vehicle.agency_id);
+  const mayOperate = scope != null && canOperate(scope, vehicle.agency_id);
 
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
@@ -82,7 +90,7 @@ export function VehicleDetail({ vehicleId }: { vehicleId: string }) {
       <header className="flex flex-col gap-1">
         <div className="flex items-center gap-3">
           <h1 className="font-heading text-xl font-semibold text-foreground">
-            {vehicle.registration_plate}
+            <PlateBadge plate={vehicle.registration_plate} size="md" />
           </h1>
           <StatusBadge status={vehicle.status} />
         </div>
@@ -91,6 +99,9 @@ export function VehicleDetail({ vehicleId }: { vehicleId: string }) {
 
       <VehicleInfoCard vehicle={vehicle} locale={locale} />
       <CurrentContractCard query={contractQuery} locale={locale} />
+      {mayManage && <VehicleActionsCard vehicle={vehicle} />}
+      <MileageCard vehicle={vehicle} canWrite={mayOperate} />
+      <VehicleDocuments vehicleId={vehicle.id} canWrite={mayOperate} />
     </div>
   );
 }

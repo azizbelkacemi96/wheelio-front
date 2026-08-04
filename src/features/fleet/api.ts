@@ -8,7 +8,15 @@
  * joined "current contract" field, and vehicle.status is a separate axis.
  */
 import { api } from "@/shared/api/client";
-import type { VehicleResponse, VehicleStatus } from "@/types/fleet";
+import type {
+  ChangeStatusBody,
+  CreateVehicleBody,
+  LogMileageBody,
+  MileageLogResponse,
+  UpdateVehicleBody,
+  VehicleResponse,
+  VehicleStatus,
+} from "@/types/fleet";
 import type { ContractResponse } from "@/types/rental";
 
 export interface FetchVehiclesParams {
@@ -42,4 +50,49 @@ export async function fetchActiveContract(
     .json<ContractResponse[]>();
   // null, never undefined — react-query rejects undefined query data.
   return contracts[0] ?? null;
+}
+
+function encodeIdSegment(id: string): string {
+  return encodeURIComponent(id);
+}
+
+export function createVehicle(body: CreateVehicleBody): Promise<VehicleResponse> {
+  return api.post("vehicles", { json: body }).json<VehicleResponse>();
+}
+
+export function updateVehicle(
+  vehicleId: string,
+  body: UpdateVehicleBody,
+): Promise<VehicleResponse> {
+  return api
+    .patch(`vehicles/${encodeIdSegment(vehicleId)}`, { json: body })
+    .json<VehicleResponse>();
+}
+
+export function changeVehicleStatus(
+  vehicleId: string,
+  body: ChangeStatusBody,
+): Promise<VehicleResponse> {
+  return api
+    .patch(`vehicles/${encodeIdSegment(vehicleId)}/status`, { json: body })
+    .json<VehicleResponse>();
+}
+
+export function archiveVehicle(vehicleId: string): Promise<void> {
+  return api.delete(`vehicles/${encodeIdSegment(vehicleId)}`).then(() => undefined);
+}
+
+export function logMileage(
+  vehicleId: string,
+  body: LogMileageBody,
+): Promise<MileageLogResponse> {
+  return api
+    .post(`vehicles/${encodeIdSegment(vehicleId)}/mileage`, { json: body })
+    .json<MileageLogResponse>();
+}
+
+export function listMileage(vehicleId: string): Promise<MileageLogResponse[]> {
+  return api
+    .get(`vehicles/${encodeIdSegment(vehicleId)}/mileage`)
+    .json<MileageLogResponse[]>();
 }
